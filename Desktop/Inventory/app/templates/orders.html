@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex m-b-10 no-block">
+                    <h5 class="card-title m-b-0 align-self-center">Orders List</h5>
+                </div>
+                <table id="orderTable" class="table color-table table-bordered product-table table-hover dataTable no-footer" role="grid" aria-describedby="myTable_info" style="width: 760px;">
+                        <thead>
+                            <tr role="row">
+                                <td class="sorting_asc" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="ID: activate to sort column descending" style="width: 37px;">ID</td>
+                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Product: activate to sort column ascending" style="width: 160px;">Product</td>
+                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" style="width: 111px;">Category</td>
+                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending" style="width: 60px;">Price</td>
+                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 72px;">Currency</td>
+                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="QTY: activate to sort column ascending" style="width: 51px;">QTY</td>
+                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="TAGS: activate to sort column ascending" style="width: 51px;">TAGS</td>
+                                <td class="" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="" style="width: 20px;"></td>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                </table>
+                <div class="ml-auto text-light-blue" style="margin-top: 50px;">
+                    <ul class="nav nav-tabs customtab default-customtab list-inline text-uppercase lp-5 font-medium font-12" style="float:right;" role="tablist">
+                        <li>
+                            <a href="{{url_for('addItem')}}" class="btn waves-effect waves-light btn-rounded btn-primary" style="float: right;">Add Product</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

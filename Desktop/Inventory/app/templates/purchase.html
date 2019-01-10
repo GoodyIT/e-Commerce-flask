@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="row col-lg-12">
+    <h2>Purchase Order</h2>
+</div>
+<div class="row col-lg-12">
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="vendor-block" style="margin-bottom: 10px; height: 100px">
+            <div class="col-lg-2" style="text-align; center;">
+                <h5 style="text-color: red;">Vendor Name</h5>
+            </div>
+            <div class="col-lg-5">
+                <label for="vendor">Vendor</label>
+                <select name="vendor" class="form-control form-control-lg">
+                    <option value="{{form.vendor}}"></option>
+                </select>
+            </div>
+            <div class="col-lg-5">
+            </div>
+        </div> <!-- end vendor-block -->
+        <div class="row">
+            <div class="col-lg-2" style="text-align: center;">
+                <h5 style="text-color: red;">Deliver To</h5>
+            </div>
+            <div class="col-lg-5">
+                <div class="row" style="margin-bottom: 15px; margin-top: 15px;">
+                    <div class="col-lg-12 radio-inline" style="margin:0; padding:0">
+                        {{form.delivery}}
+                    </div>
+                </div> <!-- end row -->
+                <p>Johnathan Stevens</p>
+                <p>Eloraus, LLC</p>
+                <p>5988 Chesbro Ave</p>
+                <p>San Jose, CA 95123</p>
+            </div>
+            <div class="col-lg-5"></div>
+        </div>
+        <hr>
+        <div class="row" style="margin-bottom: 30px">
+            <div class="col-lg-2">
+                <h5 style="text-color: red;">Purchase Order #</h5>
+            </div>
+            <div class="col-lg-5">
+                <input type="text" class="form-control" id="purchase" name="purchase" placeholder="PO-23942032342">
+            </div>
+            <div class="col-lg-5">
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 30px">
+            <div class="col-lg-2">
+                <h5 style="text-color: red;">Reference Order #</h5>
+            </div>
+            <div class="col-lg-5">
+                <input type="text" class="form-control" id="reference" name="reference" placeholder="aXl9023-x23ak22-32qaL3">
+            </div>
+            <div class="col-lg-5">
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 30px">
+            <div class="col-lg-2">
+                <h5 style="text-color: red;">Current Date</h5>
+            </div>
+            <div class="col-lg-3">
+                <input type="text" class="form-control" id="datepick" name="currentDate" size="30">
+            </div>
+            <div class="col-lg-2">
+                <h5 style="text-color: red;">Delivery Date</h5>
+            </div>
+            <div class="col-lg-3">
+                <input type="text" class="form-control" id="deliverypick" name="deliveryDate" size="30">
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-lg-12">
+                <table class ="table table-bordered" style="padding:10px;" id="tbPurchase">
+                    <thead>
+                        <tr>
+                            <th>Item Details</th>
+                            <th>League</th>
+                            <th>Quantity</th>
+                            <th>Rate</th>
+                            <th>Tax</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="purchase-tbody">
+                        <tr>
+                            <td><input type="text" id="item_details" placeholder="Lego Set XR"></td>
+                            <td><input type="text" id="league" placeholder="Silver +"></td>
+                            <td><input type="number" id="quantity" placeholder="1"></td>
+                            <td><input type="number" id="rate" placeholder="1.00"></td>
+                            <td><input type="number" id="tax" placeholder="1%"></td>
+                            <td><input type="number" id="amount" placeholder="$7.25"></td>
+                            <td><button type="button" class="btn btn-primary add-row">Add</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div> <!-- end row -->
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-6">
+                <div class="col-lg-4">
+                    <h5>Sub Total</h5>
+                </div>
+                <div class="col-lg-6">
+                </div>
+                <div class="col-lg-2">
+                    <h5 id="tbTotal">0.00</h5>
+                </div>
+            </div>
+            <div class="col-lg-2"></div>
+        </div> <!-- end row -->
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-6">
+                <div class="col-lg-4">
+                    <h5>Discount</h5>
+                </div>
+                <div class="col-lg-6">
+                    <input type="text" id="item_discount" placeholder="$0.00"></input>
+                </div>
+                <div class="col-lg-2">
+                    <h5 id="tbDiscount">0.00</h5>
+                </div>
+            </div>
+            <div class="col-lg-2"></div>
+        </div> <!-- end row -->
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-6">
+                <div class="col-lg-4">
+                    <h5><b>Total</b></h5>
+                </div>
+                <div class="col-lg-6">
+                </div>
+                <div class="col-lg-2">
+                    <h5 id="tbFinal">0.00</h5>
+                </div>
+            </div>
+            <div class="col-lg-2"></div>
+        </div> <!-- end row -->
+        <div class="row" style="margin-top: 50px;">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-6">
+                <h5 style="text-color: red;">Notes</h5>
+                <input type="text" class="form-control" id="notes"
+                name="item_notes" style="height: 100px">
+            </div>
+            <div class="col-lg-2"></div>
+        </div>
+        <div class="row" style="margin-top: 25px;">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-6">
+                <h5 style="text-color: red;">Terms & Conditions</h5>
+                <input type="text" class="form-control" id="terms"
+                name="terms_notes" style="height: 100px">
+            </div>
+            <div class="col-lg-2"></div>
+        </div>
+        <div class="row" style="margin-top:20px; padding-bottom: 10px;">
+            <div class="col-lg-10"></div>
+            <div class="col-lg-1">
+                <input type="button" class="btn btn-primary" id="submit"
+                style="" value="Submit">
+            </div>
+            <div class="col-lg-1"></div>
+        </div>
+    </form>
+</div> <!-- end row -->
+
+{% endblock %}

@@ -1,0 +1,88 @@
+ <!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="business intelligence bi fake data generator">
+    <meta name="author" content="johnathan stevens">
+    <meta name="google-signin-client_id" content="153400489042-hgo37urlslkd1ddlj05nil8pbdpnse8m.apps.googleusercontent.com">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom fonts for this template-->
+    <link href="../static/vendor/font-awesome/5.1/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../static/css/style.css" rel="stylesheet" type="text/css">
+
+    <!-- Title Page -->
+    {% if title %}
+        <title>{{title}}</title>
+    {% else %}
+        <title>Web Page</title>
+    {% endif %}
+</head>
+
+<!-- Container -->
+    <body>
+      <!-- Top Navigation -->
+      <nav class="navbar navbar-inverse fixed-top">
+          <ul class="nav navbar-nav navbar-left">
+              <li><a href="{{url_for('home')}}">Dashboard</a></li>
+              <li><a href="{{url_for('queue')}}">Queue</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown"><a href="{{url_for('reports')}}" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b>
+                  <ul class="dropdown-menu">
+                      <li><a href="{{url_for('reports')}}"><span class="glyphicon glyphicon-user"></span>Routes</a></li>
+                      <li><a href="#"><span class="glyphicon glyphicon-user"></span>File Exports</a></li>
+                  </ul>
+              </li>
+              <li class="dropdown"><a href="{{url_for('products')}}" class="dropdown-toggle" data-toggle="dropdown">Products<b class="caret"></b>
+                  <ul class="dropdown-menu">
+                      <li><a href="{{url_for('products')}}"><span class="glyphicon glyphicon-user"></span>Inventory</a></li>
+                      <li><a href="{{url_for('groups')}}"><span class="glyphicon glyphicon-user"></span>Groups</a></li>
+                      <li><a href="#"></a></li>
+                  </ul>
+              </li>
+              <li class="dropdown"><a href="{{url_for('orders')}}" class="dropdown-toggle" data-toggle="dropdown">Orders <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                      <li><a href="{{url_for('orders')}}"><span class="glyphicon glyphicon-user"></span>Status</a></li>
+                      <li><a href="{{url_for('purchase')}}"><span class="glyphicon glyphicon-user"></span>Purchase Order</a></li>
+                      <li><a href="#"><span class="glyphicon glyphicon-user"></span>Bills</a></li>
+                  </ul>
+              </li>
+              <li class="dropdown"><a href="{{url_for('integrations')}}" class="dropdown-toggle" data-toggle="dropdown">Integrations<b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                      <li><a href="{{url_for('integrations')}}"><span class="glyphicon glyphicon-user"></span>Integrations</a></li>
+                      <li><a href="{{url_for('contacts')}}"><span class="glyphicon glyphicon-user"></span>Contacts</a></li>
+                  </ul>
+              </li>
+              <li><a href="{{url_for('logout')}}">Logout</a></li>
+          </ul>
+      </nav>
+      <div class="container">
+
+        {% if messages %}
+            {% for message in messages %}
+                <b>{{message}}</b>
+            {% endfor %}
+        {% endif %}
+
+        {% block body %}{% endblock %}
+
+      </div>
+    <div id="footer">
+        {% block footer %}{% endblock %}
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script src="../static/vendor/jquery-easing/jquery.easing.js"></script>
+        <script src="../static/vendor/dropzone/dropzone.js"></script>
+        <script src="../static/vendor/bootstrap/js/bootstrap.js"></script>
+        <script src="../static/vendor/js/apps.js"></script>
+
+    </div>
+<!-- END Container -->
+
+    </body>
+</html>
