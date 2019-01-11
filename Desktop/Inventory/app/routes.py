@@ -60,6 +60,11 @@ def purchase():
         return redirect(url_for('purchase'))
     return render_template('purchase.html', title='Purchase Order', form=form)
 
+# groups list
+@app.route('/products/list')
+@login_required
+def groups_list():
+    return render_template('groups_list.html', title='Groups List')
 # groups
 @app.route('/products/groups')
 @login_required

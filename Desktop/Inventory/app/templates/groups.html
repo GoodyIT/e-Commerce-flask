@@ -5,7 +5,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="card">
-            <div class="card-body">
+            <div class="card-body" style="height:800px">
                 <div class="d-flex m-b-10 no-block">
                     <div class="row" style="height: 100px;">
                         <div class="col-lg-10">
@@ -15,36 +15,32 @@
                             <button type="button" class="btn btn-primary">Add Group</button>
                         </div>
                     </div>
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                  <th>Name</th>
-                                  <th></th>
-                                  <th>Items</th>
-                                  <th>League</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>John</td>
-                                    <td></td>
-                                    <td>10</td>
-                                    <td>Gold</td>
-                                </tr>
-                                <tr>
-                                    <td>Mary</td>
-                                    <td></td>
-                                    <td>12</td>
-                                    <td>Gold</td>
-                                </tr>
-                                <tr>
-                                    <td>July</td>
-                                    <td></td>
-                                    <td>34</td>
-                                    <td>Gold</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <h4>Groups</h4>
+                        </div>
+                        <div class="col-lg-10"></div>
+                    </div>
+                    <div class="row report-block" style="background-color:#eeeeee">
+                        <div class="col-lg-1"><p>ID</p></div>
+                        <div class="col-lg-1"><p>GROUP NAME</p></div>
+                        <div class="col-lg-8"></div>
+                        <div class="col-lg-1"><h8>TOTAL ITEMS</h8></div>
+                        <div class="col-lg-1"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-1">
+                            <h5>adsfl24a-1b</h5>
+                        </div>
+                        <div class="col-lg-1">
+                            <a href="{{url_for('groups_list')}}"><h5 class="grp-list">Gold</h5></a>
+                        </div>
+                        <div class="col-lg-8"></div>
+                        <div class="col-lg-1">
+                            <h5>20</h5>
+                        </div>
+                        <div class="col-lg-1"></div>
+                    </div> <!-- end row -->
                 </div>
             </div>
         </div>
