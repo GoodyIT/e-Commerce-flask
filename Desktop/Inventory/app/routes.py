@@ -267,10 +267,23 @@ def contacts():
     return render_template('contacts.html', title='Contacts')
 
 # Orders
-@app.route('/orders')
+@app.route('/orders', methods=['GET','POST'])
 @login_required
 def orders():
-    table = None
+    if request.method == 'POST':
+        item = request.json
+        new_order = db.Queue.find_one({'order_id':item['id']})
+        db.Queue.remove({'order_id':item['id']})
+        db.Orders.insert_one(new_order)
+
+        response = app.response_class(
+            response=json.dumps(item),
+            status=200,
+            mimetype='application/json'
+        )
+        return response
+
+    table = db.Orders.find()
     return render_template('orders.html', title='Queue', table=table)
 
 # Queue
@@ -280,7 +293,7 @@ def queue():
     # current = db.Queue.find()
     if request.method == 'POST':
         item = request.json
-        db.Queue.remove({'id':item['id']})
+        db.Queue.remove({'order_id':item['id']})
         response = app.response_class(
             response=json.dumps(item),
             status=200,
@@ -288,13 +301,8 @@ def queue():
         )
         return response
 
-    temp = [
-    {'id': 1, 'player': 'Rob','item':'Item 1','quantity':'2','type':'Store','amount':'35'},
-    {'id': 2, 'player': 'Sarah','item':'Item 2','quantity':'2','type':'Store','amount':'35'},
-    {'id': 3, 'player': 'Greg','item':'Item 3','quantity':'2','type':'Points','amount':'35'},
-    {'id': 4, 'player': 'Mab','item':'Item 3','quantity':'2','type':'Points','amount':'35'}
-    ]
-    return render_template('queue.html', title='Queue', queue=temp)
+    queue = db.Queue.find()
+    return render_template('queue.html', title='Queue', queue=queue)
 
 # signup page
 @app.route('/signup', methods=['GET', 'POST'])

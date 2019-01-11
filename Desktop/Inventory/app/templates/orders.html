@@ -12,16 +12,26 @@
                 <table id="orderTable" class="table color-table table-bordered product-table table-hover dataTable no-footer" role="grid" aria-describedby="myTable_info" style="width: 760px;">
                         <thead>
                             <tr role="row">
-                                <td class="sorting_asc" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="ID: activate to sort column descending" style="width: 37px;">ID</td>
-                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Product: activate to sort column ascending" style="width: 160px;">Product</td>
-                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" style="width: 111px;">Category</td>
-                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending" style="width: 60px;">Price</td>
-                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 72px;">Currency</td>
-                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="QTY: activate to sort column ascending" style="width: 51px;">QTY</td>
-                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="TAGS: activate to sort column ascending" style="width: 51px;">TAGS</td>
+                                <td class="sorting_asc" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="ID: activate to sort column descending" style="width: 37px;">Order</td>
+                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Product: activate to sort column ascending" style="width: 160px;">Player</td>
+                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" style="width: 111px;">Item</td>
+                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" style="width: 111px;">Quantity</td>
+                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending" style="width: 60px;">Type</td>
+                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 72px;">Price</td>
                                 <td class="" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="" style="width: 20px;"></td>
                         </thead>
                         <tbody>
+                            {% for item in table %}
+                                <tr role="row">
+        					                  <td class="sorting_1">{{item.order_id}}</td>
+                                    <td>{{item.player_id}}</td>
+                                    <td>{{item.item_id}}</td>
+        						                <td>{{item.quantity}}</td>
+        						                <td>{{item.type}}</td>
+        						                <td>{{item.price}}</td>
+        						                <td class="text-center"><button type="button" class="btn btn-primary" id='tbl-btn'>X</button></td>
+        					              </tr>
+                            {% endfor %}
                         </tbody>
                 </table>
                 <div class="ml-auto text-light-blue" style="margin-top: 50px;">

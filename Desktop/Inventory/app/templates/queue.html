@@ -16,16 +16,16 @@
                             <div class="row">
                                 <div class="col-lg-1">
                                     <h5><u>ID</u></h5>
-                                    {{x.id}}
+                                    <div id="order_id">{{x.order_id}}</div>
                                 </div>
                                 <div class="col-lg-1">
                                     <h5><u>Player</u></h5>
-                                    {{x.player}}
+                                    {{x.player_id}}
                                 </div>
                                 <div class="col-lg-1"></div>
                                 <div class="col-lg-1">
                                     <h5><u>Item</u></h5>
-                                    {{x.item}}
+                                    {{x.item_id}}
                                 </div>
                                 <div class="col-lg-1">
                                     <h5><u>Quantity</u></h5>
@@ -37,22 +37,16 @@
                                 </div>
                                 <div class="col-lg-1">
                                     <h5><u>Price</u></h5>
-                                    {{x.amount}}
+                                    {{x.price}}
                                 </div>
                                 <div class="col-lg-1"></div>
                                 <div class="col-lg-2" style="margin-top: 40px; padding:0px;">
-                                    <button class="btn btn-primary" id="que_app">Approve</button>
-                                    <button class="btn btn-primary" id="que_dis">Disapprove</button>
+                                    <button class="btn btn-primary que-app">Approve</button>
+                                    <button class="btn btn-primary que-dis">Disapprove</button>
                                 </div>
                             </div>
                         </div>
                     {% endfor %}
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
 		        </div>
         </div>
     </div>

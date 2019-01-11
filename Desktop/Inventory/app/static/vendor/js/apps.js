@@ -126,10 +126,24 @@ $(function() {
         });
 
     });
+    // Queue approve
+    $(".que-app").on("click", function() {
+        var item = $(this).closest('.row').find("#order_id").html();
+        $.ajax({
+            url: "/orders",
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({'id':item}),
+        })
+        .done(function() {
+            location.reload();
+        });
+    });
 
-    // Queue
-    $("#que-btn").on("click", function() {
-        var item = $(this).closest('div').find("h5:nth-child(1)").number();
+    // Queue disapprove
+    $(".que-dis").on("click", function() {
+        var item = $(this).closest('.row').find("#order_id").html();
         $.ajax({
             url: "/queue",
             type: "post",
