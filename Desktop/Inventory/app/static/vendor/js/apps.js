@@ -132,6 +132,98 @@ $(function() {
         });
 
     });
+
+    $('#export').on('click', function(e) {
+
+        //prevent Default functionality
+        e.preventDefault();
+        
+        var vendorName = $("#vendor option:selected").text();
+        var purchaseOrder = $("#purchase").val();
+        var referenceOrder = $("#reference").val();
+        var currentDate = $("#datepick").val();
+        var deliveryDate = $("#deliverypick").val();
+        // ------------- Table --------------- //
+        var col = [
+            {
+                title: "Item Details",
+                dataKey: "item_details"
+            }, 
+            {
+                title: "League",
+                dataKey: "league"
+            }, 
+            {
+                title: "Quantity",
+                dataKey: "quantity"
+            }, 
+            {
+                title: "Rate",
+                dataKey: "rate"
+            }, 
+            {
+                title: "Tax",
+                dataKey: "tax"
+            }, 
+            {
+                title: "Amount",
+                dataKey: "amount"
+            }
+        ];
+        var rows = [];
+        $("tbody tr",$("#tbPurchase"))
+          .filter(function( index ) {
+            return index > 0;
+          }).map(function(item, index) { 
+            rows.push({
+                index           : index,
+                item_details    : $("td:eq(0)",this).html(),
+                league          : $("td:eq(1)",this).html(),
+                quantity        : $("td:eq(2)",this).html(),
+                rate            : $("td:eq(3)",this).html(),
+                tax             : $("td:eq(4)",this).html(),
+                amount          : $("td:eq(5)",this).html(),
+            });
+        });
+        // ----------------------------------- //
+        var subTotal = $("#tbTotal").html();
+        var discount = $("#tbDiscount").html();
+        var final    = $("#tbFinal").html();
+        var notes    = $("#notes").val();
+        var terms    = $("#terms").val();
+
+        var doc = new jsPDF();
+        doc.text(vendorName + "VENDOR NAME HERE", 50, 10);
+        doc.line(0,15, 500, 15);
+        doc.text("Deliver To", 10, 30);
+        doc.text("Johnathan Stevens", 50, 40);
+        doc.text("Eloraus, LLC", 50, 50);
+        doc.text("5988 Chesbro Ave", 50, 60);
+        doc.text("San Jose, CA 95123", 50, 70);
+        doc.line(0,75, 500, 75);
+        doc.text("Purchase Order #", 10, 90);
+        doc.text(purchaseOrder, 60, 90);
+        doc.text("Reference Order #", 10, 110);
+        doc.text(referenceOrder, 60, 110);
+        doc.text("Current Date", 10, 130);
+        doc.text(currentDate, 60, 130);
+        doc.text("Delivery Date", 100, 130);
+        doc.text(deliveryDate, 150, 130);
+        doc.autoTable(col, rows, { startX: 50, startY: 150 });
+        doc.line(0,185, 300, 185);
+        doc.text("Sub Total", 10, 200);
+        doc.text(subTotal, 50, 200);
+        doc.text("Discount", 10, 210);
+        doc.text(discount, 50, 210);
+        doc.text("Total", 10, 220);
+        doc.text(final, 50, 220);
+        doc.text("Note", 10, 230);
+        doc.text(notes, 10, 240);
+        doc.text("Terms & Conditions", 10, 260);
+        doc.text(terms, 10, 270);
+        doc.save('invoice.pdf')
+    });
+
     // Queue approve
     $(".que-app").on("click", function() {
         var item = $(this).closest('.row').find("#order_id").html();

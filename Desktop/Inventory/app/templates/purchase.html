@@ -14,7 +14,7 @@
             </div>
             <div class="col-lg-5" style="padding:0;">
                 <label for="vendor">Vendor</label>
-                <select name="vendor" class="form-control form-control-lg">
+                <select name="vendor" class="form-control form-control-lg" id="vendor">
                     <option value="{{form.vendor}}"></option>
                 </select>
             </div>
@@ -165,12 +165,16 @@
             <div class="col-lg-2"></div>
         </div>
         <div class="row" style="margin-top:20px; padding-bottom: 10px;">
-            <div class="col-lg-10"></div>
+            <div class="col-lg-8"></div>
             <div class="col-lg-1">
                 <input type="button" class="btn btn-primary" id="submit"
                 style="" value="Submit">
             </div>
-            <div class="col-lg-1"></div>
+            <div class="col-lg-1">
+                <input type="button" class="btn btn-primary" id="export"
+                style="" value="Export to PDF">
+            </div>
+            <div class="col-lg-2"></div>
         </div>
     </form>
 </div> <!-- end row -->
