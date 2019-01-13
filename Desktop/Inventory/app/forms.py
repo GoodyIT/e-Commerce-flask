@@ -4,6 +4,34 @@ from wtforms import StringField, SubmitField, PasswordField, TextAreaField, \
 IntegerField, DateField, SelectField, RadioField, FormField
 from wtforms.validators import DataRequired, ValidationError, EqualTo, Email
 
+def getGroups():
+    groups = db.Groups.find()
+    size = groups.count() - 1
+    choices = []
+
+    while size >= 0:
+        choices.append((groups[size]['id'], groups[size]['name']))
+        size -= 1
+
+    if len(choices) == 0:
+        return [('none', 'None')]
+    return choices
+
+class VendorForm(FlaskForm):
+    vendor = StringField('Vendor Name')
+    url = StringField('URL')
+    submit = SubmitField('Add Vendor')
+
+class GroupForm(FlaskForm):
+    ''' Group Add Form '''
+    type = RadioField('Type', choices=[('goods', 'Goods'),('service', 'Service')])
+    name = StringField('Group Name')
+    description = StringField('Description')
+    unit = StringField('Unit')
+    manufacturer = StringField('Manufacturer')
+    tax = StringField('Tax')
+    brand = StringField('Manufacturer')
+    submit = SubmitField('Add Group')
 
 class UpperForm(FlaskForm):
     ''' Group Form '''
@@ -15,6 +43,7 @@ class UpperForm(FlaskForm):
     deliveryDate = DateField('Delivery Date', format='%m/%d/%y')
 
 class PurchaseForm(FlaskForm):
+    ''' Purchase Form '''
     submit = None
 
 class LoginForm(FlaskForm):
@@ -26,12 +55,13 @@ class LoginForm(FlaskForm):
 class ProductForm(FlaskForm):
     ''' Product Items '''
     product = StringField('Product Name', validators=[DataRequired()])
-    category = SelectField('Category', choices=[('Choice1', 'First'),('Choice2','Second'),('Choice3', 'Third')])
+    category = SelectField('Category', choices=getGroups())
     sku = StringField('SKU', validators=[DataRequired()])
     price = IntegerField('Price', validators=[DataRequired()])
     currency = SelectField('Currency', choices=[('Choice1', 'First'),('Choice2','Second'),('Choice3', 'Third')])
     quantity = IntegerField('Quantity', validators=[DataRequired()])
-    tags = StringField('Tags', validators=[])
+    vendor = StringField('Vendor', validators=[DataRequired()])
+    url = StringField('URL')
     submit = SubmitField('Add Item')
 
 class RegisterForm(FlaskForm):

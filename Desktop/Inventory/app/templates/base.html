@@ -22,7 +22,13 @@
 </head>
 
 <!-- Container -->
-    <body>
+<body>
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Eloraus Inventory</p>
+        </div>
+    </div>
       <!-- Top Navigation -->
       <nav class="navbar navbar-inverse fixed-top">
           <ul class="nav navbar-nav navbar-left">
@@ -40,7 +46,7 @@
                   <ul class="dropdown-menu">
                       <li><a href="{{url_for('products')}}"><span class="glyphicon glyphicon-user"></span>Inventory</a></li>
                       <li><a href="{{url_for('groups')}}"><span class="glyphicon glyphicon-user"></span>Groups</a></li>
-                      <li><a href="#"></a></li>
+                      <li><a href="{{url_for('vendor')}}"><span class="glyphicon glyphicon-user"></span>Vendor</a></li>
                   </ul>
               </li>
               <li class="dropdown"><a href="{{url_for('orders')}}" class="dropdown-toggle" data-toggle="dropdown">Orders <b class="caret"></b></a>

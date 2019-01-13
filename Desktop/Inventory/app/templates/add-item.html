@@ -65,11 +65,18 @@
                 {% endfor %}
             </div>
         </div> <!-- END ROW -->
-        <div class="row" style="margin-top: 30px;">
-            <div class="col-lg-12">
-                <label for="tags">Tags</label>
-                <input type="text" class="form-control" id="tags" name="tags" placeholder="Lego Set">
-                {% for error in form.tags.errors %}
+        <div class="row" style="margin-top: 30px; padding:0;">
+            <div class="col-lg-4">
+                <label for="vendor">Vendor</label>
+                <input type="text" class="form-control" id="vendor" name="vendor" placeholder="Amazon">
+                {% for error in form.vendor.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div class="col-lg-8">
+                <label for="url">URL</label>
+                <input type="text" class="form-control" id="url" name="url" placeholder="www.amazon.com">
+                {% for error in form.url.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </div>

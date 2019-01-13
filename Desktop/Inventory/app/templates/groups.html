@@ -12,7 +12,7 @@
                             <h2>Groups</h2>
                         </div>
                         <div class="col-lg-2" style="margin-top: 10px;">
-                            <button type="button" class="btn btn-primary">Add Group</button>
+                              <a href="{{url_for('groups_add')}}" class="btn waves-effect waves-light btn-rounded btn-primary" style="float: right;">Add Group</a>
                         </div>
                     </div>
                     <div class="row">
@@ -22,25 +22,32 @@
                         <div class="col-lg-10"></div>
                     </div>
                     <div class="row report-block" style="background-color:#eeeeee">
-                        <div class="col-lg-1"><p>ID</p></div>
-                        <div class="col-lg-1"><p>GROUP NAME</p></div>
-                        <div class="col-lg-8"></div>
+                        <div class="col-lg-2"><p>ID</p></div>
+                        <div class="col-lg-2"><p>ITEM NAME</p></div>
+                        <div class="col-lg-2"><p>CATEGORY TYPE</p></div>
+                        <div class="col-lg-4"></div>
                         <div class="col-lg-1"><h8>TOTAL ITEMS</h8></div>
                         <div class="col-lg-1"></div>
                     </div>
+                    {% for item in groups %}
                     <div class="row">
-                        <div class="col-lg-1">
-                            <h5>adsfl24a-1b</h5>
+                        <div class="col-lg-2">
+                            <p>{{item.id}}</p>
                         </div>
-                        <div class="col-lg-1">
-                            <a href="{{url_for('groups_list')}}"><h5 class="grp-list">Gold</h5></a>
+                        <div class="col-lg-2">
+                            <p>{{item.name}}</p>
                         </div>
-                        <div class="col-lg-8"></div>
+                        <div class="col-lg-2">
+                            <a href="{{url_for('groups')}}"></a>
+                            <h5 class="grp-list">{{item.type}}</h5>
+                        </div>
+                        <div class="col-lg-4"></div>
                         <div class="col-lg-1">
-                            <h5>20</h5>
+                            <h5>{{item.total}}</h5>
                         </div>
                         <div class="col-lg-1"></div>
                     </div> <!-- end row -->
+                    {% endfor %}
                 </div>
             </div>
         </div>

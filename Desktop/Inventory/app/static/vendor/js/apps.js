@@ -1,4 +1,10 @@
 $(function() {
+    // preloader 
+    $(function() {
+        $(".preloader").fadeOut();
+    });
+
+    $('#type-0').css('margin-right', '25px');
 
     // JS Bootstrap
     $('.dropdown-toggle').dropdown();

@@ -1,8 +1,9 @@
 from app import app, db, login
 from flask import render_template, json, url_for, flash, redirect, request, jsonify, g, Flask
 from flask_login import login_user, logout_user, login_required, current_user
+from uuid import uuid4 as uid
 from datetime import datetime as date
-from .forms import RegisterForm, LoginForm, ProductForm, PurchaseForm
+from .forms import RegisterForm, LoginForm, ProductForm, PurchaseForm, GroupForm, VendorForm
 from .data import User
 from .inventory import Warehouse
 
@@ -60,16 +61,57 @@ def purchase():
         return redirect(url_for('purchase'))
     return render_template('purchase.html', title='Purchase Order', form=form)
 
+# groups add
+@app.route('/groups/add', methods=['GET','POST'])
+@login_required
+def groups_add():
+    form = GroupForm()
+    if form.validate_on_submit():
+        new_item = {
+            'id' : str(uid()),
+            'type' : form.type.data,
+            'name' : form.name.data,
+            'description' : form.description.data,
+            'unit' : form.unit.data,
+            'manufacturer' : form.manufacturer.data,
+            'tax' : form.tax.data,
+            'brand' : form.brand.data,
+            'total' : 0
+        }
+        db.Groups.insert_one(new_item)
+        flash('New Group Added.')
+        return redirect(url_for('groups'))
+    return render_template('groups-add.html', title='Groups', form=form)
+
+
+# groups
+@app.route('/groups')
+@login_required
+def groups():
+    groups = db.Groups.find()
+    return render_template('groups.html', title='Groups', groups=groups)
+
 # groups list
 @app.route('/products/list')
 @login_required
 def groups_list():
-    return render_template('groups_list.html', title='Groups List')
-# groups
-@app.route('/products/groups')
+    return render_template('groups-list.html', title='Groups List')
+
+# vendor
+@app.route('/products/vendor', methods=['GET','POST'])
 @login_required
-def groups():
-    return render_template('groups.html', title='Groups')
+def vendor():
+    form = VendorForm()
+    if form.validate_on_submit():
+        vendor = {
+            'id' : str(uid()),
+            'vendor' : form.vendor.data,
+            'url' : form.url.data
+        }
+        db.Vendor.insert_one(vendor)
+        flash('New Vendor Added.')
+        return redirect(url_for('vendor'))
+    return render_template('vendor.html', title='Vendor', form=form)
 
 # products - add item
 @app.route('/products/add', methods=['GET','POST'])
@@ -77,17 +119,30 @@ def groups():
 def addItem():
     form = ProductForm()
     if form.validate_on_submit():
-        print("+++++++++++SUBMITTED++++++++++++")
+        # add new vendor
+        vendor = {
+            'id' : str(uid()),
+            'vendor' : form.vendor.data,
+            'url' : form.url.data,
+        }
+        db.Vendor.insert_one(vendor)
+
+        # add new product
         new_item = {
-            'id' : form.sku.data,
+            'id' : str(uid()),
             'product' : form.product.data,
             'category' : form.category.data,
             'price' : form.price.data,
             'currency' : form.currency.data,
             'quantity' : form.quantity.data,
-            'tags' : form.tags.data,
+            'vendor' : form.vendor.data,
         }
         db.Products.insert_one(new_item)
+
+        # update Groups inventory count
+        current = db.Groups.find_one({'id': form.category.data})
+        db.Groups.update_one(current,{"$set":{'total': current['total']+1}})
+
         flash('New Item Added.')
         return redirect(url_for('products'))
     return render_template('add-item.html', title='Add Item', form=form)
