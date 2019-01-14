@@ -133,7 +133,7 @@ $(function() {
 
     });
 
-    $('#export').on('click', function(e) {
+    $('#export_to_pdf').on('click', function(e) {
 
         //prevent Default functionality
         e.preventDefault();
@@ -174,7 +174,7 @@ $(function() {
         $("tbody tr",$("#tbPurchase"))
           .filter(function( index ) {
             return index > 0;
-          }).map(function(item, index) { 
+          }).map(function(index) { 
             rows.push({
                 index           : index,
                 item_details    : $("td:eq(0)",this).html(),
@@ -221,7 +221,73 @@ $(function() {
         doc.text(notes, 10, 240);
         doc.text("Terms & Conditions", 10, 260);
         doc.text(terms, 10, 270);
-        doc.save('invoice.pdf')
+        doc.save('invoice.pdf');
+    });
+
+    $('#export_to_csv').on('click', function(e) {
+
+        //prevent Default functionality
+        e.preventDefault();
+        var rows = [[
+            "",
+            "Item Details",
+            "League",
+            "Quantity",
+            "Rate",
+            "Tax",
+            "Amount",
+        ]];
+        
+        $("tbody tr",$("#tbPurchase"))
+          .filter(function( index ) {
+            return index > 0;
+          }).map(function(index) { 
+            rows.push([
+                index+1,
+                $("td:eq(0)",this).html(),
+                $("td:eq(1)",this).html(),
+                $("td:eq(2)",this).html(),
+                $("td:eq(3)",this).html(),
+                $("td:eq(4)",this).html(),
+                $("td:eq(5)",this).html(),
+            ]);
+        });
+        // ----------------------------------- //
+        let csvContent = "data:text/csv;charset=utf-8,";
+        rows.forEach(function(rowArray){
+            let row = rowArray.join(",");
+            csvContent += row + "\r\n";
+        }); 
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "order.csv");
+        document.body.appendChild(link);
+        link.click();
+    });
+
+    $('#export_to_excel').on('click', function(e) {
+
+        //prevent Default functionality
+        e.preventDefault();
+        var rows = [];
+        
+        $("tbody tr",$("#tbPurchase"))
+          .filter(function( index ) {
+            return index > 0;
+          }).map(function(index) { 
+            rows.push({
+                ""              : index+1, 
+                "Item Details"  : $("td:eq(0)",this).html(),
+                "League"        : $("td:eq(1)",this).html(),
+                "Quantity"      : $("td:eq(2)",this).html(),
+                "Rate"          : $("td:eq(3)",this).html(),
+                "Tax"           : $("td:eq(4)",this).html(),
+                "Amount"        : $("td:eq(5)",this).html()
+            });
+        });
+        // ----------------------------------- //
+        alasql("SELECT * INTO XLSX('order.xlsx',{headers:true}) FROM ? ",[rows]);
     });
 
     // Queue approve
