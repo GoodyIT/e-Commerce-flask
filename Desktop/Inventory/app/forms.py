@@ -17,6 +17,23 @@ def getGroups():
         return [('none', 'None')]
     return choices
 
+def getVendor():
+    vendor = db.Vendor.find()
+    size = vendor.count() - 1
+    choices = []
+
+    while size >= 0:
+        choices.append((vendor[size]['id'], vendor[size]['vendor']))
+        size -= 1
+
+    if len(choices) == 0:
+        return [('none', 'None')]
+    return choices
+
+class BillingForm(FlaskForm):
+    vendor = SelectField('Category', choices=getVendor())
+    submit = None
+
 class VendorForm(FlaskForm):
     vendor = StringField('Vendor Name')
     url = StringField('URL')
@@ -44,7 +61,7 @@ class UpperForm(FlaskForm):
 
 class PurchaseForm(FlaskForm):
     ''' Purchase Form '''
-    vendor = SelectField('Category', choices=[('Choice1', 'First'),('Choice2','Second'),('Choice3', 'Third')])
+    vendor = SelectField('Category', choices=getVendor())
     purchase = StringField('Purchase Order', validators=[DataRequired()])
     reference = StringField('Reference Order', validators=[DataRequired()])
     current_date = DateField('Current Date', format='%m/%d/%Y')
@@ -69,7 +86,7 @@ class ProductForm(FlaskForm):
     price = IntegerField('Price', validators=[DataRequired()])
     currency = SelectField('Currency', choices=[('Choice1', 'First'),('Choice2','Second'),('Choice3', 'Third')])
     quantity = IntegerField('Quantity', validators=[DataRequired()])
-    vendor = StringField('Vendor', validators=[DataRequired()])
+    vendor = SelectField('Vendor', choices=getVendor())
     url = StringField('URL')
     submit = SubmitField('Add Item')
 

@@ -3,7 +3,7 @@ from flask import render_template, json, url_for, flash, redirect, request, json
 from flask_login import login_user, logout_user, login_required, current_user
 from uuid import uuid4 as uid
 from datetime import datetime as date
-from .forms import RegisterForm, LoginForm, ProductForm, PurchaseForm, GroupForm, VendorForm
+from .forms import RegisterForm, LoginForm, ProductForm, PurchaseForm, GroupForm, VendorForm, BillingForm
 from .data import User
 from .inventory import Warehouse
 
@@ -76,6 +76,15 @@ def purchase():
         return redirect(url_for('purchase'))
     return render_template('purchase.html', title='Purchase Order', form=form)
 
+# Purchase
+@app.route('/bills')
+@login_required
+def bills():
+    form = BillingForm()
+    if form.validate_on_submit():
+        return redirect(url_for('bills'))
+    return render_template('bills.html', title='Billing', form=form)
+
 # groups add
 @app.route('/groups/add', methods=['GET','POST'])
 @login_required
@@ -98,7 +107,6 @@ def groups_add():
         return redirect(url_for('groups'))
     return render_template('groups-add.html', title='Groups', form=form)
 
-
 # groups
 @app.route('/groups')
 @login_required
@@ -107,10 +115,16 @@ def groups():
     return render_template('groups.html', title='Groups', groups=groups)
 
 # groups list
-@app.route('/products/list')
+@app.route('/groups/<name>')
 @login_required
-def groups_list():
-    return render_template('groups-list.html', title='Groups List')
+def groups_list(name):
+    try:
+        group = db.Groups.find({'name':str(name)})
+        items = db.Products.find({'category':group[0]['id']})
+    except TypeError:
+        flash("Group Does Not Exist")
+        return redirect(url_for('groups'))
+    return render_template('groups-list.html', title='Groups List', items=items)
 
 # vendor
 @app.route('/products/vendor', methods=['GET','POST'])

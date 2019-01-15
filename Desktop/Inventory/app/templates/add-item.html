@@ -28,17 +28,19 @@
             {% endfor %}
         </div>
         <div class="row" style='margin-top:30px;'>
-            <div class="col-lg-5" style="padding:0;">
-                <label for="category">Category</label>
-                <select name="category" class="form-control form-control-lg">
-                    <option value="{{form.category}}"></option>
-                </select>
-            </div>
-            <div class="col-lg-1"></div>
-            <div class="col-lg-6" style="padding:0;">
+            <div class="col-lg-8" style="padding-left:0;">
                 <label for="sku">SKU</label>
                 <input type="text" class="form-control" id="sku" name="sku" placeholder="aXl9023-x23ak22-32qaL3">
                 {% for error in form.sku.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div class="col-lg-4" style="padding:0">
+                <label for="category">Group</label>
+                <select name="category" class="form-control form-control-lg">
+                    <option value="{{form.category}}"></option>
+                </select>
+                {% for error in form.category.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </div>
@@ -66,14 +68,16 @@
             </div>
         </div> <!-- END ROW -->
         <div class="row" style="margin-top: 30px; padding:0;">
-            <div class="col-lg-4">
+            <div class="col-lg-4" style="padding-left:0;">
                 <label for="vendor">Vendor</label>
-                <input type="text" class="form-control" id="vendor" name="vendor" placeholder="Amazon">
+                <select name="vendor" class="form-control form-control-lg">
+                    <option value="{{form.vendor}}"></option>
+                </select>
                 {% for error in form.vendor.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </div>
-            <div class="col-lg-8">
+            <div class="col-lg-8" style="padding-right:0">
                 <label for="url">URL</label>
                 <input type="text" class="form-control" id="url" name="url" placeholder="www.amazon.com">
                 {% for error in form.url.errors %}
