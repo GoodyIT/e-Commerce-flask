@@ -148,27 +148,6 @@ $(function() {
         $("#tbFinal").html(parseFloat(current)-discount).toFixed(2);
     });
 
-    // $('#submit').submit(function(e) {
-
-    //     //prevent Default functionality
-    //     e.preventDefault();
-
-    //     //get the action-url of the form
-    //     var actionurl = 'localhost:5000/purchase/post'
-
-    //     //do your own request an handle the results
-    //     $.ajax({
-    //             url: actionurl,
-    //             type: 'post',
-    //             dataType: 'application/json',
-    //             data: $("#submit").serialize(),
-    //             success: function(data) {
-    //                 alert("done!");
-    //             }
-    //     });
-
-    // });
-
     $('#export_to_pdf').on('click', function(e) {
 
         //prevent Default functionality
@@ -276,6 +255,11 @@ $(function() {
             "Rate",
             "Tax",
             "Amount",
+            "Vendor Name",
+            "Purchase Order",
+            "Reference Order",
+            "Current Date",
+            "Delivery Date"
         ]];
 
         $("tbody tr",$("#tbPurchase"))
@@ -290,6 +274,11 @@ $(function() {
                 $("td:eq(3)",this).html(),
                 $("td:eq(4)",this).html(),
                 $("td:eq(5)",this).html(),
+                vendorName,
+                purchaseOrder,
+                referenceOrder,
+                currentDate,
+                deliveryDate
             ]);
         });
 
@@ -300,19 +289,7 @@ $(function() {
         var terms    = $("#terms").val();
         // ----------------------------------- //
         let csvContent = "data:text/csv;charset=utf-8,";
-        csvContent += '\r\n';
-        csvContent += `, , Vendor Name, ${vendorName}\r\n`;
-        csvContent += '\r\n';
-        csvContent += `, , Deliver To\r\n`;
-        csvContent += `, , , Johnathan Stevens\r\n`;
-        csvContent += `, , , Eloraus, LLC\r\n`;
-        csvContent += `, , , 5988 Chesbro Ave\r\n`;
-        csvContent += `, , , San Jose, CA 95123\r\n`;
-        csvContent += '\r\n';
-        csvContent += `, , Purchase Order#, ${purchaseOrder}\r\n`;
-        csvContent += `, , Reference Order#, ${referenceOrder}\r\n`;
-        csvContent += `, , Current Date, ${currentDate}, , Delivery Date, ${deliveryDate}\r\n`;
-        csvContent += '\r\n';
+    
         rows.forEach(function(rowArray){
             let row = `,` + rowArray.join(",");
             csvContent += row + "\r\n";
