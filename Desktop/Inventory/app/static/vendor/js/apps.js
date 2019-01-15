@@ -1,5 +1,8 @@
 $(function() {
-    // preloader 
+    var groupName = $('#groupName').html();
+    $('#groupName').hide();
+
+    // preloader
     $(function() {
         $(".preloader").fadeOut();
     });
@@ -137,7 +140,7 @@ $(function() {
 
         //prevent Default functionality
         e.preventDefault();
-        
+
         var vendorName = $("#vendor option:selected").text();
         var purchaseOrder = $("#purchase").val();
         var referenceOrder = $("#reference").val();
@@ -148,23 +151,23 @@ $(function() {
             {
                 title: "Item Details",
                 dataKey: "item_details"
-            }, 
+            },
             {
                 title: "League",
                 dataKey: "league"
-            }, 
+            },
             {
                 title: "Quantity",
                 dataKey: "quantity"
-            }, 
+            },
             {
                 title: "Rate",
                 dataKey: "rate"
-            }, 
+            },
             {
                 title: "Tax",
                 dataKey: "tax"
-            }, 
+            },
             {
                 title: "Amount",
                 dataKey: "amount"
@@ -174,7 +177,7 @@ $(function() {
         $("tbody tr",$("#tbPurchase"))
           .filter(function( index ) {
             return index > 0;
-          }).map(function(index) { 
+          }).map(function(index) {
             rows.push({
                 index           : index,
                 item_details    : $("td:eq(0)",this).html(),
@@ -237,11 +240,11 @@ $(function() {
             "Tax",
             "Amount",
         ]];
-        
+
         $("tbody tr",$("#tbPurchase"))
           .filter(function( index ) {
             return index > 0;
-          }).map(function(index) { 
+          }).map(function(index) {
             rows.push([
                 index+1,
                 $("td:eq(0)",this).html(),
@@ -257,7 +260,7 @@ $(function() {
         rows.forEach(function(rowArray){
             let row = rowArray.join(",");
             csvContent += row + "\r\n";
-        }); 
+        });
         var encodedUri = encodeURI(csvContent);
         var link = document.createElement("a");
         link.setAttribute("href", encodedUri);
@@ -271,13 +274,13 @@ $(function() {
         //prevent Default functionality
         e.preventDefault();
         var rows = [];
-        
+
         $("tbody tr",$("#tbPurchase"))
           .filter(function( index ) {
             return index > 0;
-          }).map(function(index) { 
+          }).map(function(index) {
             rows.push({
-                ""              : index+1, 
+                ""              : index+1,
                 "Item Details"  : $("td:eq(0)",this).html(),
                 "League"        : $("td:eq(1)",this).html(),
                 "Quantity"      : $("td:eq(2)",this).html(),

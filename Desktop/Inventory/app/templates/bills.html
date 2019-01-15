@@ -3,76 +3,29 @@
 {% block body %}
 
 <div class="row col-lg-12">
-    <h2>Purchase Order</h2>
+    <h2>Invoice</h2>
 </div>
 <div class="row col-lg-12">
     <form action="" method="post">
         {{ form.hidden_tag() }}
-        <div class="vendor-block" style="margin-bottom: 10px; height: 100px">
-            <div class="col-lg-2" style="text-align; center;">
-                <h5 style="text-color: red;">Vendor Name</h5>
-            </div>
-            <div class="col-lg-5" style="padding:0;">
-                <label for="vendor">Vendor</label>
-                <select name="vendor" class="form-control form-control-lg" id="vendor">
-                    <option value="{{form.vendor}}"></option>
-                </select>
-            </div>
-            <div class="col-lg-5">
-            </div>
-        </div> <!-- end vendor-block -->
-        <div class="row">
-            <div class="col-lg-2" style="text-align: center;">
-                <h5 style="text-color: red;">Deliver To</h5>
-            </div>
-            <div class="col-lg-5">
-                <div class="row" style="margin-bottom: 15px; margin-top: 15px;">
-                    <div class="col-lg-12 radio-inline" style="margin:0; padding:0">
-                        {{form.delivery}}
-                    </div>
-                </div> <!-- end row -->
-                <p>Johnathan Stevens</p>
-                <p>Eloraus, LLC</p>
-                <p>5988 Chesbro Ave</p>
-                <p>San Jose, CA 95123</p>
-            </div>
-            <div class="col-lg-5"></div>
-        </div>
-        <hr>
-        <div class="row" style="margin-bottom: 30px">
-            <div class="col-lg-2">
-                <h5 style="text-color: red;">Purchase Order #</h5>
-            </div>
-            <div class="col-lg-5">
-                <input type="text" class="form-control" id="purchase" name="purchase" placeholder="PO-23942032342">
-            </div>
-            <div class="col-lg-5">
+        <div class="col-lg-4">
+            <div class="row" style="margin-bottom: 30px">
             </div>
         </div>
-        <div class="row" style="margin-bottom: 30px">
-            <div class="col-lg-2">
-                <h5 style="text-color: red;">Reference Order #</h5>
-            </div>
-            <div class="col-lg-5">
-                <input type="text" class="form-control" id="reference" name="reference" placeholder="aXl9023-x23ak22-32qaL3">
-            </div>
-            <div class="col-lg-5">
-            </div>
-        </div>
-        <div class="row" style="margin-bottom: 30px">
-            <div class="col-lg-2">
-                <h5 style="text-color: red;">Current Date</h5>
-            </div>
-            <div class="col-lg-3">
-                <input type="text" class="form-control" id="datepick" name="currentDate" size="30">
-            </div>
-            <div class="col-lg-2">
-                <h5 style="text-color: red;">Delivery Date</h5>
-            </div>
-            <div class="col-lg-3">
-                <input type="text" class="form-control" id="deliverypick" name="deliveryDate" size="30">
-            </div>
-            <div class="col-lg-2">
+        <div class="col-lg-8">
+            <div class="col-lg-8"></div>
+            <div class="col-lg-4">
+                <div class="row" style="margin-top: 20px">
+                    <label for="datepick">Date</label>
+                    <input type="text" class="form-control" id="datepick" name="currentDate" size="30">
+                </div>
+                <div class="row" style="margin-top: 20px">
+                    <label for="deliveryDate">Payment Terms</label>
+                    <input type="text" class="form-control" id="deliverypick" name="deliveryDate" size="30">
+                </div>
+                <div class="row" style="margin-top: 20px">
+                    <h4>Balance</h4>
+                </div>
             </div>
         </div>
         <hr>

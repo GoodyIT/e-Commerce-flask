@@ -9,15 +9,11 @@
                 <div class="col-lg-4" style="height: 800px; border-right: 1px solid black">
                     <h2>Group list</h2>
                     <hr>
-                    <div class="row" style="height:60px; border-bottom: 1px solid black; border-top: 1px solid black">
-                        <h4>Item 1</h4>
+                    {% for x in items %}
+                    <div class="row" style="height:60px; border-top: 1px solid black">
+                        {{x.id}}
                     </div>
-                    <div class="row" style="height:60px; border-bottom: 1px solid black;">
-                        <h4>Item 2</h4>
-                    </div>
-                    <div class="row" style="height:60px; border-bottom: 1px solid black;">
-                        <h4>Item 3</h4>
-                    </div>
+                    {% endfor %}
                 </div>
                 <div class="col-lg-8">
                     <h2>Item 1</h2>
