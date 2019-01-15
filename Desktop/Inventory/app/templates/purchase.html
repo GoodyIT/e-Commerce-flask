@@ -13,10 +13,10 @@
                 <h5 style="text-color: red;">Vendor Name</h5>
             </div>
             <div class="col-lg-5" style="padding:0;">
-                <label for="vendor">Vendor</label>
-                <select name="vendor" class="form-control form-control-lg" id="vendor">
-                    <option value="{{form.vendor}}"></option>
-                </select>
+                <!-- <select name="vendor" class="form-control form-control-lg" id="vendor">
+                    <option value={{form.vendor}}></option>
+                </select> -->
+                {{form.vendor(class_="form-control form-control-lg")}}
             </div>
             <div class="col-lg-5">
             </div>
@@ -45,6 +45,9 @@
             </div>
             <div class="col-lg-5">
                 <input type="text" class="form-control" id="purchase" name="purchase" placeholder="PO-23942032342">
+                {% for error in form.purchase.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </div>
             <div class="col-lg-5">
             </div>
@@ -55,6 +58,9 @@
             </div>
             <div class="col-lg-5">
                 <input type="text" class="form-control" id="reference" name="reference" placeholder="aXl9023-x23ak22-32qaL3">
+                {% for error in form.reference.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </div>
             <div class="col-lg-5">
             </div>
@@ -64,13 +70,19 @@
                 <h5 style="text-color: red;">Current Date</h5>
             </div>
             <div class="col-lg-3">
-                <input type="text" class="form-control" id="datepick" name="currentDate" size="30">
+                <input type="text" class="form-control" id="datepick" name="current_date" size="30">
+                {% for error in form.current_date.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </div>
             <div class="col-lg-2">
                 <h5 style="text-color: red;">Delivery Date</h5>
             </div>
             <div class="col-lg-3">
-                <input type="text" class="form-control" id="deliverypick" name="deliveryDate" size="30">
+                <input type="text" class="form-control" id="deliverypick" name="delivery_date" size="30">
+                {% for error in form.delivery_date.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </div>
             <div class="col-lg-2">
             </div>
@@ -102,6 +114,7 @@
                     </tbody>
                 </table>
             </div>
+            <input type="text" id="orders" name="orders" hidden/>
         </div> <!-- end row -->
         <div class="row">
             <div class="col-lg-4"></div>
@@ -124,7 +137,7 @@
                     <h5>Discount</h5>
                 </div>
                 <div class="col-lg-6">
-                    <input type="text" id="item_discount" placeholder="$0.00"></input>
+                    <input type="text" id="item_discount" name="discount" placeholder="$0.00"></input>
                 </div>
                 <div class="col-lg-2">
                     <h5 id="tbDiscount">0.00</h5>
@@ -152,6 +165,9 @@
                 <h5 style="text-color: red;">Notes</h5>
                 <input type="text" class="form-control" id="notes"
                 name="item_notes" style="height: 100px">
+                {% for error in form.item_notes.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </div>
             <div class="col-lg-2"></div>
         </div>
@@ -161,6 +177,9 @@
                 <h5 style="text-color: red;">Terms & Conditions</h5>
                 <input type="text" class="form-control" id="terms"
                 name="terms_notes" style="height: 100px">
+                {% for error in form.terms_notes.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </div>
             <div class="col-lg-2"></div>
         </div>
@@ -184,8 +203,9 @@
         <div class="row" style="margin-top:20px; padding-bottom: 10px;">
             <div class="col-lg-9"></div>
                 <div class="col-lg-1">
-                    <input type="button" class="btn btn-primary pull-right" id="submit"
-                    style="" value="Submit">
+                    <!-- <input type="button" class="btn btn-primary pull-right" id="submit"
+                    style="" value="Submit"> -->
+                    {{form.submit(class_="btn waves-effect waves-light btn-rounded btn-primary")}}
                 </div>
             <div class="col-lg-2"></div>
         </div>

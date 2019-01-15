@@ -62,6 +62,23 @@ $(function() {
                     "<td><button type='button' class='btn btn-primary btnDelete'>Delete</button></td></tr>"
         $("table tbody").append(markup);
 
+        var rows = [];
+        $("tbody tr",$("#tbPurchase"))
+          .filter(function( index ) {
+            return index > 0;
+          }).map(function(index) { 
+            rows.push([
+                $("td:eq(0)",this).html(),
+                $("td:eq(1)",this).html(),
+                $("td:eq(2)",this).html(),
+                $("td:eq(3)",this).html(),
+                $("td:eq(4)",this).html(),
+                $("td:eq(5)",this).html()
+            ]);
+        });
+
+        $("#orders").val(rows.toString());
+
         // Erase Values on Table
         $("#item_details").val("");
         $("#league").val("");
@@ -103,6 +120,22 @@ $(function() {
 
         // Update Totals
         $(this).closest('tr').remove();
+
+        var rows = [];
+        $("tbody tr",$("#tbPurchase"))
+          .filter(function( index ) {
+            return index > 0;
+          }).map(function(index) { 
+            rows.push([
+                $("td:eq(0)",this).html(),
+                $("td:eq(1)",this).html(),
+                $("td:eq(2)",this).html(),
+                $("td:eq(3)",this).html(),
+                $("td:eq(4)",this).html(),
+                $("td:eq(5)",this).html()
+            ]);
+        });
+        $("#orders").val(rows.toString());
     });
 
     $("#item_discount").change(function() {
@@ -112,26 +145,26 @@ $(function() {
         $("#tbFinal").html(parseFloat(current)-discount).toFixed(2);
     });
 
-    $('#submit').submit(function(e) {
+    // $('#submit').submit(function(e) {
 
-        //prevent Default functionality
-        e.preventDefault();
+    //     //prevent Default functionality
+    //     e.preventDefault();
 
-        //get the action-url of the form
-        var actionurl = 'localhost:5000/purchase/post'
+    //     //get the action-url of the form
+    //     var actionurl = 'localhost:5000/purchase/post'
 
-        //do your own request an handle the results
-        $.ajax({
-                url: actionurl,
-                type: 'post',
-                dataType: 'application/json',
-                data: $("#submit").serialize(),
-                success: function(data) {
-                    alert("done!");
-                }
-        });
+    //     //do your own request an handle the results
+    //     $.ajax({
+    //             url: actionurl,
+    //             type: 'post',
+    //             dataType: 'application/json',
+    //             data: $("#submit").serialize(),
+    //             success: function(data) {
+    //                 alert("done!");
+    //             }
+    //     });
 
-    });
+    // });
 
     $('#export_to_pdf').on('click', function(e) {
 
@@ -225,7 +258,11 @@ $(function() {
     });
 
     $('#export_to_csv').on('click', function(e) {
-
+        var vendorName = $("#vendor option:selected").text();
+        var purchaseOrder = $("#purchase").val();
+        var referenceOrder = $("#reference").val();
+        var currentDate = $("#datepick").val();
+        var deliveryDate = $("#deliverypick").val();
         //prevent Default functionality
         e.preventDefault();
         var rows = [[
@@ -252,12 +289,37 @@ $(function() {
                 $("td:eq(5)",this).html(),
             ]);
         });
+
+        var subTotal = $("#tbTotal").html();
+        var discount = $("#tbDiscount").html();
+        var final    = $("#tbFinal").html();
+        var notes    = $("#notes").val();
+        var terms    = $("#terms").val();
         // ----------------------------------- //
         let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += '\r\n';
+        csvContent += `, , Vendor Name, ${vendorName}\r\n`;
+        csvContent += '\r\n';
+        csvContent += `, , Deliver To\r\n`;
+        csvContent += `, , , Johnathan Stevens\r\n`;
+        csvContent += `, , , Eloraus, LLC\r\n`;
+        csvContent += `, , , 5988 Chesbro Ave\r\n`;
+        csvContent += `, , , San Jose, CA 95123\r\n`;
+        csvContent += '\r\n';
+        csvContent += `, , Purchase Order#, ${purchaseOrder}\r\n`;
+        csvContent += `, , Reference Order#, ${referenceOrder}\r\n`;
+        csvContent += `, , Current Date, ${currentDate}, , Delivery Date, ${deliveryDate}\r\n`;
+        csvContent += '\r\n';
         rows.forEach(function(rowArray){
-            let row = rowArray.join(",");
+            let row = `,` + rowArray.join(",");
             csvContent += row + "\r\n";
         }); 
+        csvContent += '\r\n';
+        csvContent += `, , Sub Total, ${subTotal}\r\n`;
+        csvContent += `, , Discount, ${discount}\r\n`;
+        csvContent += `, , Total, ${final}\r\n`;
+        csvContent += `, , Notes, ${notes}\r\n`;
+        csvContent += `, , Terms & Conditions, ${terms}\r\n`;
         var encodedUri = encodeURI(csvContent);
         var link = document.createElement("a");
         link.setAttribute("href", encodedUri);
@@ -270,24 +332,65 @@ $(function() {
 
         //prevent Default functionality
         e.preventDefault();
+
+        var vendorName = $("#vendor option:selected").text();
+        var purchaseOrder = $("#purchase").val();
+        var referenceOrder = $("#reference").val();
+        var currentDate = $("#datepick").val();
+        var deliveryDate = $("#deliverypick").val();
+
         var rows = [];
-        
+        rows.push(['Vendor Name', vendorName]);
+        rows.push([]);
+        rows.push(['Deliver to']);
+        rows.push(['', 'Johnathan Stevens']);
+        rows.push(['', 'Eloraus, LLC']);
+        rows.push(['', '5988 Chesbro Ave']);
+        rows.push(['', 'San Jose, CA 95123']);
+        rows.push([]);
+        rows.push(['Purchase Order#', purchaseOrder]);
+        rows.push(['Reference Order#', referenceOrder]);
+        rows.push(['Current Date', currentDate, '', 'Delivery Date', deliveryDate]);
+        rows.push([]);
+        rows.push(['', 'Item Details', 'League', 'Quantity', 'Rate', 'Tax', 'Amount']);
         $("tbody tr",$("#tbPurchase"))
           .filter(function( index ) {
             return index > 0;
           }).map(function(index) { 
-            rows.push({
-                ""              : index+1, 
-                "Item Details"  : $("td:eq(0)",this).html(),
-                "League"        : $("td:eq(1)",this).html(),
-                "Quantity"      : $("td:eq(2)",this).html(),
-                "Rate"          : $("td:eq(3)",this).html(),
-                "Tax"           : $("td:eq(4)",this).html(),
-                "Amount"        : $("td:eq(5)",this).html()
-            });
+            rows.push([
+                index+1, 
+                $("td:eq(0)",this).html(),
+                $("td:eq(1)",this).html(),
+                $("td:eq(2)",this).html(),
+                $("td:eq(3)",this).html(),
+                $("td:eq(4)",this).html(),
+                $("td:eq(5)",this).html()
+            ]);
         });
+        rows.push([]);
+
+        var subTotal = $("#tbTotal").html();
+        var discount = $("#tbDiscount").html();
+        var final    = $("#tbFinal").html();
+        var notes    = $("#notes").val();
+        var terms    = $("#terms").val();
+        rows.push(['Sub Total', subTotal]);
+        rows.push(['Discount', discount]);
+        rows.push(['Total', final]);
+        rows.push(['Notes', notes]);
+        rows.push(['Terms & Conditions', terms]);
         // ----------------------------------- //
-        alasql("SELECT * INTO XLSX('order.xlsx',{headers:true}) FROM ? ",[rows]);
+        
+        var wb = XLSX.utils.book_new();
+        wb.SheetNames.push("Order");
+        var ws = XLSX.utils.aoa_to_sheet(rows);
+        wb.Sheets["Order"] = ws;
+
+        var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
+        var buf = new ArrayBuffer(wbout.length); //convert s to arrayBuffer
+        var view = new Uint8Array(buf);  //create uint8array as viewer
+        for (var i=0; i<wbout.length; i++) view[i] = wbout.charCodeAt(i) & 0xFF;
+        saveAs(new Blob([buf],{type:"application/octet-stream"}), 'order.xlsx');
     });
 
     // Queue approve

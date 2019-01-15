@@ -42,22 +42,37 @@ def post_purchase():
     return render_template('purchase.html', title='Purchase Order')
 
 # Purchase
-@app.route('/purchase')
+@app.route('/purchase', methods=['GET','POST'])
 @login_required
 def purchase():
     form = PurchaseForm()
     if form.validate_on_submit():
-        '''
-        if form.validate_on_submit():
-            new_item = {
-                'order_id' : form.purchase.data,
-                'reference_id' : form.reference.data,
-                'order_date' : form.date.data,
-                'delivery_date' : form.delivery.data,
-            }
-            db.Purchase.insert_one(new_item)
-            flash('Item Added.')
-        '''
+        orderCells = form.orders.data.split(',')
+        orders = []
+        for x in range(0, len(orderCells), 6):
+            orders.append({
+                "Item Details"  : orderCells[x],
+                "League"        : orderCells[x+1],
+                "Quantity"      : orderCells[x+2],
+                "Rate"          : orderCells[x+3],
+                "Tax"           : orderCells[x+4],
+                "Amount"        : orderCells[x+5],
+            })
+        new_item = {
+            'vendor'        : form.vendor.data,
+            'order_id'      : form.purchase.data,
+            'reference_id'  : form.reference.data,
+            'order_date'    : form.current_date.data.isoformat(),
+            'delivery_date' : form.delivery_date.data.isoformat(),
+            'orders'        : orders,
+            'discount'      : form.discount.data,
+            'notes'         : form.item_notes.data,
+            'terms'         : form.terms_notes.data
+        }
+
+        db.Purchase.insert_one(new_item)
+        flash('Item Added.')
+        
         return redirect(url_for('purchase'))
     return render_template('purchase.html', title='Purchase Order', form=form)
 

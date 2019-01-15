@@ -44,7 +44,16 @@ class UpperForm(FlaskForm):
 
 class PurchaseForm(FlaskForm):
     ''' Purchase Form '''
-    submit = None
+    vendor = SelectField('Category', choices=[('Choice1', 'First'),('Choice2','Second'),('Choice3', 'Third')])
+    purchase = StringField('Purchase Order', validators=[DataRequired()])
+    reference = StringField('Reference Order', validators=[DataRequired()])
+    current_date = DateField('Current Date', format='%m/%d/%Y')
+    delivery_date = DateField('Delivery Date', format='%m/%d/%Y')
+    discount = StringField('Discount', validators=[DataRequired()])
+    item_notes = StringField('Notes', validators=[DataRequired()])
+    terms_notes = StringField('Terms & Conditions', validators=[DataRequired()])
+    orders = StringField()
+    submit = SubmitField('Submit')
 
 class LoginForm(FlaskForm):
     ''' Login Form '''
