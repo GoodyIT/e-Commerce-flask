@@ -4,3 +4,4 @@ jwt
 uuid
 flask_wtf
 flask_PyMongo
+Pandas
