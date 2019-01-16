@@ -147,6 +147,12 @@ def vendor():
 @login_required
 def addItem():
     form = ProductForm()
+    form.update_category()
+    #print("\n routes | addItem: ||||||| ----------------------------\n")
+    #print(form.category.choices)
+    #print(form.__dict__)
+    #print(ProductForm.category)
+    #print("\n routes | addItem: End----------------------------")
     if form.validate_on_submit():
         # add new vendor
         vendor = {
@@ -415,6 +421,7 @@ def signup():
 # login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    print("++++++++++      login     +++++++++++")
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = LoginForm()
