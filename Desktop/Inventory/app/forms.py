@@ -82,6 +82,7 @@ class ProductForm(FlaskForm):
     ''' Product Items '''
     product = StringField('Product Name', validators=[DataRequired()])
     category = SelectField('Category', choices=getGroups())
+    #print(category)
     sku = StringField('SKU', validators=[DataRequired()])
     price = IntegerField('Price', validators=[DataRequired()])
     currency = SelectField('Currency', choices=[('Choice1', 'First'),('Choice2','Second'),('Choice3', 'Third')])
@@ -89,6 +90,9 @@ class ProductForm(FlaskForm):
     vendor = SelectField('Vendor', choices=getVendor())
     url = StringField('URL')
     submit = SubmitField('Add Item')
+
+    def update_category(self):
+       self.category.choices = getGroups()
 
 class RegisterForm(FlaskForm):
     ''' Registers new users with the app '''

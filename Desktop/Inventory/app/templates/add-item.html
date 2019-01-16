@@ -36,10 +36,9 @@
                 {% endfor %}
             </div>
             <div class="col-lg-4" style="padding:0">
-                <label for="category">Group</label>
-                <select name="category" class="form-control form-control-lg">
-                    <option value="{{form.category}}"></option>
-                </select>
+                <label for="category">Group</label>                
+                {{form.category(class="form-control form-control-lg")}}
+
                 {% for error in form.category.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
