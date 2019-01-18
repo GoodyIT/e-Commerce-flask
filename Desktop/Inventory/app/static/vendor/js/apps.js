@@ -1,4 +1,27 @@
 $(function() {
+
+    // pagination
+
+    // pagination - hide and show divs
+    var pageSize = 5;
+    var current = 1;
+    $('.paginate-next').('click', function(){
+
+    }
+    $('.paginate-prev').('click', function(){
+
+    }
+        $('.pagination-ship').hide();
+        $(".pagination-ship").each(function(n) {
+            if (current < pageSize)
+                $(this).show();
+        });
+    };
+
+    //pagination - execute
+    paginate(pageSize);
+
+
     var groupName = $('#groupName').html();
     $('#groupName').hide();
 
@@ -69,7 +92,7 @@ $(function() {
         $("tbody tr",$("#tbPurchase"))
           .filter(function( index ) {
             return index > 0;
-          }).map(function(index) { 
+          }).map(function(index) {
             rows.push([
                 $("td:eq(0)",this).html(),
                 $("td:eq(1)",this).html(),
@@ -128,7 +151,7 @@ $(function() {
         $("tbody tr",$("#tbPurchase"))
           .filter(function( index ) {
             return index > 0;
-          }).map(function(index) { 
+          }).map(function(index) {
             rows.push([
                 $("td:eq(0)",this).html(),
                 $("td:eq(1)",this).html(),
@@ -289,11 +312,11 @@ $(function() {
         var terms    = $("#terms").val();
         // ----------------------------------- //
         let csvContent = "data:text/csv;charset=utf-8,";
-    
+
         rows.forEach(function(rowArray){
             let row = `,` + rowArray.join(",");
             csvContent += row + "\r\n";
-        }); 
+        });
         csvContent += '\r\n';
         csvContent += `, , Sub Total, ${subTotal}\r\n`;
         csvContent += `, , Discount, ${discount}\r\n`;
@@ -336,9 +359,9 @@ $(function() {
         $("tbody tr",$("#tbPurchase"))
           .filter(function( index ) {
             return index > 0;
-          }).map(function(index) { 
+          }).map(function(index) {
             rows.push([
-                index+1, 
+                index+1,
                 $("td:eq(0)",this).html(),
                 $("td:eq(1)",this).html(),
                 $("td:eq(2)",this).html(),
@@ -360,7 +383,7 @@ $(function() {
         rows.push(['Notes', notes]);
         rows.push(['Terms & Conditions', terms]);
         // ----------------------------------- //
-        
+
         var wb = XLSX.utils.book_new();
         wb.SheetNames.push("Order");
         var ws = XLSX.utils.aoa_to_sheet(rows);
@@ -402,5 +425,4 @@ $(function() {
             location.reload();
         });
     });
-
 });

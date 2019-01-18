@@ -10,8 +10,18 @@
         <h3>Awaiting Shipping</h3>
     </div>
     <div class="row" style="background-color: #F9F9F9; border: 1px solid black; height: 800px">
-        <div class="ship-card"><h4>No Record Found</h4></div>
-        <div class="ship-card"><h4>No Record Found</h4></div>
+        {% for k, v in orders.items() %}
+        <div class="pagination-ship" style="display:none;">
+            <div class="ship-card">
+                <h4>Item ID:</h4><b>{{k}}</b>
+                <h4>Quantity:</h4><b>{{v}}</b>
+            </div>
+        </div>
+        {% endfor %}
+        <div id="pagination-links">
+            <a class="paginate-prev" href="#">&laquo; Previous</a>
+            <a class="paginate-next" href="#">Next &raquo;</a>
+        </div>
     </div>
 </div>
 <div class="col-lg-4">

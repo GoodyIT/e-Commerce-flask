@@ -36,7 +36,18 @@ def home():
 @app.route('/shipping')
 @login_required
 def shipping():
-    return render_template('shipping.html', title='Shipping')
+    orders = db.Orders.find()
+    c = 0
+    current = {}
+
+    while c < orders.count():
+        if orders[c]['item_id'] in current:
+            current[orders[c]['item_id']] += 1
+        else:
+            current[orders[c]['item_id']] = 1
+        c += 1
+
+    return render_template('shipping.html', title='Shipping', orders=current)
 
 # Purchase
 @app.route('/purchase/items')
