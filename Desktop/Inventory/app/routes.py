@@ -6,6 +6,7 @@ from datetime import datetime as date
 from .forms import RegisterForm, LoginForm, ProductForm, PurchaseForm, GroupForm, VendorForm, BillingForm
 from .data import User
 from .inventory import Warehouse
+from .zincapi_communication import post_shipping_request
 
 
 # load user
@@ -41,6 +42,11 @@ def shipping():
     current = {}
 
     while c < orders.count():
+        if not orders[c]['shipped']:
+            result = post_shipping_request(orders[c])
+            db.Orders[c]['shipped'] = result
+            orders[c]['shipped'] = result
+
         if orders[c]['item_id'] in current:
             current[orders[c]['item_id']] += 1
         else:
