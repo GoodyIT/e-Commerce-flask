@@ -32,6 +32,12 @@ def home():
     products = db.Products.find()
     return render_template('index.html', title='Home Page', total=products)
 
+# shipping
+@app.route('/shipping')
+@login_required
+def shipping():
+    return render_template('shipping.html', title='Shipping')
+
 # Purchase
 @app.route('/purchase/items')
 def post_purchase():
@@ -69,10 +75,10 @@ def purchase():
             'notes'         : form.item_notes.data,
             'terms'         : form.terms_notes.data
         }
-
+        print(new_item)
         db.Purchase.insert_one(new_item)
         flash('Item Added.')
-        
+
         return redirect(url_for('purchase'))
     return render_template('purchase.html', title='Purchase Order', form=form)
 

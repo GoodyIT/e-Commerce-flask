@@ -186,6 +186,22 @@ Preloader
 }
 /* END */
 
+.ship-card {
+      margin-top: 15px !important;
+      margin-left: 10px;
+      padding: 0 10px 0 10px;
+      display: inline-block;
+      vertical-align: top;
+      width: calc(100% - 20px);
+      height: 150px;
+      font-size: 14px;
+      margin-top: 0;
+      border: 1px solid #e1e1e1;
+      border-radius: 4px;
+      background-color: #fff!important;
+      box-shadow: none;
+}
+
 .navbar {
     margin-bottom: 0;
 }
