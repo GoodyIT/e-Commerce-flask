@@ -1,26 +1,6 @@
 $(function() {
 
-    // pagination
-
-    // pagination - hide and show divs
-    var pageSize = 5;
-    var current = 1;
-    $('.paginate-next').('click', function(){
-
-    }
-    $('.paginate-prev').('click', function(){
-
-    }
-        $('.pagination-ship').hide();
-        $(".pagination-ship").each(function(n) {
-            if (current < pageSize)
-                $(this).show();
-        });
-    };
-
-    //pagination - execute
-    paginate(pageSize);
-
+    $('#shipping-items').paginate({itemsPerPage: 4});
 
     var groupName = $('#groupName').html();
     $('#groupName').hide();
