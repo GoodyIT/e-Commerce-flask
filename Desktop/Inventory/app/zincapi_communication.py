@@ -2,6 +2,8 @@ import requests
 import pprint
 import json
 
+(SHIPPING_REQUEST_FAILED, SHIPPING_AWAITING, SHIPPING_SHIPPED, SHIPPING_DELIVERED) = range(4)
+
 
 def post_shipping_request(order):
     data = {
@@ -47,15 +49,43 @@ def post_shipping_request(order):
     }
 
     data = json.dumps(data)
+
     response = requests.post('https://api.zinc.io/v1/orders', data=data, auth=('FD1414B3CEF415B7C40A9E0F', ''))
-    response_text = json.loads(response.text)
-    if response.status_code == 200 and 'error' not in response_text:
-        return response_text['request_id']
+    if response.status_code != 200:
+        return SHIPPING_REQUEST_FAILED
+
+    response_dict = json.loads(response.text)
+    if response.status_code == 200 and 'error' not in response_dict:
+        return response_dict['request_id']
     return None
 
 
-def check_shipping_status(orders):
-    pass
+def shipping_status_by_request_id(request_id):
+    response = requests.get('https://api.zinc.io/v1/orders/{}'.format(request_id), auth=('FD1414B3CEF415B7C40A9E0F', ''))
+    if response.status_code != 200:
+        return SHIPPING_REQUEST_FAILED
+
+    response_dict = json.loads(response.text)
+
+    pprint.pprint(response_dict)
+
+    if 'code' in response_dict and response_dict['code'] == 'request_processing':
+        return SHIPPING_AWAITING
+
+    elif '_type' in response_dict and response_dict['_type'] == 'error':
+        # Request done processing.
+        # Could contain "message": "Request is currently processing and will complete soon."
+        # or not only. For now return awaiting in this case.
+        return SHIPPING_AWAITING
+
+    elif '_type' in response_dict and response_dict['_type'] == 'order_response':
+        # check response_dict for details
+        pass
+
+    else:
+        # check response_dict for details
+        pass
+
 
 
 if __name__ == '__main__':
@@ -64,4 +94,5 @@ if __name__ == '__main__':
     db = client.test_inv
     orders = db.Orders.find()
     request_id = post_shipping_request(orders[0])
-    print(request_id)
+    status = shipping_status_by_request_id(request_id)
+    print(request_id, status)
