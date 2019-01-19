@@ -91,6 +91,7 @@ def createOrders(count, year):
             'quantity': random.randint(1, 10),
             'type': types[random.randint(0,1)],
             'price': random.randint(1, 100),
+            'shipped': 'awaiting',
             'street': _street(),
             'city' : _getCity(),
             'state' : _getState(),

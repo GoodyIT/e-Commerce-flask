@@ -1,6 +1,8 @@
 $(function() {
 
-    $('#shipping-items').paginate({itemsPerPage: 4});
+    $('#shipping-awaiting-items').paginate({itemsPerPage: 4});
+    $('#shipping-shipped-items').paginate({itemsPerPage: 4});
+    $('#shipping-delivered-items').paginate({itemsPerPage: 4});
 
     var groupName = $('#groupName').html();
     $('#groupName').hide();

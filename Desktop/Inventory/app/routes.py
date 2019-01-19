@@ -37,20 +37,27 @@ def home():
 @app.route('/shipping')
 @login_required
 def shipping():
+
+    def check_shipping_status():
+        import random
+        _SHIPPING_STATUS = ['awaiting', 'shipped', 'delivered']
+        return _SHIPPING_STATUS[random.randint(0, 2)]
+
     orders = db.Orders.find()
     c = 0
     current = {}
 
     while c < orders.count():
-        if not orders[c]['shipped']:
-            result = post_shipping_request(orders[c])
-            db.Orders[c]['shipped'] = result
-            orders[c]['shipped'] = result
+
+        result = check_shipping_status()
+        db.Orders.update_one({'_id': orders[c]['_id']}, {'$set': {'shipped': result}})
+        orders[c]['shipped'] = result
+        current[orders[c]['item_id']] = {'shipped': result}
 
         if orders[c]['item_id'] in current:
-            current[orders[c]['item_id']] += 1
+            current[orders[c]['item_id']]['qty'] = 1
         else:
-            current[orders[c]['item_id']] = 1
+            current[orders[c]['item_id']]['qty'] = 1
         c += 1
 
     return render_template('shipping.html', title='Shipping', orders=current)
