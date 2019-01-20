@@ -8,26 +8,144 @@
             <div class="card-body" style="height:800px">
                 <div class="col-lg-4" style="height: 800px; border-right: 1px solid black">
                     <h2>Group list</h2>
-                    <hr>
-                    {% for x in items %}
+                    {% set item = items[0] %}
                     <div class="row" style="height:60px; border-top: 1px solid black">
-                        {{x.id}}
-                    </div>
+                    {% for x in items %}
+                        <a href="javascript:getProduct('{{x.id}}')">{{x.product}}</a>
+                        <hr>
                     {% endfor %}
+                    </div>
                 </div>
                 <div class="col-lg-8">
-                    <h2>Item 1</h2>
+                    <h2 id="ptitle">{{item.product}}</h2>
                     <div class="navbar navbar-light fixed-top">
-                        <ul class="nav navbar-nav navbar-left">
-                            <li><a href="{{url_for('groups')}}">Overview</a></li>
-                            <li><a href="{{url_for('groups')}}">Transactions</a></li>
-                            <li><a href="{{url_for('groups')}}">Adjustments</a></li>
-                            <li><a href="{{url_for('groups')}}">History</a></li>
+                        <!--<ul class="nav navbar-nav navbar-left">
+                            <li><a href="{{url_for('groups')}}">Transactions</a></li>-->
+                        <ul class="nav nav-tabs navbar-left">
+                            <li class="active"><a data-toggle="pill" href="#Overview">Overview</a></li>
+                            <li><a data-toggle="tab" href="#Transactions">Transactions</a></li>
+                            <li><a data-toggle="tab" href="#Adjustments">Adjustments</a></li>
+                            <li><a data-toggle="tab" href="#History">History</a></li>
                         </ul>
                     </div>
-                    <hr>
-                </div>
+                    <!--<hr>-->
 
+                    <div class="tab-content" style="margin-left: 20px;">
+                        <div id="Overview" class="tab-pane fade in active">
+                        <form action="{{ url_for('groups_list',name=cates[item.category]) }}" method="post">
+                            <input type="hidden" id="pid" name="pid" value="{{item.id}}">
+                            <div class="row" style="margin-top:20px;">
+                                <label for="pname">Product Name</label>
+                                <input type="text" class="form-control" id="pname" name="pname" placeholder="" value="{{item.product}}">
+                            </div>
+                            <div class="row" style='margin-top:30px;'>
+                                <div class="col-lg-8" style="padding-left:0;">
+                                    <label for="sku">SKU</label>
+                                    <input type="text" class="form-control" id="sku" name="sku" placeholder="" value="{{item.sku}}">
+                                </div>
+                                <div class="col-lg-4" style="padding:0">
+                                    <label for="cate">Category</label>   
+                                    <select class="form-control form-control-lg" id="cate" name="cate">
+                                        {% for key, val in cates.items() %}
+                                            {% if key == item.category %}
+                                            <option value="{{key}}" selected>{{val}}</option>
+                                            {% else %}
+                                            <option value="{{key}}">{{val}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div> <!-- END ROW -->
+                            <div class="row" style="margin-top:30px;">
+                                <div class="col-lg-4" style="padding:0;">
+                                    <label for="price">Price</label>
+                                    <input type="number" class="form-control" id="price" name="price" placeholder="" value="{{item.price}}">
+                                </div>
+                                <div class="col-lg-4" style="">
+                                    <label for="curr">Currency</label>
+                                    <select class="form-control form-control-lg" id="curr" name="curr">
+                                        {% for curr in currs %}
+                                            {% if curr[0] == item.currency %}
+                                            <option value="{{curr[0]}}" selected>{{curr[1]}}</option>
+                                            {% else %}
+                                            <option value="{{curr[0]}}">{{curr[1]}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div> <!-- END ROW -->
+
+                            <div class="row" style="margin-top:20px;">
+                                <div id="dvAttr">
+                                    {% if 'attributes' in item %}
+                                        {% set cnt=0 %}                                    
+                                        {% for key, value in item.attributes.items() %}
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <label for="attr{{loop.index-1}}">Attribute</label>
+                                                <input type="text" class="form-control" id="attr{{loop.index-1}}" name="attr{{loop.index-1}}" placeholder="eg:color" value="{{key}}">
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <label for="options{{loop.index-1}}">Options</label>
+                                                <input type="text" class="form-control" id="options{{loop.index-1}}" name="options{{loop.index-1}}" data-role="tagsinput" placeholder="" value="{{value}}">
+                                            </div>
+                                            {% if loop.first %}
+                                            <div class="col-lg-3" style="margin-top: 25px;">
+                                                <button type="button" id="btnAddAttr" class="btn btn-link">+Add more attribute</button>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <label for="attr0">Attribute</label>
+                                                <input type="text" class="form-control" id="attr0" name="attr0" placeholder="eg:color">
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <label for="options0">Options</label>
+                                                <input type="text" class="form-control" id="options0" name="options0" data-role="tagsinput" placeholder="">
+                                            </div>
+                                            <div class="col-lg-3" style="margin-top: 25px;">
+                                                <button type="button" id="btnAddAttr" class="btn btn-link">+Add more attribute</button>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div> <!-- END ROW -->
+                            <div class="row" style="margin-top: 30px; padding:0;">
+                                <div class="col-lg-4" style="padding-left:0;">
+                                    <label for="vendor">Vendor</label>
+                                    <input type="text" class="form-control" id="vendor" name="vendor" placeholder="" value="{{item.vendor}}">
+                                </div>
+                                <div class="col-lg-8" style="padding-right:0">
+                                    <label for="url">URL</label>
+                                    <input type="text" class="form-control" id="url" name="url" placeholder="www.amazon.com" value="{{item.url}}">
+                                </div>
+                            </div> <!-- END ROW -->
+                            <div class="row" style="margin-top: 30px; margin-bottom: 30px;">
+                                <div class="col-lg-10"></div>
+                                <div class="col-lg-2">
+                                    <button type="submit" class="form-control btn-primary" id="btnUpdate">Update</button>
+                                </div>
+                            </div> <!-- END ROW -->
+                        </form>
+                        </div>
+                        <div id="Transactions" class="tab-pane fade">
+                            <h3>Menu 1</h3>
+                            <p>Some content in menu 1.</p>
+                        </div>
+                        <div id="Adjustments" class="tab-pane fade">
+                            <h3>Menu 2</h3>
+                            <p>Some content in menu 2.</p>
+                        </div>
+                        <div id="History" class="tab-pane fade">
+                            <h3>Menu 2</h3>
+                            <p>Some content in menu 2.</p>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>

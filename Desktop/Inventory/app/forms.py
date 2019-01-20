@@ -1,7 +1,7 @@
 from app import db
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, TextAreaField, \
-IntegerField, DateField, SelectField, RadioField, FormField
+IntegerField, DateField, SelectField, RadioField, FormField, HiddenField
 from wtforms.validators import DataRequired, ValidationError, EqualTo, Email
 
 def getGroups():
@@ -85,14 +85,25 @@ class ProductForm(FlaskForm):
     #print(category)
     sku = StringField('SKU', validators=[DataRequired()])
     price = IntegerField('Price', validators=[DataRequired()])
-    currency = SelectField('Currency', choices=[('Choice1', 'First'),('Choice2','Second'),('Choice3', 'Third')])
-    quantity = IntegerField('Quantity', validators=[DataRequired()])
+    currency = SelectField('Currency', choices=[('USD', '$'),('EURO','€'),('POUND', '£')])
+    ###For Attributes by XLZ
+    attr0 = StringField('Attribute', validators=[DataRequired()])
+    options0 = StringField('Options', validators=[DataRequired()])
+    attr1 = StringField('Attribute')
+    options1 = StringField('Options')
+    attr2 = StringField('Attribute')
+    options2 = StringField('Options')
+    ###For HiddenTag by XLZ
+    hdfiles = HiddenField("HiddenFiles")
+
+    url = StringField('URL')
     vendor = SelectField('Vendor', choices=getVendor())
     url = StringField('URL')
-    submit = SubmitField('Add Item')
+    submit = SubmitField('Add Item', render_kw={"class": "btn btn-primary btn-block"})
 
     def update_category(self):
        self.category.choices = getGroups()
+       #self.category.default = getGroups()[0][id]
 
 class RegisterForm(FlaskForm):
     ''' Registers new users with the app '''

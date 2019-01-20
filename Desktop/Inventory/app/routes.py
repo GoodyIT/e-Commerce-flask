@@ -7,6 +7,32 @@ from .forms import RegisterForm, LoginForm, ProductForm, PurchaseForm, GroupForm
 from .data import User
 from .inventory import Warehouse
 
+#app = Flask(__name__)
+
+# Added By XLZ
+import os
+from werkzeug.utils import secure_filename
+curDirPath = os.path.dirname(os.path.realpath(__file__))
+UPLOAD_FOLDER = os.path.join(curDirPath,"uploads")
+#print("--------UPLOAD_FOLDER: {} --------".format(UPLOAD_FOLDER))
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+CURRENCIES=[('USD', '$'),('EURO','€'),('POUND', '£')]
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+def getGroups():
+    groups = db.Groups.find()
+    size = groups.count() - 1
+    choices = {}
+
+    while size >= 0:
+        choices[ groups[size]['id'] ] = groups[size]['name']
+        size -= 1
+
+    if len(choices) == 0:
+        return {'none':'None'}
+    return choices
+
 
 # load user
 @login.user_loader
@@ -115,16 +141,68 @@ def groups():
     return render_template('groups.html', title='Groups', groups=groups)
 
 # groups list
-@app.route('/groups/<name>')
+@app.route('/groups/<name>', methods=['GET','POST'])
 @login_required
 def groups_list(name):
+    if request.method == 'POST':
+        #print("++++++++++NEW REQUEST++++++++++++ pid: "+request.form.get("pid"))
+
+        update_item = {
+            'product' : request.form.get("pname"),
+            'sku' : request.form.get("sku"),
+            #'images' : images,
+            'category' : request.form.get("cate"),
+            'price' : request.form.get("price"),
+            'currency' : request.form.get("curr"),
+            #'attributes' : attrs,
+            'vendor' : request.form.get("vendor"),
+            'url' : request.form.get("url"),
+        }
+        ## Check attributes
+        attrs = {}        
+        if request.form.get('attr0') :
+            if request.form.get('attr0') != "" :
+                attrs[request.form.get('attr0')] = request.form.get('options0')
+        if request.form.get('attr1') :
+            if request.form.get('attr1') != "" :
+                attrs[request.form.get('attr1')] = request.form.get('options1')
+        if request.form.get('attr2') :
+            if request.form.get('attr2') != "" :
+                attrs[request.form.get('attr2')] = request.form.get('options2')
+        if bool(attrs):
+            update_item['attributes'] = attrs
+        print(update_item);
+
+        db.Products.update_one({"id": request.form.get("pid")},{"$set":update_item},upsert=True)
+        #return redirect(url_for('groups_list',name=name))
+
     try:
-        group = db.Groups.find({'name':str(name)})
+        group = db.Groups.find({'name':str(name)}) 
+        #print("-------------------------- group: ",group[0]['id'])       
         items = db.Products.find({'category':group[0]['id']})
+        if items.count() == 0:
+            flash("Product Does Not Exist")
+            return redirect(url_for('addItem'))
+
+        cates = getGroups()
+        #print( items.__dict__ )        print(items[0])
     except TypeError:
         flash("Group Does Not Exist")
         return redirect(url_for('groups'))
-    return render_template('groups-list.html', title='Groups List', items=items)
+    return render_template('groups-list.html', title='Groups List', items=items, cates=cates, currs=CURRENCIES)
+
+# ajax request :XLZ
+@app.route('/getProduct', methods=['POST'])
+@login_required
+def getProduct():
+    if request.method == 'POST':
+        item = request.json        
+        print("++++++++++NEW REQUEST++++++++++++ item: ", item)
+        prdt = db.Products.find_one({'id':item['pid']})
+
+        return jsonify(id=prdt['id'], product=prdt['product'], sku=prdt['sku'], #'images' : prdt['images'],
+            category=prdt['category'], price=prdt['price'], currency=prdt['currency'],
+            attributes=prdt['attributes'], vendor=prdt['vendor'], url=prdt['url'])
 
 # vendor
 @app.route('/products/vendor', methods=['GET','POST'])
@@ -148,29 +226,61 @@ def vendor():
 def addItem():
     form = ProductForm()
     form.update_category()
-    #print("\n routes | addItem: ||||||| ----------------------------\n")
-    #print(form.category.choices)
-    #print(form.__dict__)
-    #print(ProductForm.category)
-    #print("\n routes | addItem: End----------------------------")
+    file_urls = []
+    if(request.method == 'POST') and 'photos' in request.files:
+        print("\n routes | addItem --- POST : ||||||| ----------------------------\n")
+        file_obj = request.files
+        for f in file_obj:
+            file = request.files.get(f)
+            if file.filename == '':
+                flash('No selected file')
+            imgfilepath = ""        
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                imgfilepath = os.path.join(UPLOAD_FOLDER, filename) 
+                file.save(imgfilepath)
+                # append image urls
+                file_urls.append(imgfilepath)
+        strjson = ",".join(file_urls)
+        #print("------strjson: "+strjson)
+        return jsonify(target_file=strjson)
+        
     if form.validate_on_submit():
         # add new vendor
-        vendor = {
-            'id' : str(uid()),
-            'vendor' : form.vendor.data,
-            'url' : form.url.data,
-        }
-        db.Vendor.insert_one(vendor)
+        vendor = ""
+        if form.vendor.data != "none":
+            vendor = form.vendor.data
+            '''
+            new_vendor = {
+                'id' : str(uid()),
+                'vendor' : vendor,
+                'url' : form.url.data,
+            }
+            db.Vendor.insert_one(new_vendor)
+            '''
 
         # add new product
+        attrs = {form.attr0.data:form.options0.data}
+        if form.attr1.data != "":
+            attrs[form.attr1.data] = form.options1.data
+        if form.attr2.data != "":
+            attrs[form.attr2.data] = form.options2.data
+        images = form.hdfiles.data 
+        #images = images.split(",")
+        print("\n routes | addItem: ----------------------------")
+        print(attrs)
+
         new_item = {
             'id' : str(uid()),
             'product' : form.product.data,
+            'sku' : form.sku.data,
+            'images' : images,
             'category' : form.category.data,
             'price' : form.price.data,
             'currency' : form.currency.data,
-            'quantity' : form.quantity.data,
-            'vendor' : form.vendor.data,
+            'attributes' : attrs,
+            'vendor' : vendor,
+            'url' : form.url.data,
         }
         db.Products.insert_one(new_item)
 
