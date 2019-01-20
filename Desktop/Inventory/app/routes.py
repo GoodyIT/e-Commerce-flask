@@ -6,7 +6,7 @@ from datetime import datetime as date
 from .forms import RegisterForm, LoginForm, ProductForm, PurchaseForm, GroupForm, VendorForm, BillingForm
 from .data import User
 from .inventory import Warehouse
-from .zincapi_communication import post_shipping_request
+from .zincapi_communication import post_shipping_request, shipping_status_by_request_id
 
 
 # load user
@@ -38,27 +38,37 @@ def home():
 @login_required
 def shipping():
 
-    def check_shipping_status():
-        import random
-        _SHIPPING_STATUS = ['awaiting', 'shipped', 'delivered']
-        return _SHIPPING_STATUS[random.randint(0, 2)]
+    #def check_shipping_status():
+        #import random
+        #_SHIPPING_STATUS = ['awaiting', 'shipped', 'delivered']
+        #return _SHIPPING_STATUS[random.randint(0, 2)]
 
     orders = db.Orders.find()
-    c = 0
     current = {}
 
-    while c < orders.count():
+    for order in orders:
 
-        result = check_shipping_status()
-        db.Orders.update_one({'_id': orders[c]['_id']}, {'$set': {'shipped': result}})
-        orders[c]['shipped'] = result
-        current[orders[c]['item_id']] = {'shipped': result}
+        try:
+            request_id = order['request_id']
+        except KeyError:
+            request_id = post_shipping_request(order)
 
-        if orders[c]['item_id'] in current:
-            current[orders[c]['item_id']]['qty'] = 1
+        if request_id:
+            db.Orders.update_one({'_id': order['_id']}, {'$set': {'request_id': request_id}})
+            result = shipping_status_by_request_id(request_id)
         else:
-            current[orders[c]['item_id']]['qty'] = 1
-        c += 1
+            result = 'awaiting'
+
+        #result = check_shipping_status()
+        #db.Orders.update_one({'_id': order['_id']}, {'$set': {'shipped': result}})
+        #order['shipped'] = result
+
+        current[order['item_id']] = {'shipped': result}
+
+        if order['item_id'] in current:
+            current[order['item_id']]['qty'] = 1
+        else:
+            current[order['item_id']]['qty'] = 1
 
     return render_template('shipping.html', title='Shipping', orders=current)
 
