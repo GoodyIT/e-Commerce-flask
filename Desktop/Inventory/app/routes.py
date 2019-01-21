@@ -3,10 +3,36 @@ from flask import render_template, json, url_for, flash, redirect, request, json
 from flask_login import login_user, logout_user, login_required, current_user
 from uuid import uuid4 as uid
 from datetime import datetime as date
+from werkzeug.utils import secure_filename
 from .forms import RegisterForm, LoginForm, ProductForm, PurchaseForm, GroupForm, VendorForm, BillingForm
 from .data import User
 from .inventory import Warehouse
 import json
+import os
+
+
+#app = Flask(__name__)
+
+def allowed_file(filename):
+    ''' method for choosing form file path '''
+    curDirPath = os.path.dirname(os.path.realpath(__file__))
+    UPLOAD_FOLDER = os.path.join(curDirPath,"uploads")
+    ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+def getGroups():
+    ''' SelectField method for getting group list '''
+    groups = db.Groups.find()
+    size = groups.count() - 1
+    choices = {}
+
+    while size >= 0:
+        choices[ groups[size]['id'] ] = groups[size]['name']
+        size -= 1
+
+    if len(choices) == 0:
+        return {'none':'None'}
+    return choices
 
 # load user
 @login.user_loader
@@ -21,6 +47,7 @@ def load_user(username):
 def not_found_error(error):
     return render_template('404.html'), 404
 
+# Internal handling
 @app.errorhandler(500)
 def internal_error(error):
     return render_template('500.html'), 500
@@ -209,6 +236,62 @@ def get_analytics():
         })
     return jsonify({})
     
+#store - games
+@app.route('/store/games')
+def games():
+    return render_template('grid-games.html', title='Games')
+
+#store - office
+@app.route('/store/office')
+def office():
+    return render_template('grid-games.html', title='Office')
+
+#store - electronics
+@app.route('/store/electronics')
+def electronics():
+    return render_template('grid-electronics.html', title='Electronics')
+
+#store - gear
+@app.route('/store/gear')
+def gear():
+    return render_template('grid-gear.html', title='Gear')
+
+#store - computers
+@app.route('/store/computers')
+def computers():
+    return render_template('grid-computers.html', title='Computers')
+
+#store - toys
+@app.route('/store/toys')
+def toys():
+    return render_template('grid-toys.html', title='Toys')
+
+#store - accessories
+@app.route('/store/accessories')
+def accessories():
+    return render_template('grid-accessories.html', title='Accessories')
+
+#store
+@app.route('/store')
+def store():
+    return render_template('store.html', title='Store')
+
+# shipping
+@app.route('/shipping')
+@login_required
+def shipping():
+    orders = db.Orders.find()
+    c = 0
+    current = {}
+
+    while c < orders.count():
+        if orders[c]['item_id'] in current:
+            current[orders[c]['item_id']] += 1
+        else:
+            current[orders[c]['item_id']] = 1
+        c += 1
+    return render_template('shipping.html', title='Shipping', orders=current)
+
 # Purchase
 @app.route('/purchase/items')
 def post_purchase():
@@ -246,10 +329,10 @@ def purchase():
             'notes'         : form.item_notes.data,
             'terms'         : form.terms_notes.data
         }
-
+        print(new_item)
         db.Purchase.insert_one(new_item)
         flash('Item Added.')
-        
+
         return redirect(url_for('purchase'))
     return render_template('purchase.html', title='Purchase Order', form=form)
 
@@ -292,16 +375,68 @@ def groups():
     return render_template('groups.html', title='Groups', groups=groups)
 
 # groups list
-@app.route('/groups/<name>')
+@app.route('/groups/<name>', methods=['GET','POST'])
 @login_required
 def groups_list(name):
+    if request.method == 'POST':
+        #print("++++++++++NEW REQUEST++++++++++++ pid: "+request.form.get("pid"))
+
+        update_item = {
+            'product' : request.form.get("pname"),
+            'sku' : request.form.get("sku"),
+            #'images' : images,
+            'category' : request.form.get("cate"),
+            'price' : request.form.get("price"),
+            'currency' : request.form.get("curr"),
+            #'attributes' : attrs,
+            'vendor' : request.form.get("vendor"),
+            'url' : request.form.get("url"),
+        }
+        ## Check attributes
+        attrs = {}
+        if request.form.get('attr0') :
+            if request.form.get('attr0') != "" :
+                attrs[request.form.get('attr0')] = request.form.get('options0')
+        if request.form.get('attr1') :
+            if request.form.get('attr1') != "" :
+                attrs[request.form.get('attr1')] = request.form.get('options1')
+        if request.form.get('attr2') :
+            if request.form.get('attr2') != "" :
+                attrs[request.form.get('attr2')] = request.form.get('options2')
+        if bool(attrs):
+            update_item['attributes'] = attrs
+        print(update_item);
+
+        db.Products.update_one({"id": request.form.get("pid")},{"$set":update_item},upsert=True)
+        #return redirect(url_for('groups_list',name=name))
+
     try:
         group = db.Groups.find({'name':str(name)})
+        #print("-------------------------- group: ",group[0]['id'])
         items = db.Products.find({'category':group[0]['id']})
+        if items.count() == 0:
+            flash("Product Does Not Exist")
+            return redirect(url_for('addItem'))
+        #print( items.__dict__ )        print(items[0])
     except TypeError:
         flash("Group Does Not Exist")
         return redirect(url_for('groups'))
-    return render_template('groups-list.html', title='Groups List', items=items)
+    if request.method == 'GET':
+        CURRENCIES=[('USD', '$'),('EURO','€'),('POUND', '£')]
+    return render_template('groups-list.html', title='Groups List', items=items, cates=getGroups(), currs=CURRENCIES)
+
+# ajax request :XLZ
+@app.route('/getProduct', methods=['POST'])
+@login_required
+def getProduct():
+    if request.method == 'POST':
+        item = request.json
+        print("++++++++++NEW REQUEST++++++++++++ item: ", item)
+        prdt = db.Products.find_one({'id':item['pid']})
+
+        return jsonify(id=prdt['id'], product=prdt['product'], sku=prdt['sku'], #'images' : prdt['images'],
+            category=prdt['category'], price=prdt['price'], currency=prdt['currency'],
+            attributes=prdt['attributes'], vendor=prdt['vendor'], url=prdt['url'])
 
 # vendor
 @app.route('/products/vendor', methods=['GET','POST'])
@@ -324,24 +459,62 @@ def vendor():
 @login_required
 def addItem():
     form = ProductForm()
+    form.update_category()
+    file_urls = []
+    if(request.method == 'POST') and 'photos' in request.files:
+        print("\n routes | addItem --- POST : ||||||| ----------------------------\n")
+        file_obj = request.files
+        for f in file_obj:
+            file = request.files.get(f)
+            if file.filename == '':
+                flash('No selected file')
+            imgfilepath = ""
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                imgfilepath = os.path.join(UPLOAD_FOLDER, filename)
+                file.save(imgfilepath)
+                # append image urls
+                file_urls.append(imgfilepath)
+        strjson = ",".join(file_urls)
+        #print("------strjson: "+strjson)
+        return jsonify(target_file=strjson)
+
     if form.validate_on_submit():
         # add new vendor
-        vendor = {
-            'id' : str(uid()),
-            'vendor' : form.vendor.data,
-            'url' : form.url.data,
-        }
-        db.Vendor.insert_one(vendor)
+        vendor = ""
+        if form.vendor.data != "none":
+            vendor = form.vendor.data
+            '''
+            new_vendor = {
+                'id' : str(uid()),
+                'vendor' : vendor,
+                'url' : form.url.data,
+            }
+            db.Vendor.insert_one(new_vendor)
+            '''
 
         # add new product
+        attrs = {form.attr0.data:form.options0.data}
+        if form.attr1.data != "":
+            attrs[form.attr1.data] = form.options1.data
+        if form.attr2.data != "":
+            attrs[form.attr2.data] = form.options2.data
+        images = form.hdfiles.data
+        #images = images.split(",")
+        print("\n routes | addItem: ----------------------------")
+        print(attrs)
+
         new_item = {
             'id' : str(uid()),
             'product' : form.product.data,
+            'sku' : form.sku.data,
+            'images' : images,
             'category' : form.category.data,
             'price' : form.price.data,
             'currency' : form.currency.data,
-            'quantity' : form.quantity.data,
-            'vendor' : form.vendor.data,
+            'attributes' : attrs,
+            'vendor' : vendor,
+            'url' : form.url.data,
         }
         db.Products.insert_one(new_item)
 
@@ -592,6 +765,7 @@ def signup():
 # login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    print("++++++++++      login     +++++++++++")
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = LoginForm()

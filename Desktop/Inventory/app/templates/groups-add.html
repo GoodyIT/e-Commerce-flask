@@ -22,8 +22,8 @@
                       </div>
                       <div class="row" style="margin-top:20px; padding: 0 15px 0 15px;">
                           <div class="col-lg-12">
-                              <label for="name">Group Name</label>
-                              <input type="text" class="form-control" id="name" name="name" placeholder="Silver">
+                              {{form.name.label}}
+                              {{form.name(class="form-control", placeholder="Silver")}}
                               {% for error in form.name.errors %}
                                   <span style="color: red;">[{{ error }}]</span>
                               {% endfor %}

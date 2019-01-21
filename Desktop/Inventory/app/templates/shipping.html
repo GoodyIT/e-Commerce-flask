@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="row col-lg-12">
+    <h2>Shipping</h2>
+</div>
+<div class="col-lg-4">
+    <div class="row" style="background-color: #D9F3F9; border: 1px solid black">
+        <h3>Awaiting Shipping</h3>
+    </div>
+    <div class="row" id="shipping-items" style="background-color: #F9F9F9; border: 1px solid black; height: 800px">
+        {% for k, v in orders.items() %}
+        <div class="pagination-ship" style="display:none;">
+            <div class="ship-card">
+                <h4>Item ID:</h4><b>{{k}}</b>
+                <h4>Quantity:</h4><b>{{v}}</b>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+        <div id="shipping-items-pagination" style="display:none;">
+            <a id="shipping-items-previous" class="paginate-prev" href="#">&laquo; Previous</a>
+            <a id="shipping-items-next" class="paginate-next" href="#">Next &raquo;</a>
+        </div>
+
+
+
+</div>
+<div class="col-lg-4">
+    <div class="row" style="background-color: #FAF8CA; border: 1px solid black">
+        <h3>Shipped Packages</h3>
+    </div>
+    <div class="row" style="background-color: #F9F9F9; border: 1px solid black; height: 800px">
+        <div class="ship-card"><h4>No Record Found</h4></div>
+        <div class="ship-card"><h4>No Record Found</h4></div>
+    </div>
+</div>
+<div class="col-lg-4">
+    <div class="row" style="background-color: #D4F1B4; border: 1px solid black">
+        <h3>Delivered Packages</h3>
+    </div>
+    <div class="row" style="background-color: #F9F9F9; border: 1px solid black; height: 800px">
+        <div class="ship-card"><h4>No Record Found</h4></div>
+        <div class="ship-card"><h4>No Record Found</h4></div>
+    </div>
+</div>
+
+{% endblock %}

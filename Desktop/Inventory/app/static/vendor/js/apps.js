@@ -1,4 +1,7 @@
 $(function() {
+
+    $('#shipping-items').paginate({itemsPerPage: 4});
+
     var groupName = $('#groupName').html();
     $('#groupName').hide();
     
@@ -69,7 +72,7 @@ $(function() {
         $("tbody tr",$("#tbPurchase"))
           .filter(function( index ) {
             return index > 0;
-          }).map(function(index) { 
+          }).map(function(index) {
             rows.push([
                 $("td:eq(0)",this).html(),
                 $("td:eq(1)",this).html(),
@@ -128,7 +131,7 @@ $(function() {
         $("tbody tr",$("#tbPurchase"))
           .filter(function( index ) {
             return index > 0;
-          }).map(function(index) { 
+          }).map(function(index) {
             rows.push([
                 $("td:eq(0)",this).html(),
                 $("td:eq(1)",this).html(),
@@ -289,11 +292,11 @@ $(function() {
         var terms    = $("#terms").val();
         // ----------------------------------- //
         let csvContent = "data:text/csv;charset=utf-8,";
-    
+
         rows.forEach(function(rowArray){
             let row = `,` + rowArray.join(",");
             csvContent += row + "\r\n";
-        }); 
+        });
         csvContent += '\r\n';
         csvContent += `, , Sub Total, ${subTotal}\r\n`;
         csvContent += `, , Discount, ${discount}\r\n`;
@@ -307,7 +310,6 @@ $(function() {
         document.body.appendChild(link);
         link.click();
     });
-
     $('#export_to_excel').on('click', function(e) {
 
         //prevent Default functionality
@@ -336,9 +338,9 @@ $(function() {
         $("tbody tr",$("#tbPurchase"))
           .filter(function( index ) {
             return index > 0;
-          }).map(function(index) { 
+          }).map(function(index) {
             rows.push([
-                index+1, 
+                index+1,
                 $("td:eq(0)",this).html(),
                 $("td:eq(1)",this).html(),
                 $("td:eq(2)",this).html(),
@@ -360,7 +362,7 @@ $(function() {
         rows.push(['Notes', notes]);
         rows.push(['Terms & Conditions', terms]);
         // ----------------------------------- //
-        
+
         var wb = XLSX.utils.book_new();
         wb.SheetNames.push("Order");
         var ws = XLSX.utils.aoa_to_sheet(rows);
@@ -567,7 +569,100 @@ $(function() {
                 break;
         }
     })
-});
+    //////////////////////////////////////////////////////////////////////////////
+    ////// Added By XLZ
+    var cntAttrs = 0;
+    $("#btnAddAttr").on("click", function(){
+        for(var i=1; i<6; i++) {
+            cntAttrs++;
+            if (!$("#attr"+cntAttrs).length) break;
+            if (cntAttrs == 5) return;
+        }
+
+        var htmlAddAttr = '<div class="row" style="margin-top:10px;">'+
+                        '<div class="col-lg-3"><label for="attr'+cntAttrs+'">Attribute</label><input type="text" class="form-control" id="attr'+cntAttrs+'" name="attr'+cntAttrs+'" placeholder="eg:color"></div>'+
+                        '<div class="col-lg-5"><label for="options'+cntAttrs+'">Options</label><input type="text" class="form-control" id="options'+cntAttrs+'" name="options'+cntAttrs+'" data-role="tagsinput" placeholder=""></div>'+
+                        '</div>';
+        $("div#dvAttr").append(htmlAddAttr);
+
+        // Erase Values on Table
+        $("#attr"+cntAttrs).val("");
+        $("#options"+cntAttrs).tagsinput();
+
+    });
+
+    ////// Upload image drag&drop
+    Dropzone.autoDiscover = false;
+    Dropzone.options.frmDropZone = {
+        paramName: "photos", // The name that will be used to transfer the file
+        acceptedFiles: '.jpg, .jpeg, .png, .gif',
+        maxFilesize: 2, // MB
+    }
+    jQuery(".dropzone").dropzone({
+        success : function(file, response) {
+            //console.log(file);
+            //console.log("------response: ",response);
+            if (response['target_file'] != '') {
+                var currentValue = jQuery("#hdfiles").val(); //jQuery("#frmNP input[name='hdfiles'").val();
+                if (currentValue == '') {
+                    jQuery("#hdfiles").val(response['target_file']);
+                } else {
+                    jQuery("#hdfiles").val(currentValue + "," + response['target_file']);
+                }
+            }
+        }
+    });
+
+    function getProduct(pid) {
+        $.ajax({
+            url: "/getProduct",
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({'pid':pid}),
+        })
+        .done(function(result) {
+            //location.reload();
+            if (result) {
+                $("#pid").val(result['id']);
+                $("#pname").val(result['product']);
+                $("#ptitle").text(result['product']);
+                $("#sku").val(result['sku']);
+                $("#cate").val(result['category']).change();
+
+                $("#price").val(result['price']);
+                $("#curr").val(result['currency']);
+
+                var attrs = result['attributes'];
+                //console.log("------> attrs: ", attrs);
+                var cntAttrs = 0;
+                $("div#dvAttr").html('');
+                $.each(attrs, function(key,value) {
+                    var htmlAddAttr = '<div class="row" style="margin-top:10px;">'+
+                        '<div class="col-lg-3"><label for="attr'+cntAttrs+'">Attribute</label><input type="text" class="form-control" id="attr'+cntAttrs+'" name="attr'+cntAttrs+'" placeholder="eg:color" value="'+key+'"></div>'+
+                        '<div class="col-lg-5"><label for="options'+cntAttrs+'">Options</label><input type="text" class="form-control" id="options'+cntAttrs+'" name="options'+cntAttrs+'" data-role="tagsinput" placeholder="" value="'+value+'"></div>';
+                    if (cntAttrs == 0) {
+                        htmlAddAttr += ' <div class="col-lg-3" style="margin-top: 25px;"><button type="button" id="btnAddAttr" class="btn btn-link">+Add more attribute</button></div>';
+                    }
+                    htmlAddAttr += '</div>';
+                    $("div#dvAttr").append(htmlAddAttr);
+
+                    $("#attr"+cntAttrs).val(key);
+                    $("#options"+cntAttrs).val(value);
+                    $("#options"+cntAttrs).tagsinput();
+                    cntAttrs++;
+                });
+
+                $("#vendor").val(result['vendor']);
+                $("#url").val(result['url']);
+
+            } else {
+                console.log("Failed to get Product Info from server!!!");
+            }
+
+        });
+    }
+})
 function initDashboard() {
     $.ajax({
         url: "/analytics",

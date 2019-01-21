@@ -35,7 +35,7 @@
                             <p>{{item.id}}</p>
                         </div>
                         <div class="col-lg-2">
-                            <a href="{{url_for('groups_list', name='Bronze')}}">{{item.name}}</a>
+                            <a href="{{url_for('groups_list', name=item.name)}}">{{item.name}}</a>
                         </div>
                         <div class="col-lg-2">
                             <h5 class="grp-list">{{item.type}}</h5>
