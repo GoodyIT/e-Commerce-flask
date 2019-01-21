@@ -37,12 +37,6 @@ def home():
 @app.route('/shipping')
 @login_required
 def shipping():
-
-    #def check_shipping_status():
-        #import random
-        #_SHIPPING_STATUS = ['awaiting', 'shipped', 'delivered']
-        #return _SHIPPING_STATUS[random.randint(0, 2)]
-
     orders = db.Orders.find()
     current = {}
 
@@ -52,11 +46,13 @@ def shipping():
             request_id = order['request_id']
         except KeyError:
             request_id = post_shipping_request(order)
-            db.Orders.update_one({'_id': order['_id']}, {'$set': {'request_id': request_id}})
+            if request_id:
+                db.Orders.update_one({'_id': order['_id']}, {'$set': {'request_id': request_id}})
+
+        if 'shipped' not in order:
             db.Orders.update_one({'_id': order['_id']}, {'$set': {'shipped': 'awaiting'}})
-            current[order['item_id']] = {'shipped': 'awaiting'}
-        else:
-            current[order['item_id']] = {'shipped': order['shipped']}
+
+        current[order['item_id']] = {'shipped': order['shipped']}
 
         if order['item_id'] in current:
             current[order['item_id']]['qty'] = 1
@@ -66,8 +62,10 @@ def shipping():
     return render_template('shipping.html', title='Shipping', orders=current)
 
 # Shipping status webhook
-@app.route('/shipping/status_updated')
-def shipping_status_updated(status_dict):
+@app.route('/shipping/status_updated', methods=['POST'])
+def shipping_status_updated():
+    status_dict = request.json
+
     import pprint
     pprint.pprint(status_dict)
 
@@ -90,7 +88,7 @@ def shipping_status_updated(status_dict):
         # check status_dict for details
         pass
 
-    db.Orders.update_one({'_id': order['_id']}, {'$set': {'shipped': status}})
+    db.Orders.update_one({'request_id': status_dict['request_id']}, {'$set': {'shipped': status}})
 
 # Purchase
 @app.route('/purchase/items')
