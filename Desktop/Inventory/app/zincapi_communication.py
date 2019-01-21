@@ -53,9 +53,12 @@ def post_shipping_request(order):
                       'phone_number': '5551230101',
                       'state': 'MA',
                       'zip_code': '02139'},
- #'webhooks': {'request_failed': 'http://mywebsite.com/zinc/requrest_failed',
+ 'webhooks': {
+              #'request_failed': 'http://mywebsite.com/zinc/requrest_failed',
               #'request_succeeded': 'http://mywebsite.com/zinc/request_succeeded',
-              #'tracking_obtained': 'http://mywebsite.com/zinc/tracking_obtained'}
+              #'tracking_obtained': 'http://mywebsite.com/zinc/tracking_obtained',
+              'status_updated': "http://79.100.23.126:5000/shipping/status_updated"
+              }
 
 }
 

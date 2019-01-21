@@ -52,18 +52,11 @@ def shipping():
             request_id = order['request_id']
         except KeyError:
             request_id = post_shipping_request(order)
-
-        if request_id:
             db.Orders.update_one({'_id': order['_id']}, {'$set': {'request_id': request_id}})
-            result = shipping_status_by_request_id(request_id)
+            db.Orders.update_one({'_id': order['_id']}, {'$set': {'shipped': 'awaiting'}})
+            current[order['item_id']] = {'shipped': 'awaiting'}
         else:
-            result = 'awaiting'
-
-        #result = check_shipping_status()
-        #db.Orders.update_one({'_id': order['_id']}, {'$set': {'shipped': result}})
-        #order['shipped'] = result
-
-        current[order['item_id']] = {'shipped': result}
+            current[order['item_id']] = {'shipped': order['shipped']}
 
         if order['item_id'] in current:
             current[order['item_id']]['qty'] = 1
@@ -71,6 +64,33 @@ def shipping():
             current[order['item_id']]['qty'] = 1
 
     return render_template('shipping.html', title='Shipping', orders=current)
+
+# Shipping status webhook
+@app.route('/shipping/status_updated')
+def shipping_status_updated(status_dict):
+    import pprint
+    pprint.pprint(status_dict)
+
+    status = 'unknown'
+
+    if 'code' in status_dict and status_dict['code'] == 'request_processing':
+        status = 'awaiting'
+
+    elif '_type' in status_dict and status_dict['_type'] == 'error':
+        # Request done processing.
+        # Could contain "message": "Request is currently processing and will complete soon."
+        # or not only. For now return awaiting in this case.
+        status = 'awaiting'
+
+    elif '_type' in status_dict and status_dict['_type'] == 'order_response':
+        # check status_dict for details
+        pass
+
+    else:
+        # check status_dict for details
+        pass
+
+    db.Orders.update_one({'_id': order['_id']}, {'$set': {'shipped': status}})
 
 # Purchase
 @app.route('/purchase/items')
