@@ -6,7 +6,7 @@ from datetime import datetime as date
 from .forms import RegisterForm, LoginForm, ProductForm, PurchaseForm, GroupForm, VendorForm, BillingForm
 from .data import User
 from .inventory import Warehouse
-from .zincapi_communication import post_shipping_request, shipping_status_by_request_id
+from .zincapi_communication import post_shipping_request
 
 
 # load user
@@ -84,6 +84,17 @@ def shipping_status_updated():
 
     if status is not None:
         db.Orders.update_one({'request_id': status_dict['request_id']}, {'$set': {'shipped': status}})
+
+    return jsonify({'status':'success'}), 200
+
+# Tracking obtained webhook
+@app.route('/shipping/tracking_obtained', methods=['POST'])
+def shipping_tracking_obtained():
+    status_dict = request.json
+    print('tracking dict = ', status_dict)
+
+    if 'tracking' in status_dict and status_dict['tracking'][0]['delivery_status'] == 'Delivered':
+        db.Orders.update_one({'request_id': status_dict['request_id']}, {'$set': {'shipped': 'delivered'}})
 
     return jsonify({'status':'success'}), 200
 
