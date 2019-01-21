@@ -17,7 +17,6 @@ def allowed_file(filename):
     curDirPath = os.path.dirname(os.path.realpath(__file__))
     UPLOAD_FOLDER = os.path.join(curDirPath,"uploads")
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
-    CURRENCIES=[('USD', '$'),('EURO','€'),('POUND', '£')]
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 def getGroups():
@@ -240,13 +239,13 @@ def groups_list(name):
         if items.count() == 0:
             flash("Product Does Not Exist")
             return redirect(url_for('addItem'))
-
-        cates = getGroups()
         #print( items.__dict__ )        print(items[0])
     except TypeError:
         flash("Group Does Not Exist")
         return redirect(url_for('groups'))
-    return render_template('groups-list.html', title='Groups List', items=items, cates=cates, currs=CURRENCIES)
+    if request.method == 'GET':
+        CURRENCIES=[('USD', '$'),('EURO','€'),('POUND', '£')]
+    return render_template('groups-list.html', title='Groups List', items=items, cates=getGroups(), currs=CURRENCIES)
 
 # ajax request :XLZ
 @app.route('/getProduct', methods=['POST'])
