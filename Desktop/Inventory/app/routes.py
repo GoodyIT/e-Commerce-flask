@@ -7,7 +7,6 @@ from .forms import RegisterForm, LoginForm, ProductForm, PurchaseForm, GroupForm
 from .data import User
 from .inventory import Warehouse
 
-
 # load user
 @login.user_loader
 def load_user(username):
@@ -21,6 +20,7 @@ def load_user(username):
 def not_found_error(error):
     return render_template('404.html'), 404
 
+# Internal handling
 @app.errorhandler(500)
 def internal_error(error):
     return render_template('500.html'), 500
@@ -31,6 +31,47 @@ def internal_error(error):
 def home():
     products = db.Products.find()
     return render_template('index.html', title='Home Page', total=products)
+
+#store - games
+@app.route('/store/games')
+def games():
+    return render_template('grid-games.html', title='Games')
+
+#store - office
+@app.route('/store/office')
+def office():
+    return render_template('grid-games.html', title='Office')
+
+#store - electronics
+@app.route('/store/electronics')
+def electronics():
+    return render_template('grid-electronics.html', title='Electronics')
+
+#store - gear
+@app.route('/store/gear')
+def gear():
+    return render_template('grid-gear.html', title='Gear')
+
+#store - computers
+@app.route('/store/computers')
+def computers():
+    return render_template('grid-computers.html', title='Computers')
+
+#store - toys
+@app.route('/store/toys')
+def toys():
+    return render_template('grid-toys.html', title='Toys')
+
+#store - accessories
+@app.route('/store/accessories')
+def accessories():
+    return render_template('grid-accessories.html', title='Accessories')
+
+#store
+@app.route('/store')
+def store():
+    return render_template('store.html', title='Store')
+
 
 # shipping
 @app.route('/shipping')

@@ -11,7 +11,7 @@
     <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom fonts for this template-->
     <link href="../static/vendor/font-awesome/5.1/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="../static/css/style.css" rel="stylesheet" type="text/css">
+    <link href="../static/vendor/css/style.css" rel="stylesheet" type="text/css">
 
     <!-- Title Page -->
     {% if title %}
@@ -34,6 +34,7 @@
           <ul class="nav navbar-nav navbar-left">
               <li><a href="{{url_for('home')}}">Dashboard</a></li>
               <li><a href="{{url_for('queue')}}">Queue</a></li>
+              <li><a href="{{url_for('store')}}">Store-Test</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
               <li class="dropdown"><a href="{{url_for('reports')}}" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b>
