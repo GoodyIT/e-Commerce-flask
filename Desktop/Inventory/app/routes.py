@@ -3,26 +3,25 @@ from flask import render_template, json, url_for, flash, redirect, request, json
 from flask_login import login_user, logout_user, login_required, current_user
 from uuid import uuid4 as uid
 from datetime import datetime as date
+from werkzeug.utils import secure_filename
 from .forms import RegisterForm, LoginForm, ProductForm, PurchaseForm, GroupForm, VendorForm, BillingForm
 from .data import User
 from .inventory import Warehouse
+import os
 
-<<<<<<< HEAD
-=======
+
 #app = Flask(__name__)
 
-# Added By XLZ
-import os
-from werkzeug.utils import secure_filename
-curDirPath = os.path.dirname(os.path.realpath(__file__))
-UPLOAD_FOLDER = os.path.join(curDirPath,"uploads")
-#print("--------UPLOAD_FOLDER: {} --------".format(UPLOAD_FOLDER))
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
-CURRENCIES=[('USD', '$'),('EURO','€'),('POUND', '£')]
 def allowed_file(filename):
+    ''' method for choosing form file path '''
+    curDirPath = os.path.dirname(os.path.realpath(__file__))
+    UPLOAD_FOLDER = os.path.join(curDirPath,"uploads")
+    ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+    CURRENCIES=[('USD', '$'),('EURO','€'),('POUND', '£')]
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 def getGroups():
+    ''' SelectField method for getting group list '''
     groups = db.Groups.find()
     size = groups.count() - 1
     choices = {}
@@ -35,8 +34,6 @@ def getGroups():
         return {'none':'None'}
     return choices
 
-
->>>>>>> 0d4515d29d31bca4040d7cf2838026997c7a0b4a
 # load user
 @login.user_loader
 def load_user(username):
@@ -102,7 +99,6 @@ def accessories():
 def store():
     return render_template('store.html', title='Store')
 
-
 # shipping
 @app.route('/shipping')
 @login_required
@@ -117,7 +113,6 @@ def shipping():
         else:
             current[orders[c]['item_id']] = 1
         c += 1
-
     return render_template('shipping.html', title='Shipping', orders=current)
 
 # Purchase
@@ -221,7 +216,7 @@ def groups_list(name):
             'url' : request.form.get("url"),
         }
         ## Check attributes
-        attrs = {}        
+        attrs = {}
         if request.form.get('attr0') :
             if request.form.get('attr0') != "" :
                 attrs[request.form.get('attr0')] = request.form.get('options0')
@@ -239,8 +234,8 @@ def groups_list(name):
         #return redirect(url_for('groups_list',name=name))
 
     try:
-        group = db.Groups.find({'name':str(name)}) 
-        #print("-------------------------- group: ",group[0]['id'])       
+        group = db.Groups.find({'name':str(name)})
+        #print("-------------------------- group: ",group[0]['id'])
         items = db.Products.find({'category':group[0]['id']})
         if items.count() == 0:
             flash("Product Does Not Exist")
@@ -258,7 +253,7 @@ def groups_list(name):
 @login_required
 def getProduct():
     if request.method == 'POST':
-        item = request.json        
+        item = request.json
         print("++++++++++NEW REQUEST++++++++++++ item: ", item)
         prdt = db.Products.find_one({'id':item['pid']})
 
@@ -296,17 +291,17 @@ def addItem():
             file = request.files.get(f)
             if file.filename == '':
                 flash('No selected file')
-            imgfilepath = ""        
+            imgfilepath = ""
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                imgfilepath = os.path.join(UPLOAD_FOLDER, filename) 
+                imgfilepath = os.path.join(UPLOAD_FOLDER, filename)
                 file.save(imgfilepath)
                 # append image urls
                 file_urls.append(imgfilepath)
         strjson = ",".join(file_urls)
         #print("------strjson: "+strjson)
         return jsonify(target_file=strjson)
-        
+
     if form.validate_on_submit():
         # add new vendor
         vendor = ""
@@ -327,7 +322,7 @@ def addItem():
             attrs[form.attr1.data] = form.options1.data
         if form.attr2.data != "":
             attrs[form.attr2.data] = form.options2.data
-        images = form.hdfiles.data 
+        images = form.hdfiles.data
         #images = images.split(",")
         print("\n routes | addItem: ----------------------------")
         print(attrs)

@@ -404,24 +404,22 @@ $(function() {
             location.reload();
         });
     });
-<<<<<<< HEAD
-=======
 
     //////////////////////////////////////////////////////////////////////////////
     ////// Added By XLZ
     var cntAttrs = 0;
-    $("#btnAddAttr").on("click", function(){        
+    $("#btnAddAttr").on("click", function(){
         for(var i=1; i<6; i++) {
             cntAttrs++;
             if (!$("#attr"+cntAttrs).length) break;
             if (cntAttrs == 5) return;
-        }        
+        }
 
         var htmlAddAttr = '<div class="row" style="margin-top:10px;">'+
                         '<div class="col-lg-3"><label for="attr'+cntAttrs+'">Attribute</label><input type="text" class="form-control" id="attr'+cntAttrs+'" name="attr'+cntAttrs+'" placeholder="eg:color"></div>'+
                         '<div class="col-lg-5"><label for="options'+cntAttrs+'">Options</label><input type="text" class="form-control" id="options'+cntAttrs+'" name="options'+cntAttrs+'" data-role="tagsinput" placeholder=""></div>'+
                         '</div>';
-        $("div#dvAttr").append(htmlAddAttr);        
+        $("div#dvAttr").append(htmlAddAttr);
 
         // Erase Values on Table
         $("#attr"+cntAttrs).val("");
@@ -434,8 +432,8 @@ $(function() {
     Dropzone.options.frmDropZone = {
         paramName: "photos", // The name that will be used to transfer the file
         acceptedFiles: '.jpg, .jpeg, .png, .gif',
-        maxFilesize: 2, // MB      
-    }    
+        maxFilesize: 2, // MB
+    }
     jQuery(".dropzone").dropzone({
         success : function(file, response) {
             //console.log(file);
@@ -449,11 +447,7 @@ $(function() {
                 }
             }
         }
-    });    
-
-
->>>>>>> 0d4515d29d31bca4040d7cf2838026997c7a0b4a
-});
+    });
 
 function getProduct(pid) {
     $.ajax({
@@ -463,7 +457,7 @@ function getProduct(pid) {
         contentType: "application/json",
         data: JSON.stringify({'pid':pid}),
     })
-    .done(function(result) {        
+    .done(function(result) {
         //location.reload();
         if (result) {
             $("#pid").val(result['id']);
@@ -474,7 +468,7 @@ function getProduct(pid) {
 
             $("#price").val(result['price']);
             $("#curr").val(result['currency']);
-            
+
             var attrs = result['attributes'];
             //console.log("------> attrs: ", attrs);
             var cntAttrs = 0;
@@ -487,7 +481,7 @@ function getProduct(pid) {
                     htmlAddAttr += ' <div class="col-lg-3" style="margin-top: 25px;"><button type="button" id="btnAddAttr" class="btn btn-link">+Add more attribute</button></div>';
                 }
                 htmlAddAttr += '</div>';
-                $("div#dvAttr").append(htmlAddAttr);        
+                $("div#dvAttr").append(htmlAddAttr);
 
                 $("#attr"+cntAttrs).val(key);
                 $("#options"+cntAttrs).val(value);
@@ -497,10 +491,11 @@ function getProduct(pid) {
 
             $("#vendor").val(result['vendor']);
             $("#url").val(result['url']);
-            
+
         } else {
             console.log("Failed to get Product Info from server!!!");
         }
 
     });
-}
+    }
+})
