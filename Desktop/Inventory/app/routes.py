@@ -64,31 +64,26 @@ def shipping():
 # Shipping status webhook
 @app.route('/shipping/status_updated', methods=['POST'])
 def shipping_status_updated():
+
     status_dict = request.json
 
-    import pprint
-    pprint.pprint(status_dict)
-
-    status = 'unknown'
+    status = None
 
     if 'code' in status_dict and status_dict['code'] == 'request_processing':
         status = 'awaiting'
 
     elif '_type' in status_dict and status_dict['_type'] == 'error':
         # Request done processing.
-        # Could contain "message": "Request is currently processing and will complete soon."
-        # or not only. For now return awaiting in this case.
+        # We can do more precise checks on the status dict.
+        # For now return awaiting in this case.
         status = 'awaiting'
 
     elif '_type' in status_dict and status_dict['_type'] == 'order_response':
-        # check status_dict for details
-        pass
+        # here we know that the order was successfully placed
+        status = 'shipped'
 
-    else:
-        # check status_dict for details
-        pass
-
-    db.Orders.update_one({'request_id': status_dict['request_id']}, {'$set': {'shipped': status}})
+    if status is not None:
+        db.Orders.update_one({'request_id': status_dict['request_id']}, {'$set': {'shipped': status}})
 
     return jsonify({'status':'success'}), 200
 
