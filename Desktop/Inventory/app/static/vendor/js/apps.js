@@ -1,7 +1,7 @@
 $(function() {
     var groupName = $('#groupName').html();
     $('#groupName').hide();
-
+    
     // preloader
     $(function() {
         $(".preloader").fadeOut();
@@ -19,7 +19,7 @@ $(function() {
             $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
         }
     );
-
+    
     // Tables
     $('#orderTable').DataTable();
     $('#productTable').DataTable();
@@ -403,4 +403,284 @@ $(function() {
         });
     });
 
+    $("#analytics_by_date_type").on('change', function () {
+        switch($("#analytics_by_date_type").val()) {
+            case 'by_daily':
+                $.ajax({
+                    url: "/analytics",
+                    type: "post",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({'type': 'by_daily'}),
+                })
+                .done(function(res) {
+                    labelArray = [];
+                    dataArray  = [];
+                    res.analyticsByDaily.forEach(value => {
+                        labelArray.push(value['_id']['year'] + "." + value['_id']['day']);
+                        dataArray.push(value['quantity']);
+                    });
+                    var ctxAnalyticsByDaily = document.getElementById("analytics_by_date").getContext('2d');
+                    new Chart(ctxAnalyticsByDaily, {
+                        type: 'bar',
+                        data: {
+                            labels: labelArray,
+                            datasets: [{
+                                label: 'Analytics By Date',
+                                data: dataArray,
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255,99,132,1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero:true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                });
+                break;
+            case 'by_weekly':
+                $.ajax({
+                    url: "/analytics",
+                    type: "post",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({'type': 'by_weekly'}),
+                })
+                .done(function(res) {
+                    labelArray = [];
+                    dataArray  = [];
+                    res.analyticsByWeekly.forEach(value => {
+                        labelArray.push(value['_id']['year'] + "." + value['_id']['week']);
+                        dataArray.push(value['quantity']);
+                    });
+                    var ctxAnalyticsByWeekly = document.getElementById("analytics_by_date").getContext('2d');
+                    new Chart(ctxAnalyticsByWeekly, {
+                        type: 'bar',
+                        data: {
+                            labels: labelArray,
+                            datasets: [{
+                                label: 'Analytics By Date',
+                                data: dataArray,
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255,99,132,1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero:true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                });
+                break;
+            case 'by_monthly':
+                $.ajax({
+                    url: "/analytics",
+                    type: "post",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({'type': 'by_monthly'}),
+                })
+                .done(function(res) {
+                    labelArray = [];
+                    dataArray  = [];
+                    res.analyticsByMonthly.forEach(value => {
+                        labelArray.push(value['_id']['year'] + "." + value['_id']['month']);
+                        dataArray.push(value['quantity']);
+                    });
+                    var ctxAnalyticsByMonthly = document.getElementById("analytics_by_date").getContext('2d');
+                    new Chart(ctxAnalyticsByMonthly, {
+                        type: 'bar',
+                        data: {
+                            labels: labelArray,
+                            datasets: [{
+                                label: 'Analytics By Date',
+                                data: dataArray,
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255,99,132,1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero:true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                });
+                break;
+            case 'by_yearly':
+                $.ajax({
+                    url: "/analytics",
+                    type: "post",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({'type': 'by_yearly'}),
+                })
+                .done(function(res) {
+                    labelArray = [];
+                    dataArray  = [];
+                    res.analyticsByYearly.forEach(value => {
+                        labelArray.push(value['_id']['year']);
+                        dataArray.push(value['quantity']);
+                    });
+                    var ctxAnalyticsByYearly = document.getElementById("analytics_by_date").getContext('2d');
+                    new Chart(ctxAnalyticsByYearly, {
+                        type: 'bar',
+                        data: {
+                            labels: labelArray,
+                            datasets: [{
+                                label: 'Analytics By Date',
+                                data: dataArray,
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255,99,132,1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero:true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                });
+                break;
+        }
+    })
 });
+function initDashboard() {
+    $.ajax({
+        url: "/analytics",
+        type: "post",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify({'type': 'init'}),
+    })
+    .done(function(res) {
+        $("#analytics_total_order").html(res.analytics.quantity);
+        $("#analytics_total_price").html(res.analytics.price);
+
+        // Analytics by location
+        var labelArray = [];
+        var dataArray  = [];
+        labelArray = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", 
+          "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", 
+          "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", 
+          "VA", "WA", "WV", "WI", "WY"];
+        var dataJson = {};
+        res.analyticsByState.forEach(value => {
+            dataJson[value["_id"]] = value["quantity"];
+        });
+        dataArray = labelArray.map(state => {
+            if (dataJson[state])
+                return dataJson[state];
+            return 0;
+        });
+        
+        var ctxAnalyticsByLocation = document.getElementById("analytics_by_location").getContext('2d');
+        new Chart(ctxAnalyticsByLocation, {
+            type: 'bar',
+            data: {
+                labels: labelArray,
+                datasets: [{
+                    label: 'Analytics By Location',
+                    data: dataArray,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255,99,132,1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+
+        // Analytics by group
+        labelArray = [];
+        dataArray  = [];
+        res.analyticsByItem.forEach(value => {
+            labelArray.push(value['_id']);
+            dataArray.push(value['quantity']);
+        });
+        var ctxAnalyticsByItem = document.getElementById("analytics_by_item").getContext('2d');
+        new Chart(ctxAnalyticsByItem, {
+            type: 'bar',
+            data: {
+                labels: labelArray,
+                datasets: [{
+                    label: 'Analytics By Item',
+                    data: dataArray,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255,99,132,1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+
+        // Analytics by date
+        labelArray = [];
+        dataArray  = [];
+        res.analyticsByYearly.forEach(value => {
+            labelArray.push(value['_id']['year']);
+            dataArray.push(value['quantity']);
+        });
+        var ctxAnalyticsByYearly = document.getElementById("analytics_by_date").getContext('2d');
+        new Chart(ctxAnalyticsByYearly, {
+            type: 'bar',
+            data: {
+                labels: labelArray,
+                datasets: [{
+                    label: 'Analytics By Date',
+                    data: dataArray,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255,99,132,1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+    });
+}

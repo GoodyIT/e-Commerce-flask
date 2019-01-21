@@ -66,9 +66,9 @@ class PurchaseForm(FlaskForm):
     reference = StringField('Reference Order', validators=[DataRequired()])
     current_date = DateField('Current Date', format='%m/%d/%Y')
     delivery_date = DateField('Delivery Date', format='%m/%d/%Y')
-    discount = StringField('Discount', validators=[DataRequired()])
-    item_notes = StringField('Notes', validators=[DataRequired()])
-    terms_notes = StringField('Terms & Conditions', validators=[DataRequired()])
+    discount = StringField('Discount')
+    item_notes = StringField('Notes')
+    terms_notes = StringField('Terms & Conditions')
     orders = StringField()
     submit = SubmitField('Submit')
 

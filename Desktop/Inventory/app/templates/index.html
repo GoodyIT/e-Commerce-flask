@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block body %}
-  <body>
+  <body onload="initDashboard()">
       <div class="row">
           <div class="card" style="margin-bottom: 25px">
               <div class="col-lg-8" style="border-right: 1px solid #EDEDED;">
@@ -98,29 +98,78 @@
       </div>
       <hr>
       <div class="row">
-          <div class="col-lg-4" style="border-right: 1px solid #EDEDED;">
-              <div class="purchase-block">
-                  <h4 style="text-align: left;">Purchase Orders</h4>
-                  <hr>
-                  <div class="purchase-item">
-                      <h3>0</h3>
-                      <h5>Quantity Ordered</h5>
-                  </div>
-                  <hr>
-                  <div class="purchase-item">
-                      <h3>0</h3>
-                      <h5>Total Cost</h5>
-                  </div>
-              </div>
-          </div>
-          <div class='col-lg-8'>
-              <div class="salesorder-block" style="margin-bottom: 10px">
-                  <h4 style="text-align: left;">Sales Orders</h4>
-                  <div class="salesorder-header" style="display:inline-block;">
-                  </div>
-                  <div class="salesorder-item"></div>
-              </div>
-          </div>
+        <div class="col-lg-4" style="border-right: 1px solid #EDEDED;">
+            <div class="purchase-block">
+                <h4 style="text-align: left;">Purchase Orders</h4>
+                <hr>
+                <div class="purchase-item">
+                    <h3 id="analytics_total_order">0</h3>
+                    <h5>Quantity Ordered</h5>
+                </div>
+                <hr>
+                <div class="purchase-item">
+                    <h3 id="analytics_total_price">0</h3>
+                    <h5>Total Cost</h5>
+                </div>
+            </div>
+        </div>
+        <div class='col-lg-8'>
+            <div class="salesorder-block" style="margin-bottom: 10px">
+                <h4 style="text-align: left;">Sales Orders</h4>
+                <div class="salesorder-header" style="display:inline-block;">
+                </div>
+                <div class="salesorder-item"></div>
+            </div>
+        </div>
+        <div class='col-lg-12' style='display: flex; align-items: center; margin-top: 20px;'>
+            <div class="col-lg-3" style="text-align: center;">
+            </div>
+            <div class="col-lg-6" style="padding:0; text-align: center;">
+                <h3 style="margin: 0;">Analytics By Date</h3>
+            </div>
+            <div class="col-lg-3">
+                <select name="analytics_by_date_type" class="form-control form-control-lg" id="analytics_by_date_type">
+                    <option value="by_daily">By Daily</option>
+                    <option value="by_weekly">By Weekly</option>
+                    <option value="by_monthly">By Monthly</option>
+                    <option value="by_yearly" selected>By Yearly</option>
+                </select>
+            </div>
+        </div>
+        <div class='col-lg-12'>
+            <canvas id="analytics_by_date"></canvas>
+        </div>
+
+        <div class='col-lg-12' style='display: flex; align-items: center; margin-top: 20px;'>
+            <div class="col-lg-3" style="text-align: center;">
+            </div>
+            <div class="col-lg-6" style="padding:0; text-align: center;">
+                <h3 style="margin: 0;">Analytics By Location</h3>
+            </div>
+            <div class="col-lg-3">
+                <select name="analytics_by_location_type" class="form-control form-control-lg" id="analytics_by_location_type">
+                    <option value="by_city">By City</option>
+                    <option value="by_state" selected>By State</option>
+                    <option value="by_country">By Country</option>
+                </select>
+            </div>
+        </div>
+        <div class='col-lg-12'>
+            <canvas id="analytics_by_location"></canvas>
+        </div>
+
+        <div class='col-lg-12' style='display: flex; align-items: center; margin-top: 20px;'>
+            <div class="col-lg-3" style="text-align: center;">
+            </div>
+            <div class="col-lg-6" style="padding:0; text-align: center;">
+                <h3 style="margin: 0;">Analytics By Group</h3>
+            </div>
+            <div class="col-lg-3">
+            </div>
+        </div>
+        <div class='col-lg-12'>
+            <canvas id="analytics_by_item"></canvas>
+        </div>
       </div>
 
 {% endblock %}
