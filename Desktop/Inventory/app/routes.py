@@ -90,6 +90,8 @@ def shipping_status_updated():
 
     db.Orders.update_one({'request_id': status_dict['request_id']}, {'$set': {'shipped': status}})
 
+    return jsonify({'status':'success'}), 200
+
 # Purchase
 @app.route('/purchase/items')
 def post_purchase():
