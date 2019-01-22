@@ -7,22 +7,22 @@
               <div class="col-lg-8" style="border-right: 1px solid #EDEDED;">
                   <h4>Sales Activity</h4>
                   <div class="sales-block">
-                      <span style="font-size:30px;">0</span>
+                      <span style="font-size:30px;" id="analytics_packed_order_count">0</span>
                       <span>QTY</span>
                       <p>TO BE PACKED</p>
                   </div>
                   <div class="sales-block">
-                      <span style="font-size:30px;">0</span>
+                      <span style="font-size:30px;" id="analytics_shipped_order_count">0</span>
                       <span>PKGS</span>
                       <p>TO BE SHIPPED</p>
                   </div>
                   <div class="sales-block">
-                      <span style="font-size:30px;">0</span>
+                      <span style="font-size:30px;" id="analytics_delivered_order_count">0</span>
                       <span>PKGS</span>
                       <p>TO BE DELIVERED</p>
                   </div>
                   <div class="sales-block">
-                      <span style="font-size:30px;">0</span>
+                      <span style="font-size:30px;" id="analytics_invoiced_order_count">0</span>
                       <span>QTY</span>
                       <p>TO BE INVOICED</p>
                   </div>
@@ -136,7 +136,7 @@
                 </select>
             </div>
         </div>
-        <div class='col-lg-12'>
+        <div class='col-lg-12' id="analytics_by_date_container">
             <canvas id="analytics_by_date"></canvas>
         </div>
 
@@ -154,7 +154,7 @@
                 </select>
             </div>
         </div>
-        <div class='col-lg-12'>
+        <div class='col-lg-12' id='analytics_by_location_container'>
             <canvas id="analytics_by_location"></canvas>
         </div>
 
@@ -168,7 +168,7 @@
             </div>
         </div>
         <div class='col-lg-12'>
-            <canvas id="analytics_by_item"></canvas>
+            <canvas id="analytics_by_group"></canvas>
         </div>
       </div>
 

@@ -69,7 +69,7 @@ def home():
 @login_required
 def get_analytics():
     requestData = json.loads(request.data)
-    print(requestData)
+    
     if (requestData['type'] == 'init'):
         analyticsByState = db.Orders.aggregate([
             {
@@ -107,11 +107,11 @@ def get_analytics():
             },
             { "$sort": { "_id": 1} }
         ])
-        analyticsByItem = db.Orders.aggregate([
+        analyticsByGroup = db.Orders.aggregate([
             {
                 "$group": 
                 {
-                    "_id": "$item_id",
+                    "_id": "$group_id",
                     "price": { 
                         "$sum": { 
                             "$multiply": [ "$price", "$quantity" ]
@@ -122,9 +122,23 @@ def get_analytics():
                     },
                     "count": { "$sum": 1 }
                 }
+            },
+            {
+                "$lookup":
+                {
+                    "from": "Groups",
+                    "localField": "_id",
+                    "foreignField": "id",
+                    "as": "group"
+                }
             }
         ])
-        analytics = db.Orders.aggregate([
+
+        analyticsByGroupArray = []
+        for x in analyticsByGroup:
+            analyticsByGroupArray.append({'group': x['group'][0]['name'], 'quantity': x['quantity']})
+        
+        totalQuantityAndCost = db.Orders.aggregate([
             {
                 "$group": {
                     "_id": "1",
@@ -140,11 +154,23 @@ def get_analytics():
                 }
             }
         ])
+        
+        totalQuantityAndCostArray = list(totalQuantityAndCost)
+        packedOrderCount    = db.Queue.count_documents({})
+        shippedOrderCount   = db.Orders.count_documents({"ship_id": None})
+        deliveredOrderCount = db.Orders.count_documents({"$and": [{"ship_id": {"$ne": None}}, {"invoice_id": None}]})
+        invoicedOrderCount  = db.Orders.count_documents({"$and": [{"ship_id": {"$ne": None}}, {"invoice_id": {"$ne": None}}]})
+        
         return jsonify({
-            "analyticsByYearly": list(analyticsByYearly),
-            "analyticsByState": list(analyticsByState),
-            "analyticsByItem": list(analyticsByItem),
-            "analytics": list(analytics)[0]
+            "analyticsByYearly"   : list(analyticsByYearly),
+            "analyticsByState"    : list(analyticsByState),
+            "analyticsByGroup"    : analyticsByGroupArray,
+            "totalCost"           : totalQuantityAndCostArray[0]['price'],
+            "totalQuantity"       : totalQuantityAndCostArray[0]['quantity'],
+            "packedOrderCount"    : packedOrderCount,
+            "shippedOrderCount"   : shippedOrderCount,
+            "deliveredOrderCount" : deliveredOrderCount,
+            "invoicedOrderCount"  : invoicedOrderCount
         })
     if (requestData['type'] == 'by_daily'):
         analyticsByDaily = db.Orders.aggregate([
@@ -233,6 +259,48 @@ def get_analytics():
         ])
         return jsonify({
             "analyticsByYearly": list(analyticsByYearly)
+        })
+    if (requestData['type'] == 'by_state'):
+        analyticsByState = db.Orders.aggregate([
+            {
+                "$group" : {
+                    "_id":"$state", 
+                    "price": { 
+                        "$sum": { 
+                            "$multiply": [ "$price", "$quantity" ]
+                        }
+                    },
+                    "quantity": { 
+                        "$sum": "$quantity"
+                    },
+                    "count": { "$sum": 1 }
+                }
+            },
+            { "$sort": { "_id": 1} }
+        ])
+        return jsonify({
+            "analyticsByState": list(analyticsByState)
+        })
+    if (requestData['type'] == 'by_country'):
+        analyticsByCountry = db.Orders.aggregate([
+            {
+                "$group" : {
+                    "_id":"$country", 
+                    "price": { 
+                        "$sum": { 
+                            "$multiply": [ "$price", "$quantity" ]
+                        }
+                    },
+                    "quantity": { 
+                        "$sum": "$quantity"
+                    },
+                    "count": { "$sum": 1 }
+                }
+            },
+            { "$sort": { "_id": 1} }
+        ])
+        return jsonify({
+            "analyticsByCountry": list(analyticsByCountry)
         })
     return jsonify({})
     

@@ -406,6 +406,8 @@ $(function() {
     });
 
     $("#analytics_by_date_type").on('change', function () {
+        $("#analytics_by_date").remove();
+        $("#analytics_by_date_container").append('<canvas id="analytics_by_date"></canvas>');
         switch($("#analytics_by_date_type").val()) {
             case 'by_daily':
                 $.ajax({
@@ -569,6 +571,106 @@ $(function() {
                 break;
         }
     })
+
+    $("#analytics_by_location_type").on('change', function () {
+        $("#analytics_by_location").remove();
+        $("#analytics_by_location_container").append('<canvas id="analytics_by_location"></canvas>');
+        switch($("#analytics_by_location_type").val()) {
+            case 'by_city':
+                break;
+            case 'by_state':
+                $.ajax({
+                    url: "/analytics",
+                    type: "post",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({'type': 'by_state'}),
+                })
+                .done(function(res) {
+                    var labelArray = [];
+                    var dataArray  = [];
+                    labelArray = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", 
+                    "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", 
+                    "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", 
+                    "VA", "WA", "WV", "WI", "WY"];
+                    var dataJson = {};
+                    res.analyticsByState.forEach(value => {
+                        dataJson[value["_id"]] = value["quantity"];
+                    });
+                    dataArray = labelArray.map(state => {
+                        if (dataJson[state])
+                            return dataJson[state];
+                        return 0;
+                    });
+                    
+                    var ctxAnalyticsByLocation = document.getElementById("analytics_by_location").getContext('2d');
+                    new Chart(ctxAnalyticsByLocation, {
+                        type: 'bar',
+                        data: {
+                            labels: labelArray,
+                            datasets: [{
+                                label: 'Analytics By Location',
+                                data: dataArray,
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255,99,132,1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero:true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                });
+                break;
+            case 'by_country':
+                $.ajax({
+                    url: "/analytics",
+                    type: "post",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({'type': 'by_country'}),
+                })
+                .done(function(res) {
+                    var labelArray = [];
+                    var dataArray  = [];
+                    res.analyticsByCountry.forEach(value => {
+                        labelArray.push(value['_id']);
+                        dataArray.push(value['quantity']);
+                    });
+                    
+                    var ctxAnalyticsByLocation = document.getElementById("analytics_by_location").getContext('2d');
+                    new Chart(ctxAnalyticsByLocation, {
+                        type: 'bar',
+                        data: {
+                            labels: labelArray,
+                            datasets: [{
+                                label: 'Analytics By Location',
+                                data: dataArray,
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255,99,132,1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero:true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                });
+                break;
+        }
+    })
     //////////////////////////////////////////////////////////////////////////////
     ////// Added By XLZ
     var cntAttrs = 0;
@@ -672,8 +774,13 @@ function initDashboard() {
         data: JSON.stringify({'type': 'init'}),
     })
     .done(function(res) {
-        $("#analytics_total_order").html(res.analytics.quantity);
-        $("#analytics_total_price").html(res.analytics.price);
+        console.log(res);
+        $("#analytics_total_order").html(res.totalQuantity);
+        $("#analytics_total_price").html(res.totalCost);
+        $("#analytics_packed_order_count").html(res.packedOrderCount);
+        $("#analytics_shipped_order_count").html(res.shippedOrderCount);
+        $("#analytics_delivered_order_count").html(res.deliveredOrderCount);
+        $("#analytics_invoiced_order_count").html(res.invoicedOrderCount);
 
         // Analytics by location
         var labelArray = [];
@@ -719,17 +826,18 @@ function initDashboard() {
         // Analytics by group
         labelArray = [];
         dataArray  = [];
-        res.analyticsByItem.forEach(value => {
-            labelArray.push(value['_id']);
+        res.analyticsByGroup.forEach(value => {
+            labelArray.push(value['group']);
             dataArray.push(value['quantity']);
         });
-        var ctxAnalyticsByItem = document.getElementById("analytics_by_item").getContext('2d');
-        new Chart(ctxAnalyticsByItem, {
+        
+        var ctxAnalyticsByGroup = document.getElementById("analytics_by_group").getContext('2d');
+        new Chart(ctxAnalyticsByGroup, {
             type: 'bar',
             data: {
                 labels: labelArray,
                 datasets: [{
-                    label: 'Analytics By Item',
+                    label: 'Analytics By Group',
                     data: dataArray,
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     borderColor: 'rgba(255,99,132,1)',
@@ -750,6 +858,7 @@ function initDashboard() {
         // Analytics by date
         labelArray = [];
         dataArray  = [];
+
         res.analyticsByYearly.forEach(value => {
             labelArray.push(value['_id']['year']);
             dataArray.push(value['quantity']);
