@@ -56,8 +56,8 @@ def post_shipping_request(order):
  'webhooks': {
               #'request_failed': "http://188.254.244.234:9000/shipping/status_updated",
               #'request_succeeded': "http://188.254.244.234:9000/shipping/status_updated",
-              'tracking_obtained': 'http://188.254.244.234:9000/shipping/tracking_obtained', # replace with your IP
-              'status_updated': "http://188.254.244.234:9000/shipping/status_updated" # replace with your IP
+              'tracking_obtained': 'http://188.254.160.12:5000/shipping/tracking_obtained', # replace with your IP
+              'status_updated': "http://188.254.160.12:5000/shipping/status_updated" # replace with your IP
               }
 
 }
@@ -73,3 +73,20 @@ def post_shipping_request(order):
         return response_dict['request_id']
 
     return False
+
+def post_cancellation_request(request_id, merchant_order_id):
+    #response = requests.post('https://api.zinc.io/v1/orders/{0}/cancel'.format(request_id), auth=('', '')) # put token as a first argument in auth
+    headers = {
+        'Content-type': 'application/json'
+    }
+    data = {
+        "merchant_order_id": merchant_order_id,
+        "webhooks": {
+            "request_succeeded": "https://www.example.com/webhooks/shipping/cancellation_order/succeed",
+            "request_failed": "https://www.example.com/webhooks/failed"
+        }
+    }
+    data = json.dumps(data)
+    url = 'https://api.zinc.io/v1/orders/{0}/cancel'.format(request_id)
+    response = requests.post(url, headers=headers, data=data, auth=('', '')) # put token as a first argument in auth
+

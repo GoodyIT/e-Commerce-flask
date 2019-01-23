@@ -51,6 +51,7 @@ def shipping():
 
         if 'shipped' not in order:
             db.Orders.update_one({'_id': order['_id']}, {'$set': {'shipped': 'awaiting'}})
+            order['shipped'] = 'awaiting'
 
         current[order['item_id']] = {'shipped': order['shipped']}
 
@@ -61,6 +62,10 @@ def shipping():
 
     return render_template('shipping.html', title='Shipping', orders=current)
 
+@app.route('/shipping/cancellation_order/succeeded', methods=['POST'])
+def cancel_order_succeeded():
+    pass
+
 # Shipping status webhook
 @app.route('/shipping/status_updated', methods=['POST'])
 def shipping_status_updated():
@@ -68,7 +73,7 @@ def shipping_status_updated():
     status_dict = request.json
 
     status = None
-
+    merchant_order_id = None
     if 'code' in status_dict and status_dict['code'] == 'request_processing':
         status = 'awaiting'
 
@@ -81,10 +86,11 @@ def shipping_status_updated():
     elif '_type' in status_dict and status_dict['_type'] == 'order_response':
         # here we know that the order was successfully placed
         status = 'shipped'
-
+        merchant_order_id = status_dict['merchant_order_ids'][0]['merchant_order_id']
     if status is not None:
         db.Orders.update_one({'request_id': status_dict['request_id']}, {'$set': {'shipped': status}})
-
+    if merchant_order_id is not None:
+        db.Orders.update_one({'request_id': status_dict['request_id']}, {'$set': {'merchant_order_id': merchant_order_id}})
     return jsonify({'status':'success'}), 200
 
 # Tracking obtained webhook
@@ -254,6 +260,8 @@ def addItem():
 def products():
     if request.method == 'POST':
         item = request.json
+        order = db.Orders.find_one({'order_id':item['id']})
+        post_cancellation_request(order['request_id'])
         db.Products.remove({'id':item['id']})
         response = app.response_class(
             response=json.dumps(item),
@@ -434,6 +442,12 @@ def orders():
     if request.method == 'POST':
         item = request.json
         new_order = db.Queue.find_one({'order_id':item['id']})
+        request_id = post_shipping_request(new_order)
+        if request_id:
+            new_order['request_id'] = request_id
+            new_order['shipped'] = 'awaiting'
+        else:
+            return "Error msg"
         db.Queue.remove({'order_id':item['id']})
         db.Orders.insert_one(new_order)
 
