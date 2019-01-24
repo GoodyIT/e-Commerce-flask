@@ -5,10 +5,10 @@ import configparser
 
 config = configparser.ConfigParser()
 config.read('shipping.ini')
-_IP_PORT = config['GENERAL']['ip_port']
-_CLIENT_TOKEN = config['GENERAL']['client_token']
-_AMAZON_EMAIL = config['AMAZON']['email']
-_AMAZON_PASSWORD = config['AMAZON']['password']
+_IP_PORT = '192.168.1.209:5000'#config['GENERAL']['ip_port']
+_CLIENT_TOKEN = '8EE83746884E0953B59ED48D'#config['GENERAL']['client_token']
+_AMAZON_EMAIL = 'rado.ninecommentaries@gmail.com'#config['AMAZON']['email']
+_AMAZON_PASSWORD = 'l7KEjRdyW'#config['AMAZON']['password']
 
 
 # maybe we have two types of failing - the request to zincapi could fail
@@ -17,7 +17,7 @@ _AMAZON_PASSWORD = config['AMAZON']['password']
  SHIPPING_SHIPPED, SHIPPING_DELIVERED) = ('failed', 'awaiting', 'shipped', 'delivered')
 
 
-def post_shipping_request(order):
+def post_shipping_request(item_id, quantity):
     data = {
         'billing_address': {'address_line1': '84 Massachusetts Ave',
                      'address_line2': '',
@@ -39,7 +39,7 @@ def post_shipping_request(order):
                     'number': '5555555555554444',
                     'security_code': '123',
                     'use_gift': False},
- 'products': [{'product_id': order["item_id"], 'quantity': order["quantity"]}],
+ 'products': [{'product_id': item_id, 'quantity': quantity}],
  'retailer': 'amazon',
 
  # put credentials here before running it

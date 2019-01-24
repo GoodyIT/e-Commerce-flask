@@ -440,14 +440,17 @@ def contacts():
 @login_required
 def orders():
     if request.method == 'POST':
+        print('-------- in orders post --------')
         item = request.json
         new_order = db.Queue.find_one({'order_id':item['id']})
         request_id = post_shipping_request(new_order)
+        new_order['shipped'] = 'awaiting'
         if request_id:
             new_order['request_id'] = request_id
-            new_order['shipped'] = 'awaiting'
-        else:
-            return "Error msg"
+        #else:
+            # here we just don't add request_id in the DB
+            #return "Error msg"
+
         db.Queue.remove({'order_id':item['id']})
         db.Orders.insert_one(new_order)
 
