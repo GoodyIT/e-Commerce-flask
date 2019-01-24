@@ -16,7 +16,9 @@ class ZincapiMiddleware(object):
         db = client.test_inv
         request = Request(environ)
 
-        if request.url == "http://{0}/shipping/status_updated".format('188.254.244.234:9000'): # put your ip:port
+        print('request.url = ', request.url)
+
+        if 'shipping/status_updated' in request.url:
 
             print('IN STATUS UPDATED HOOK')
 
@@ -47,7 +49,7 @@ class ZincapiMiddleware(object):
             print('MERCHANT ORDER ID ==> ', merchant_order_id)
             print('==========================================')
 
-        elif request.url == 'http://{0}/shipping/tracking_obtained'.format('188.254.244.234:9000'): # put your ip:port
+        elif 'shipping/tracking_obtained' in request.url:
             status_dict = json.loads(request.data.decode("utf-8"))
 
             print('IN TRACKING OBTAINED HOOK')
@@ -68,6 +70,8 @@ class ZincapiMiddleware(object):
             new_order = db.Queue.find_one({'order_id': order_id})
             request_id = post_shipping_request(new_order['order_id'], new_order['quantity'])
 
+            print('request_id = ', request_id)
+
             new_order['shipped'] = 'awaiting'
             if request_id:
                 new_order['request_id'] = request_id
@@ -83,7 +87,7 @@ class ZincapiMiddleware(object):
             # Order is cancelled successfully
             pass
 
-        elif request.url == "https://{0}/shipping/cancellation_order/failed".format('188.254.244.234:9000'): # put your ip:port
+        elif 'cancellation_order/failed' in request.url:
             # Order cansellation faild for some reason
             pass
 
