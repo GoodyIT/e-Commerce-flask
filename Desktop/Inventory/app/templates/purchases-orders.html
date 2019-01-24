@@ -6,10 +6,18 @@
     <div class="col-lg-5"></div>
     <div class="col-lg-4">
         <h4>Purchases Orders</h4>
-        <p>From 01 Jan 2019 To 31 Jan 2019</p>
     </div>
     <div class="col-lg-3"></div>
 </div>
+<div class="row" style="display: flex; align-items: center; text-align: right; margin-bottom: 10px;">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-1 text-align-right" style="padding: 0px;">From</div>
+    <div class="col-lg-2"><input type="text" class="form-control" id="purchase_from_date" name="purchase_from_date" size="30"></div>
+    <div class="col-lg-1" style="padding: 0px;">To</div>
+    <div class="col-lg-2"><input type="text" class="form-control" id="purchase_to_date" name="purchase_to_date" size="30"></div>
+    <div class="col-lg-2"><button type="button" class="btn btn-primary add-row" id="report_order_button">Report</button></div>
+</div>
+
 <div class="row report-block" style="background-color:#eeeeee">
     <div class="col-lg-1"><p>FIFO</p></div>
     <div class="col-lg-1"><p>SKU</p></div>
@@ -22,7 +30,7 @@
     <div class="col-lg-1"></div>
     <div class="col-lg-1"><h8>SALES PRICE</h8></div>
 </div>
-<div class="row" style="height:800px">
+<div class="row" style="height:800px" id="report-order-content">
     <div class="col-lg-5"></div>
     <div class="col-lg-4">
         <p>No Data To Display</p>

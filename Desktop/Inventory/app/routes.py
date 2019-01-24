@@ -473,7 +473,7 @@ def groups_list(name):
                 attrs[request.form.get('attr2')] = request.form.get('options2')
         if bool(attrs):
             update_item['attributes'] = attrs
-        print(update_item);
+        print(update_item)
 
         db.Products.update_one({"id": request.form.get("pid")},{"$set":update_item},upsert=True)
         #return redirect(url_for('groups_list',name=name))
@@ -624,9 +624,19 @@ def activity_log():
     return render_template('activity-log.html', title='Activity Log')
 
 # inventory - product orders
-@app.route('/reports/purchases-orders')
+@app.route('/reports/purchases-orders', methods=['GET','POST'])
 @login_required
 def purchases_orders():
+    if request.method == 'POST':
+        result = db.Orders.find({
+            "date": {
+                "$gt": date.strptime(request.json["from"], "%Y-%m-%dT%H:%M:%S.%fZ"),
+                "$lte": date.strptime(request.json["to"], "%Y-%m-%dT%H:%M:%S.%fZ")
+            },
+        }, {
+            "_id": 0
+        })
+        return jsonify({"report": list(result)})
     return render_template('purchases-orders.html', title='Purchases Orders')
 
 # inventory - product receivable
