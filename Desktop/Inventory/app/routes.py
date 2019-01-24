@@ -41,18 +41,6 @@ def shipping():
     current = {}
 
     for order in orders:
-
-        try:
-            request_id = order['request_id']
-        except KeyError:
-            request_id = post_shipping_request(order)
-            if request_id:
-                db.Orders.update_one({'_id': order['_id']}, {'$set': {'request_id': request_id}})
-
-        if 'shipped' not in order:
-            db.Orders.update_one({'_id': order['_id']}, {'$set': {'shipped': 'awaiting'}})
-            order['shipped'] = 'awaiting'
-
         current[order['item_id']] = {'shipped': order['shipped']}
 
         if order['item_id'] in current:
@@ -61,48 +49,6 @@ def shipping():
             current[order['item_id']]['qty'] = 1
 
     return render_template('shipping.html', title='Shipping', orders=current)
-
-@app.route('/shipping/cancellation_order/succeeded', methods=['POST'])
-def cancel_order_succeeded():
-    pass
-
-# Shipping status webhook
-@app.route('/shipping/status_updated', methods=['POST'])
-def shipping_status_updated():
-
-    status_dict = request.json
-
-    status = None
-    merchant_order_id = None
-    if 'code' in status_dict and status_dict['code'] == 'request_processing':
-        status = 'awaiting'
-
-    elif '_type' in status_dict and status_dict['_type'] == 'error':
-        # Request done processing.
-        # We can do more precise checks on the status dict.
-        # For now return awaiting in this case.
-        status = 'awaiting'
-
-    elif '_type' in status_dict and status_dict['_type'] == 'order_response':
-        # here we know that the order was successfully placed
-        status = 'shipped'
-        merchant_order_id = status_dict['merchant_order_ids'][0]['merchant_order_id']
-    if status is not None:
-        db.Orders.update_one({'request_id': status_dict['request_id']}, {'$set': {'shipped': status}})
-    if merchant_order_id is not None:
-        db.Orders.update_one({'request_id': status_dict['request_id']}, {'$set': {'merchant_order_id': merchant_order_id}})
-    return jsonify({'status':'success'}), 200
-
-# Tracking obtained webhook
-@app.route('/shipping/tracking_obtained', methods=['POST'])
-def shipping_tracking_obtained():
-    status_dict = request.json
-    print('tracking dict = ', status_dict)
-
-    if 'tracking' in status_dict and status_dict['tracking'][0]['delivery_status'] == 'Delivered':
-        db.Orders.update_one({'request_id': status_dict['request_id']}, {'$set': {'shipped': 'delivered'}})
-
-    return jsonify({'status':'success'}), 200
 
 # Purchase
 @app.route('/purchase/items')
@@ -261,7 +207,7 @@ def products():
     if request.method == 'POST':
         item = request.json
         order = db.Orders.find_one({'order_id':item['id']})
-        post_cancellation_request(order['request_id'])
+        post_cancellation_request(order['request_id'], None)#order['merchant_order_id'])
         db.Products.remove({'id':item['id']})
         response = app.response_class(
             response=json.dumps(item),
@@ -440,14 +386,9 @@ def contacts():
 @login_required
 def orders():
     if request.method == 'POST':
-        print('-------- in orders post --------')
-
-        #else:
-            # here we just don't add request_id in the DB
-            #return "Error msg"
 
         response = app.response_class(
-            response=json.dumps(item),
+            response=json.dumps('success'),
             status=200,
             mimetype='application/json'
         )

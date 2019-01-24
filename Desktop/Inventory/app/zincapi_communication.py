@@ -5,10 +5,10 @@ import configparser
 
 config = configparser.ConfigParser()
 config.read('shipping.ini')
-_IP_PORT = '192.168.1.209:5000'#config['GENERAL']['ip_port']
-_CLIENT_TOKEN = '8EE83746884E0953B59ED48D'#config['GENERAL']['client_token']
-_AMAZON_EMAIL = 'rado.ninecommentaries@gmail.com'#config['AMAZON']['email']
-_AMAZON_PASSWORD = 'l7KEjRdyW'#config['AMAZON']['password']
+_IP_PORT = config['GENERAL']['ip_port']
+_CLIENT_TOKEN = config['GENERAL']['client_token']
+_AMAZON_EMAIL = config['AMAZON']['email']
+_AMAZON_PASSWORD = config['AMAZON']['password']
 
 
 # maybe we have two types of failing - the request to zincapi could fail
@@ -82,16 +82,44 @@ def post_shipping_request(item_id, quantity):
 
     return False
 
+
+def shipping_status_by_request_id(request_id):
+    response = requests.get('https://api.zinc.io/v1/orders/{}'.format(request_id), auth=(_CLIENT_TOKEN, ''))
+    if response.status_code != 200:
+        return SHIPPING_REQUEST_FAILED
+
+    response_dict = json.loads(response.text)
+
+    #pprint.pprint(response_dict)
+
+    if 'code' in response_dict and response_dict['code'] == 'request_processing':
+        return SHIPPING_AWAITING
+
+    elif '_type' in response_dict and response_dict['_type'] == 'error':
+        # Request done processing.
+        # Could contain "message": "Request is currently processing and will complete soon."
+        # or not only. For now return awaiting in this case.
+        return SHIPPING_AWAITING
+
+    elif '_type' in response_dict and response_dict['_type'] == 'order_response':
+        # check response_dict for details
+        pass
+
+    else:
+        # check response_dict for details
+        pass
+
+
 def post_cancellation_request(request_id, merchant_order_id):
-    #response = requests.post('https://api.zinc.io/v1/orders/{0}/cancel'.format(request_id), auth=('', '')) # put token as a first argument in auth
+    print('-------------- IN CANCELLATION REQUEST -----------------')
     headers = {
         'Content-type': 'application/json'
     }
     data = {
         "merchant_order_id": merchant_order_id,
         "webhooks": {
-            "request_succeeded": "https://www.example.com/webhooks/shipping/cancellation_order/succeed",
-            "request_failed": "https://www.example.com/webhooks/failed"
+            "request_succeeded": "https://{0}/shipping/cancellation_order/succeed".format(_IP_PORT),
+            "request_failed": "https://{0}/shipping/cancellation_order/failed".format(_IP_PORT)
         }
     }
     data = json.dumps(data)

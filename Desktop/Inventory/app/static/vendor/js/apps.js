@@ -381,13 +381,12 @@ $(function() {
     // Queue approve
     $(".que-app").on("click", function() {
         var item = $(this).closest('.row').find("#order_id").html();
-        var quantity = $(this).closest('.row').find("#order_quantity").html();
         $.ajax({
             url: "/orders",
             type: "post",
             dataType: "json",
             contentType: "application/json",
-            data: JSON.stringify({'id':item, 'quantity':quantity}),
+            data: JSON.stringify({'id':item}),
         })
         .done(function() {
             location.reload();
