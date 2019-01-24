@@ -1,6 +1,14 @@
 import requests
-import pprint
 import json
+import configparser
+
+
+config = configparser.ConfigParser()
+config.read('shipping.ini')
+_IP_PORT = config['GENERAL']['ip_port']
+_CLIENT_TOKEN = config['GENERAL']['client_token']
+_AMAZON_EMAIL = config['AMAZON']['email']
+_AMAZON_PASSWORD = config['AMAZON']['password']
 
 
 # maybe we have two types of failing - the request to zincapi could fail
@@ -35,8 +43,8 @@ def post_shipping_request(order):
  'retailer': 'amazon',
 
  # put credentials here before running it
- 'retailer_credentials': {'email': '',
-                          'password': '',
+ 'retailer_credentials': {'email': _AMAZON_EMAIL,
+                          'password': _AMAZON_PASSWORD,
 
 
                           #'verification_code': '942240',
@@ -56,15 +64,15 @@ def post_shipping_request(order):
  'webhooks': {
               #'request_failed': "http://188.254.244.234:9000/shipping/status_updated",
               #'request_succeeded': "http://188.254.244.234:9000/shipping/status_updated",
-              'tracking_obtained': 'http://188.254.160.12:5000/shipping/tracking_obtained', # replace with your IP
-              'status_updated': "http://188.254.160.12:5000/shipping/status_updated" # replace with your IP
+              'tracking_obtained': 'http://{0}/shipping/tracking_obtained'.format(_IP_PORT),
+              'status_updated': "http://{0}/shipping/status_updated".format(_IP_PORT)
               }
 
 }
 
     data = json.dumps(data)
 
-    response = requests.post('https://api.zinc.io/v1/orders', data=data, auth=('', '')) # put token as a first argument in auth
+    response = requests.post('https://api.zinc.io/v1/orders', data=data, auth=(_CLIENT_TOKEN, ''))
     if response.status_code != 200:
         return False
 
@@ -88,5 +96,5 @@ def post_cancellation_request(request_id, merchant_order_id):
     }
     data = json.dumps(data)
     url = 'https://api.zinc.io/v1/orders/{0}/cancel'.format(request_id)
-    response = requests.post(url, headers=headers, data=data, auth=('', '')) # put token as a first argument in auth
+    response = requests.post(url, headers=headers, data=data, auth=(_CLIENT_TOKEN, ''))
 

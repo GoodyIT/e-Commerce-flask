@@ -6,7 +6,7 @@ from datetime import datetime as date
 from .forms import RegisterForm, LoginForm, ProductForm, PurchaseForm, GroupForm, VendorForm, BillingForm
 from .data import User
 from .inventory import Warehouse
-from .zincapi_communication import post_shipping_request
+from .zincapi_communication import post_shipping_request, post_cancellation_request
 
 
 # load user
