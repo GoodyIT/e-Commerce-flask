@@ -34,7 +34,7 @@ $(function() {
     $( "#deliverypick" ).datepicker();
 
     // Table buttons
-    $("#tbl-btn").on("click", function() {
+    $(".tbl-btn, #tbl-btn").on("click", function() {
         var item = $(this).closest('tr').find("td:nth-child(1)").text();
         $.ajax({
             url: "/products",

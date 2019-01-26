@@ -61,12 +61,12 @@ def post_shipping_request(item_id, quantity):
                       'phone_number': '5551230101',
                       'state': 'MA',
                       'zip_code': '02139'},
- 'webhooks': {
-              #'request_failed': "http://188.254.244.234:9000/shipping/status_updated",
-              #'request_succeeded': "http://188.254.244.234:9000/shipping/status_updated",
-              'tracking_obtained': 'http://{0}/shipping/tracking_obtained'.format(_IP_PORT),
-              'status_updated': "http://{0}/shipping/status_updated".format(_IP_PORT)
-              }
+ #'webhooks': {
+              ##'request_failed': "http://188.254.244.234:9000/shipping/status_updated",
+              ##'request_succeeded': "http://188.254.244.234:9000/shipping/status_updated",
+              #'tracking_obtained': 'http://{0}/shipping/tracking_obtained'.format(_IP_PORT),
+              #'status_updated': "http://{0}/shipping/status_updated".format(_IP_PORT)
+              #}
 
 }
 
@@ -110,11 +110,12 @@ def shipping_status_by_request_id(request_id):
         pass
 
 
-def post_cancellation_request(request_id, merchant_order_id):
+def post_cancellation_request(merchant_order_id, request_id):
     print('-------------- IN CANCELLATION REQUEST -----------------')
     headers = {
         'Content-type': 'application/json'
     }
+
     data = {
         "merchant_order_id": merchant_order_id,
         "webhooks": {

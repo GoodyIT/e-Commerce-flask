@@ -7,9 +7,8 @@ from .zincapi_communication import post_shipping_request, post_cancellation_requ
 
 class ZincapiMiddleware(object):
 
-    def __init__(self, wsgi_app, app):
+    def __init__(self, wsgi_app):
         self.app = wsgi_app
-        self._flask_app = app
 
     def __call__(self, environ, start_response):
         client = MongoClient('mongodb://localhost:27017/')
@@ -23,6 +22,8 @@ class ZincapiMiddleware(object):
             print('IN STATUS UPDATED HOOK')
 
             status_dict = json.loads(request.data.decode("utf-8"))
+
+            print('----------------------------', '\n', status_dict, '\n', '----------------------------')
 
             status = None
             merchant_order_id = None
@@ -40,9 +41,11 @@ class ZincapiMiddleware(object):
                 status = 'shipped'
                 merchant_order_id = status_dict['merchant_order_ids'][0]['merchant_order_id']
             if status is not None:
-                db.Orders.update_one({'request_id': status_dict['request_id']}, {'$set': {'shipped': status}})
+                item_id = status_dict['request']['products'][0]['product_id']
+                db.Orders.update_one({'item_id': item_id}, {'$set': {'shipped': status}})
             if merchant_order_id is not None:
-                db.Orders.update_one({'request_id': status_dict['request_id']}, {'$set': {'merchant_order_id': merchant_order_id}})
+                item_id = status_dict['request']['products'][0]['product_id']
+                db.Orders.update_one({'item_id': item_id}, {'$set': {'merchant_order_id': merchant_order_id}})
 
             print('==========================================')
             print('SHIPPING STATUS ==> ', status)
@@ -62,13 +65,14 @@ class ZincapiMiddleware(object):
             print('DELIVERY STATUS ==> ', delivery_status)
 
             if delivery_status == 'Delivered':
-                db.Orders.update_one({'request_id': status_dict['request_id']}, {'$set': {'shipped': 'delivered'}})
+                merchant_order_id = status_dict['tracking'][0]['merchant_order_id']
+                db.Orders.update_one({'merchant_order_id': merchant_order_id}, {'$set': {'shipped': 'delivered'}})
 
         elif '/orders' == environ['PATH_INFO'] and 'POST' == environ['REQUEST_METHOD']:
 
             order_id = json.loads(request.data.decode("utf-8"))['id']
             new_order = db.Queue.find_one({'order_id': order_id})
-            request_id = post_shipping_request(new_order['order_id'], new_order['quantity'])
+            request_id = post_shipping_request(new_order['item_id'], new_order['quantity'])
 
             print('request_id = ', request_id)
 
@@ -83,9 +87,16 @@ class ZincapiMiddleware(object):
             print('POST SHIPPING REQUEST')
             print('========================================')
 
-        elif request.url == 'https://{0}/shipping/cancellation_order/succeed'.format('188.254.244.234:9000'): # put your ip:port
-            # Order is cancelled successfully
-            pass
+        elif '/products' == environ['PATH_INFO'] and 'POST' == environ['REQUEST_METHOD']:
+            order_id = json.loads(request.data.decode("utf-8"))['id']
+
+            order = db.Orders.find_one({'order_id':order_id})
+            post_cancellation_request(order['merchant_order_id'], order['request_id'])
+
+        elif request.url == 'http://{0}/shipping/cancellation_order/succeed'.format('188.254.244.234:9000'): # put your ip:port
+            status_dict = json.loads(request.data.decode("utf-8"))
+            merchant_order_id = status_dict['merchant_order_id']
+            db.Orders.update({'merchant_order_id': merchant_order_id}, {'$set': {'shipped': 'cancelled'}})
 
         elif 'cancellation_order/failed' in request.url:
             # Order cansellation faild for some reason
@@ -106,5 +117,10 @@ class ZincapiMiddleware(object):
 
                 #db.Orders.update_one({'_id': order['_id']}, {'$set': {'shipped': shipped_status}})
 
-        return self.app(environ, start_response)
+
+        def my_start_response(status, headers, exc_info=None):
+            status = '200 OK'
+            return start_response(status, headers, exc_info)
+
+        return self.app(environ, my_start_response)
 

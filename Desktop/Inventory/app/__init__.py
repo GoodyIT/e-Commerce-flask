@@ -12,6 +12,6 @@ login.login_view = 'login'
 client = MongoClient('mongodb://localhost:27017/')
 db = client.test_inv
 
-app.wsgi_app = ZincapiMiddleware(app.wsgi_app, app)
+app.wsgi_app = ZincapiMiddleware(app.wsgi_app)
 
 from app import routes

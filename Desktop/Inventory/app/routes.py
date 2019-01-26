@@ -206,8 +206,8 @@ def addItem():
 def products():
     if request.method == 'POST':
         item = request.json
-        order = db.Orders.find_one({'order_id':item['id']})
-        post_cancellation_request(order['request_id'], None)#order['merchant_order_id'])
+        #order = db.Orders.find_one({'order_id':item['id']})
+        #post_cancellation_request(order['merchant_order_id'])
         db.Products.remove({'id':item['id']})
         response = app.response_class(
             response=json.dumps(item),
