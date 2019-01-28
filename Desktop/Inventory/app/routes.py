@@ -640,9 +640,23 @@ def purchases_orders():
     return render_template('purchases-orders.html', title='Purchases Orders')
 
 # inventory - product receivable
-@app.route('/reports/purchases-receivable')
+@app.route('/reports/purchases-receivable', methods=['GET','POST'])
 @login_required
 def purchases_receivable():
+    if request.method == 'POST':
+        if request.json["receivable"] == 'Receivable':
+            result = db.Orders.find({
+                "invoice_id": {"$ne": None}
+            }, {
+                "_id": 0
+            })
+        else:
+            result = db.Orders.find({
+                "invoice_id": None
+            }, {
+                "_id": 0
+            })
+        return jsonify({"report": list(result)})
     return render_template('purchases-receivable.html', title='Purchases Details')
 
 # inventory - product sales
