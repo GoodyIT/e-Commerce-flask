@@ -646,17 +646,41 @@ def purchases_receivable():
     return render_template('purchases-receivable.html', title='Purchases Details')
 
 # inventory - product sales
-@app.route('/reports/purchases-vendors')
+@app.route('/reports/purchases-vendors', methods=['GET','POST'])
 @login_required
 def purchases_vendors():
-    return render_template('purchases-vendors.html', title='Purchases By Vendors')
+    if request.method == 'POST':
+        products = db.Products.find({
+            "vendor": request.json["vendor"]
+        })
+        productIdArray = []
+        for product in products:
+            productIdArray.append(product["id"])
+        
+        result = db.Orders.find({
+            "product_id": {
+                "$in": productIdArray
+            }
+        }, {
+            "_id": 0
+        })
+        return jsonify({"report": list(result)})
+    vendors = db.Vendor.find()
+    return render_template('purchases-vendors.html', title='Purchases By Vendors', vendors=vendors)
 
 # inventory - product sales
-@app.route('/reports/purchases-items')
+@app.route('/reports/purchases-items', methods=['GET','POST'])
 @login_required
 def purchases_items():
-    return render_template('purchases-items.html', title='Purchases by Items')
-
+    if request.method == 'POST':
+        result = db.Orders.find({
+            "product_id": request.json["product_id"]
+        }, {
+            "_id": 0
+        })
+        return jsonify({"report": list(result)})
+    products = db.Products.find()
+    return render_template('purchases-items.html', title='Purchases by Items', products=products)
 # inventory - purchase bills
 @app.route('/reports/purchases-bills')
 @login_required

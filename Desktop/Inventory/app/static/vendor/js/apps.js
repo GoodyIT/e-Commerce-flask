@@ -30,56 +30,8 @@ $(function() {
     // DATEPICKER on Tables
     $( "#datepick" ).datepicker();
     $( "#deliverypick" ).datepicker();
-    $( "#purchase_to_date" ).datepicker();
-    $( "#purchase_from_date" ).datepicker();
-
-    currentDate = new Date();
-    $( "#purchase_from_date" ).datepicker().datepicker("setDate", new Date(currentDate.getYear()+1900, 0, 1));
-    $( "#purchase_to_date" ).datepicker().datepicker("setDate", currentDate);
     
-    $( "#report_order_button" ).click(function() {
-        var fromDate = new Date($( "#purchase_from_date" ).val());
-        var toDate   = new Date($( "#purchase_to_date" ).val());
-        $.ajax({
-            url: "/reports/purchases-orders",
-            type: "post",
-            dataType: "json",
-            contentType: "application/json",
-            data: JSON.stringify({
-                'from'  : fromDate.toISOString(),
-                'to'    : toDate.toISOString()
-            }),
-        })
-        .done(function(res) {
-            $("#report-order-content").html('');
-            if (res.report.length) {
-                res.report.forEach(item => {
-                    $("#report-order-content").append(`
-                        <div class="col-lg-12">
-                            <div class="col-lg-1"><p>${item.order_id}</p></div>
-                            <div class="col-lg-1"><p>SKU</p></div>
-                            <div class="col-lg-3"></div>
-                            <div class="col-lg-1"><h8>0.1</h8></div>
-                            <div class="col-lg-1"></div>
-                            <div class="col-lg-1"><h8>${item.quantity}</h8></div>
-                            <div class="col-lg-1"></div>
-                            <div class="col-lg-1"><h8>${item.quantity*item.price}</h8></div>
-                            <div class="col-lg-1"></div>
-                            <div class="col-lg-1"><h8>${(0.1*item.quantity*item.price).toFixed(2)}</h8></div>
-                        </div>
-                    `);
-                })
-            } else {
-                $("#report-order-content").append(`
-                    <div class="col-lg-5"></div>
-                    <div class="col-lg-4">
-                        <p>No Data To Display</p>
-                    </div>
-                    <div class="col-lg-3"></div>
-                `);
-            }
-        });
-    });
+    
     // Table buttons
     $("#tbl-btn").on("click", function() {
         var item = $(this).closest('tr').find("td:nth-child(1)").text();
