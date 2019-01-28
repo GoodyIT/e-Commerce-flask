@@ -1,14 +1,13 @@
 import json
-
 from pymongo import MongoClient
 from werkzeug.wrappers import Request
-
 from .zincapi_communication import post_shipping_request, post_cancellation_request, shipping_status_by_request_id
 
 class ZincapiMiddleware(object):
 
-    def __init__(self, wsgi_app):
+    def __init__(self, wsgi_app, socketio):
         self.app = wsgi_app
+        self.socketio = socketio
 
     def __call__(self, environ, start_response):
         client = MongoClient('mongodb://localhost:27017/')
@@ -23,7 +22,7 @@ class ZincapiMiddleware(object):
 
             status_dict = json.loads(request.data.decode("utf-8"))
 
-            print('----------------------------', '\n', status_dict, '\n', '----------------------------')
+            #print('----------------------------', '\n', status_dict, '\n', '----------------------------')
 
             status = None
             merchant_order_id = None
@@ -51,6 +50,9 @@ class ZincapiMiddleware(object):
             print('SHIPPING STATUS ==> ', status)
             print('MERCHANT ORDER ID ==> ', merchant_order_id)
             print('==========================================')
+
+            self.socketio.emit('my event', {'message': 'got it!'}, namespace='/test')
+
 
         elif 'shipping/tracking_obtained' in request.url:
             status_dict = json.loads(request.data.decode("utf-8"))
@@ -93,7 +95,7 @@ class ZincapiMiddleware(object):
             order = db.Orders.find_one({'order_id':order_id})
             post_cancellation_request(order['merchant_order_id'], order['request_id'])
 
-        elif request.url == 'http://{0}/shipping/cancellation_order/succeed'.format('188.254.244.234:9000'): # put your ip:port
+        elif '/shipping/cancellation_order/succeed' in request.url:
             status_dict = json.loads(request.data.decode("utf-8"))
             merchant_order_id = status_dict['merchant_order_id']
             db.Orders.update({'merchant_order_id': merchant_order_id}, {'$set': {'shipped': 'cancelled'}})

@@ -407,4 +407,23 @@ $(function() {
             location.reload();
         });
     });
+
+	$(document).ready(function(){
+	    var url = 'http://' + document.domain + ':' + location.port + '/test'
+		console.log(url)
+	    //connect to the socket server.
+	    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
+
+	    //receive details from server
+	    socket.on('my event', function(msg) {
+	        console.log("Received message: " + msg.message);
+
+	        var pathname = window.location.pathname;
+	        if (pathname === "/shipping") {
+	        	console.log('In /shipping');
+	        	location.reload();
+	        };
+	    });
+	});
+
 });
