@@ -2,66 +2,189 @@
 
 {% block body %}
 
-<div class="col-lg-12">
     <div class="row">
-        <h2>Reports</h2>
-        <hr>
+        <div class="col-xl-12">
+
+            <!-- Traffic sources -->
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h6 class="card-title">Reports</h6>
+                </div>
+
+                <div class="card-body py-0">
+
+                    <div class="row">
+                        <div class="col-xl-5">
+
+                            <!-- Traffic sources -->
+                            <div class="card">
+                                <div class="card-header header-elements-inline">
+                                    <h6 class="card-title">Inventory</h6>
+                                </div>
+
+                                <div class="card-body py-0">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="d-flex mb-2">
+                                                <ul>
+                                                    <li><a href="{{url_for('inventory_purchases')}}">Active Purchase Orders Report</a></li>
+                                                    <li><a href="{{url_for('inventory_sales')}}">Product Sales Report</a></li>
+                                                    <li><a href="{{url_for('inventory_details')}}">Inventory Details</a></li>
+                                                    <li><a href="{{url_for('inventory_valuation')}}">Inventory Valuation Summary</a></li>
+                                                    <li><a href="{{url_for('inventory_fifo')}}">FIFO Cost Lot Tracking</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /traffic sources -->
+
+                        </div>
+
+                        <div class="col-xl-5">
+
+                            <!-- Sales stats -->
+                            <div class="card">
+                                <div class="card-header header-elements-inline">
+                                    <h6 class="card-title">Sales</h6>
+                                </div>
+
+                                <div class="card-body py-0">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="mb-12">
+                                                <ul>
+                                                    <li><a href="{{url_for('sales_invoice')}}">Invoice History</a></li>
+                                                    <li><a href="{{url_for('sales_payments')}}">Payments Received</a></li>
+                                                    <li><a href="{{url_for('sales_orders')}}">Sale Orders</a></li>
+                                                    <li><a href="{{url_for('sales_packing')}}">Sales Packing</a></li>
+                                                    <li><a href="{{url_for('sales_item')}}">Sales Item</a></li>
+                                                    <li><a href="{{url_for('sales_customers')}}">Sales by Customer</a></li>
+                                                    <li><a href="{{url_for('salesman')}}">Sales by Salesman</a></li>
+                                                    <li><a href="{{url_for('sales_balance')}}">Customer Balance</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /sales stats -->
+
+                        </div>
+
+                        <div class="col-xl-2">
+
+                            <!-- Sales stats -->
+                            <div class="card">
+                                <div class="card-header header-elements-inline">
+                                    <h6 class="card-title">Exports</h6>
+                                </div>
+
+                                <div class="card-body py-0">
+                                    <div class="row" style="margin-left: 30px;">
+                                        <div class="col-12">
+                                            <div class="mb-12">
+                                                <div class="row">
+                                                    <button type="button" class="btn btn-primary btn-sm" style="width: 120px;">CSV Exports</button>
+                                                </div>
+                                                <div class="row" style="margin-top: 5px;">
+                                                    <button type="button" class="btn btn-primary btn-sm" style="width: 120px;">EXCEL Exports</button>
+                                                </div>
+                                                <div class="row" style="margin-top: 5px;">
+                                                    <button type="button" class="btn btn-primary btn-sm" style="width: 120px;">DOC Exports</button>
+                                                </div>
+                                                <div class="row" style="margin-top: 5px; margin-bottom: 20px;">
+                                                    <button type="button" class="btn btn-primary btn-sm" style="width: 120px;">PDF Exports</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /sales stats -->
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xl-5">
+
+                            <!-- Traffic sources -->
+                            <div class="card">
+                                <div class="card-header header-elements-inline">
+                                    <h6 class="card-title">Purchases</h6>
+                                </div>
+
+                                <div class="card-body py-0">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="d-flex mb-2">
+                                                <ul>
+                                                    <li><a href="{{url_for('purchases_orders')}}">Purchase Order History</a></li>
+                                                    <li><a href="{{url_for('purchases_receivable')}}">Purchase Receivable</a></li>
+                                                    <li><a href="{{url_for('purchases_vendors')}}">Purchases by Vendor</a></li>
+                                                    <li><a href="{{url_for('purchases_items')}}">Purchases by Items</a></li>
+                                                    <li><a href="{{url_for('purchases_bills')}}">Bill Details</a></li>
+                                                    <li><a href="{{url_for('purchases_payments')}}">Payments Made</a></li>
+                                                    <li><a href="{{url_for('purchases_balance')}}">Vendor Balance</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /traffic sources -->
+
+                        </div>
+
+                        <div class="col-xl-5">
+
+                            <!-- Sales stats -->
+                            <div class="card">
+                                <div class="card-header header-elements-inline">
+                                    <h6 class="card-title">Activity</h6>
+                                </div>
+
+                                <div class="card-body py-0">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="mb-12">
+                                                <ul>
+                                                    <li><a href="{{url_for('activity_mail')}}">System Mail</a></li>
+                                                    <li><a href="{{url_for('activity_log')}}">Activity Logs</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /sales stats -->
+
+                        </div>
+
+                        <div class="col-xl-2">
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <!-- /traffic sources -->
+
+        </div>
+
     </div>
-</div>
-<div class="row">
-    <div class="col-lg-5">
-        <h4>Inventory</h4>
-        <ul>
-            <li><a href="{{url_for('inventory_purchases')}}">Active Purchase Orders Report</a></li>
-            <li><a href="{{url_for('inventory_sales')}}">Product Sales Report</a></li>
-            <li><a href="{{url_for('inventory_details')}}">Inventory Details</a></li>
-            <li><a href="{{url_for('inventory_valuation')}}">Inventory Valuation Summary</a></li>
-            <li><a href="{{url_for('inventory_fifo')}}">FIFO Cost Lot Tracking</a></li>
-        </ul>
-    </div>
-    <div class="col-lg-5">
-        <h4>Sales</h4>
-        <ul>
-            <li><a href="{{url_for('sales_invoice')}}">Invoice History</a></li>
-            <li><a href="{{url_for('sales_payments')}}">Payments Received</a></li>
-            <li><a href="{{url_for('sales_orders')}}">Sale Orders</a></li>
-            <li><a href="{{url_for('sales_packing')}}">Sales Packing</a></li>
-            <li><a href="{{url_for('sales_item')}}">Sales Item</a></li>
-            <li><a href="{{url_for('sales_customers')}}">Sales by Customer</a></li>
-            <li><a href="{{url_for('salesman')}}">Sales by Salesman</a></li>
-            <li><a href="{{url_for('sales_balance')}}">Customer Balance</a></li>
-        </ul>
-    </div>
-    <div class="col-lg-2 exports" style="border: 1px solid #eee;">
-        <h4>Exports</h4>
-        <button type="button" class="btn btn-primary btn-sm">CSV Exports</button>
-        <button type="button" class="btn btn-primary btn-sm">EXCEL Exports</button>
-        <button type="button" class="btn btn-primary btn-sm">DOC Exports</button>
-        <button type="button" class="btn btn-primary btn-sm">PDF Exports</button>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-5">
-        <h4>Purchases</h4>
-        <ul>
-            <li><a href="{{url_for('purchases_orders')}}">Purchase Order History</a></li>
-            <li><a href="{{url_for('purchases_receivable')}}">Purchase Receivable</a></li>
-            <li><a href="{{url_for('purchases_vendors')}}">Purchases by Vendor</a></li>
-            <li><a href="{{url_for('purchases_items')}}">Purchases by Items</a></li>
-            <li><a href="{{url_for('purchases_bills')}}">Bill Details</a></li>
-            <li><a href="{{url_for('purchases_payments')}}">Payments Made</a></li>
-            <li><a href="{{url_for('purchases_balance')}}">Vendor Balance</a></li>
-        </ul>
-    </div>
-    <div class="col-lg-5">
-        <h4>Activity</h4>
-        <ul>
-            <li><a href="{{url_for('activity_mail')}}">System Mail</a></li>
-            <li><a href="{{url_for('activity_log')}}">Activity Logs</a></li>
-        </ul>
-    </div>
-    <div class="col-lg-2">
-    </div>
-</div>
 
 {% endblock %}

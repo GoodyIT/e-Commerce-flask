@@ -2,100 +2,126 @@
 
 {% block body %}
 
-
-<div class="col-lg-3">
-    <h2 style="text-align: left">Add New Product</h2>
     <div class="row">
-        <div class="avatar-upload">
-            <div class="avatar-edit">
-                <form action="{{ url_for('addItem') }}" method="post" class="dropzone" id="frm-drop-zone" enctype="multipart/form-data">
-            </div>
-        </div>
-    </div>
-</div>
-<div class="col-lg-9">
-    <form action="" method="post" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <div class="row" style="margin-top:20px;">
-            {{form.product.label}}
-            {{form.product(class="form-control",placeholder="Lego Set")}}
-            {% for error in form.product.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </div>
-        <div class="row" style='margin-top:30px;'>
-            <div class="col-lg-8" style="padding-left:0;">
-                <label for="sku">SKU</label>
-                <input type="text" class="form-control" id="sku" name="sku" placeholder="aXl9023-x23ak22-32qaL3">
-                {% for error in form.sku.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </div>
-            <div class="col-lg-4" style="padding:0">
-                <label for="category">Group</label>         
-                {{form.category(class="form-control form-control-lg")}}
+        <div class="col-md-12">
 
-                {% for error in form.category.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </div>
-        </div> <!-- END ROW -->
-        <div class="row" style="margin-top:30px;">
-            <div class="col-lg-4" style="padding:0;">
-                <label for="price">Price</label>
-                <input type="number" class="form-control" id="price" name="price" placeholder="32.00">
-                {% for error in form.price.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </div>
-            <div class="col-lg-4" style="">
-                <label for="currency">Currency</label>
-                {{form.currency(class="form-control form-control-lg")}}
-            </div>
-        </div> <!-- END ROW -->
+            <!-- Horizontal form -->
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title">Add New Product</h5>
+                    <div class="header-elements">
+                        <div class="list-icons">
+                            <a class="list-icons-item" data-action="collapse"></a>
+                            <a class="list-icons-item" data-action="reload"></a>
+                            <a class="list-icons-item" data-action="remove"></a>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="row" style="margin-top:20px;">
-            <div id="dvAttr">
-                <div class="row">
-                    <div class="col-lg-3">
-                        <label for="attr0">Attribute</label>
-                        <input type="text" class="form-control" id="attr0" name="attr0" placeholder="eg:color">
-                    </div>
-                    <div class="col-lg-5">
-                        <label for="options0">Options</label>
-                        <input type="text" class="form-control" id="options0" name="options0" data-role="tagsinput" placeholder="">
-                    </div>
-                    <div class="col-lg-3" style="margin-top: 25px;">
-                        <button type="button" id="btnAddAttr" class="btn btn-link">+Add more attribute</button>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="avatar-upload">
+                                <div class="avatar-edit">
+                                    <form action="{{ url_for('addItem') }}" method="post" class="dropzone" id="frm-drop-zone" enctype="multipart/form-data">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-9">
+                            <form action="" method="post" enctype="multipart/form-data">
+                                {{ form.hidden_tag() }}
+                                <div class="row" style="margin-top:20px;">
+                                    {{form.product.label}}
+                                    {{form.product(class="form-control",placeholder="Lego Set")}}
+                                    {% for error in form.product.errors %}
+                                        <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
+                                </div>
+                                <div class="row" style='margin-top:30px;'>
+                                    <div class="col-lg-8" style="padding-left:0;">
+                                        <label for="sku">SKU</label>
+                                        <input type="text" class="form-control" id="sku" name="sku" placeholder="aXl9023-x23ak22-32qaL3">
+                                        {% for error in form.sku.errors %}
+                                            <span style="color: red;">[{{ error }}]</span>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-lg-4" style="padding:0">
+                                        <label for="category">Group</label>         
+                                        {{form.category(class="form-control form-control-lg")}}
+
+                                        {% for error in form.category.errors %}
+                                            <span style="color: red;">[{{ error }}]</span>
+                                        {% endfor %}
+                                    </div>
+                                </div> <!-- END ROW -->
+                                <div class="row" style="margin-top:30px;">
+                                    <div class="col-lg-4" style="padding:0;">
+                                        <label for="price">Price</label>
+                                        <input type="number" class="form-control" id="price" name="price" placeholder="32.00">
+                                        {% for error in form.price.errors %}
+                                            <span style="color: red;">[{{ error }}]</span>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-lg-4" style="">
+                                        <label for="currency">Currency</label>
+                                        {{form.currency(class="form-control form-control-lg")}}
+                                    </div>
+                                </div> <!-- END ROW -->
+
+                                <div class="row" style="margin-top:20px;">
+                                    <div id="dvAttr">
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <label for="attr0">Attribute</label>
+                                                <input type="text" class="form-control" id="attr0" name="attr0" placeholder="eg:color">
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <label for="options0">Options</label>
+                                                <input type="text" class="form-control" id="options0" name="options0" data-role="tagsinput" placeholder="">
+                                            </div>
+                                            <div class="col-lg-3" style="margin-top: 25px;">
+                                                <button type="button" id="btnAddAttr" class="btn btn-link">+Add more attribute</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- END ROW -->
+
+
+                                <div class="row" style="margin-top: 30px; padding:0;">
+                                    <div class="col-lg-4" style="padding-left:0;">
+                                        <label for="vendor">Vendor</label>
+                                        {{form.vendor(class="form-control form-control-lg")}}
+                                        {% for error in form.vendor.errors %}
+                                            <span style="color: red;">[{{ error }}]</span>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-lg-8" style="padding-right:0">
+                                        <label for="url">URL</label>
+                                        <input type="text" class="form-control" id="url" name="url" placeholder="www.amazon.com">
+                                        {% for error in form.url.errors %}
+                                            <span style="color: red;">[{{ error }}]</span>
+                                        {% endfor %}
+                                    </div>
+                                </div> <!-- END ROW -->
+                                <div class="row" style="margin-top: 30px; margin-bottom: 30px;">
+                                    <div class="col-lg-10"></div>
+                                    <div class="col-lg-2">
+                                        {{form.submit()}}
+                                    </div>
+                                </div> <!-- END ROW -->
+                            </form> <!-- END FORM -->
+
+                        </div>
                     </div>
                 </div>
             </div>
-        </div> <!-- END ROW -->
+            <!-- /horizotal form -->
 
+        </div>
 
-        <div class="row" style="margin-top: 30px; padding:0;">
-            <div class="col-lg-4" style="padding-left:0;">
-                <label for="vendor">Vendor</label>
-                {{form.vendor(class="form-control form-control-lg")}}
-                {% for error in form.vendor.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </div>
-            <div class="col-lg-8" style="padding-right:0">
-                <label for="url">URL</label>
-                <input type="text" class="form-control" id="url" name="url" placeholder="www.amazon.com">
-                {% for error in form.url.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </div>
-        </div> <!-- END ROW -->
-        <div class="row" style="margin-top: 30px; margin-bottom: 30px;">
-            <div class="col-lg-10"></div>
-            <div class="col-lg-2">
-                {{form.submit()}}
-            </div>
-        </div> <!-- END ROW -->
-    </form> <!-- END FORM -->
-</div>
+    </div>
+
 
 {% endblock %}

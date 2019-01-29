@@ -2,153 +2,369 @@
 
 {% block body %}
 
-<div class="row">
-    <div class="col-lg-12 col-md-12">
-        <div class="card">
-            <div class="card-body" style="height:800px">
-                <div class="col-lg-4" style="height: 800px; border-right: 1px solid black">
-                    <h2>Group list</h2>
-                    {% set item = items[0] %}
-                    <div class="row" style="height:60px; border-top: 1px solid black">
-                    {% for x in items %}
-                        <a href="javascript:getProduct('{{x.id}}')">{{x.product}}</a>
-                        <hr>
-                    {% endfor %}
+    <div class="row">
+        <div class="col-md-12">
+
+            <!-- Horizontal form -->
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title">Group list</h5>
+                    <div class="header-elements">
+                        <div class="list-icons">
+                            <a class="list-icons-item" data-action="collapse"></a>
+                            <a class="list-icons-item" data-action="reload"></a>
+                            <a class="list-icons-item" data-action="remove"></a>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-8">
-                    <h2 id="ptitle">{{item.product}}</h2>
-                    <div class="navbar navbar-light fixed-top">
-                        <!--<ul class="nav navbar-nav navbar-left">
-                            <li><a href="{{url_for('groups')}}">Transactions</a></li>-->
-                        <ul class="nav nav-tabs navbar-left">
-                            <li class="active"><a data-toggle="pill" href="#Overview">Overview</a></li>
-                            <li><a data-toggle="tab" href="#Transactions">Transactions</a></li>
-                            <li><a data-toggle="tab" href="#Adjustments">Adjustments</a></li>
-                            <li><a data-toggle="tab" href="#History">History</a></li>
-                        </ul>
-                    </div>
-                    <!--<hr>-->
 
-                    <div class="tab-content" style="margin-left: 20px;">
-                        <div id="Overview" class="tab-pane fade in active">
-                        <form action="{{ url_for('groups_list',name=cates[item.category]) }}" method="post">
-                            <input type="hidden" id="pid" name="pid" value="{{item.id}}">
-                            <div class="row" style="margin-top:20px;">
-                                <label for="pname">Product Name</label>
-                                <input type="text" class="form-control" id="pname" name="pname" placeholder="" value="{{item.product}}">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3" style="border-right: 1px solid black">
+                            <h2>Group list</h2>
+                            {% set item = items[0] %}
+                            {% for x in items %}
+                            <div class="row" style="border-top: 1px solid black">
+                                <a href="javascript:getProduct('{{x.id}}')">{{x.product}}</a>
+                                <hr>
                             </div>
-                            <div class="row" style='margin-top:30px;'>
-                                <div class="col-lg-8" style="padding-left:0;">
-                                    <label for="sku">SKU</label>
-                                    <input type="text" class="form-control" id="sku" name="sku" placeholder="" value="{{item.sku}}">
-                                </div>
-                                <div class="col-lg-4" style="padding:0">
-                                    <label for="cate">Category</label>   
-                                    <select class="form-control form-control-lg" id="cate" name="cate">
-                                        {% for key, val in cates.items() %}
-                                            {% if key == item.category %}
-                                            <option value="{{key}}" selected>{{val}}</option>
-                                            {% else %}
-                                            <option value="{{key}}">{{val}}</option>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div> <!-- END ROW -->
-                            <div class="row" style="margin-top:30px;">
-                                <div class="col-lg-4" style="padding:0;">
-                                    <label for="price">Price</label>
-                                    <input type="number" class="form-control" id="price" name="price" placeholder="" value="{{item.price}}">
-                                </div>
-                                <div class="col-lg-4" style="">
-                                    <label for="curr">Currency</label>
-                                    <select class="form-control form-control-lg" id="curr" name="curr">
-                                        {% for curr in currs %}
-                                            {% if curr[0] == item.currency %}
-                                            <option value="{{curr[0]}}" selected>{{curr[1]}}</option>
-                                            {% else %}
-                                            <option value="{{curr[0]}}">{{curr[1]}}</option>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div> <!-- END ROW -->
+                            {% endfor %}
+                       </div>
+                        <div class="col-lg-9">
+                            <h2 id="ptitle">{{item.product}}</h2>
+                            <!--<ul class="nav navbar-nav navbar-left">
+                                <li><a href="{{url_for('groups')}}">Transactions</a></li>-->
+                            <ul class="nav nav-tabs nav-tabs-solid border-0">
+                                <li class="nav-item"><a href="#Overview" class="nav-link active" data-toggle="tab">Overview</a></li>
+                                <li class="nav-item"><a href="#Transactions" class="nav-link" data-toggle="tab">Transactions</a></li>
+                                <li class="nav-item"><a href="#Adjustments" class="nav-link" data-toggle="tab">Adjustments</a></li>
+                                <li class="nav-item"><a href="#History" class="nav-link" data-toggle="tab">History</a></li>
+                            </ul>
 
-                            <div class="row" style="margin-top:20px;">
-                                <div id="dvAttr">
-                                    {% if 'attributes' in item %}
-                                        {% set cnt=0 %}                                    
-                                        {% for key, value in item.attributes.items() %}
-                                        <div class="row">
-                                            <div class="col-lg-3">
-                                                <label for="attr{{loop.index-1}}">Attribute</label>
-                                                <input type="text" class="form-control" id="attr{{loop.index-1}}" name="attr{{loop.index-1}}" placeholder="eg:color" value="{{key}}">
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active" id="Overview">
+                                    <div class="row" style="margin-left:20px;">
+                                        <div class="col-lg-6">
+                                            <div class="mb-4">
+                                                <table class="table">
+                                                    <tr class="table-active">
+                                                        <td colspan="2"><span class="font-weight-semibold">Primary Details</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">Item Group Name</td>
+                                                        <td><span id="lbgroupname">Number1</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">Item Type</td>
+                                                        <td><span id="lbitemtype">Inventory Items</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">Black</td>
+                                                        <td><span id="lbblack">Add</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">SKU</td>
+                                                        <td><span id="lbsku">3r234242aeff</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">Unit</td>
+                                                        <td><span id="lbunit">234</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">Created Source</td>
+                                                        <td><span id="lbsource">User</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">Inventory Account</td>
+                                                        <td><span id="lbinven">Inventory Asset</span></td>
+                                                    </tr>
+                                                </table>
                                             </div>
-                                            <div class="col-lg-5">
-                                                <label for="options{{loop.index-1}}">Options</label>
-                                                <input type="text" class="form-control" id="options{{loop.index-1}}" name="options{{loop.index-1}}" data-role="tagsinput" placeholder="" value="{{value}}">
+                                            <div class="mb-4">
+                                                <table class="table">
+                                                    <tr class="table-active">
+                                                        <td colspan="2"><span class="font-weight-semibold">Purchase Information</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">Purchase Cost</td>
+                                                        <td><span id="lbpurcost">AFN3300</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">Purchase Account</td>
+                                                        <td><span id="lbpuraccount">Cost of Goods Sold</span></td>
+                                                    </tr>
+                                                </table>
                                             </div>
-                                            {% if loop.first %}
-                                            <div class="col-lg-3" style="margin-top: 25px;">
-                                                <button type="button" id="btnAddAttr" class="btn btn-link">+Add more attribute</button>
+                                            <div class="mb-4">
+                                                <table class="table">
+                                                    <tr class="table-active">
+                                                        <td colspan="2"><span class="font-weight-semibold">Sales Information</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">Selling Price</td>
+                                                        <td><span id="lbselprice">AFN3300</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">Sales Account</td>
+                                                        <td><span id="lbsalesaccount">Sales</span></td>
+                                                    </tr>
+                                                </table>
                                             </div>
-                                            {% endif %}
+
                                         </div>
-                                        {% endfor %}
-                                    {% else %}
-                                        <div class="row">
-                                            <div class="col-lg-3">
-                                                <label for="attr0">Attribute</label>
-                                                <input type="text" class="form-control" id="attr0" name="attr0" placeholder="eg:color">
+                                        <div class="col-lg-1"></div>
+                                        <div class="col-lg-5">
+                                            <div class="mb-4">
+                                                <table class="table">
+                                                    <tr class="table-active">
+                                                        <td colspan="2"><span id="lbopenstock" class="font-weight-semibold">Opening Stock: 0.00</span></td>
+                                                    </tr>
+                                                </table>
                                             </div>
-                                            <div class="col-lg-5">
-                                                <label for="options0">Options</label>
-                                                <input type="text" class="form-control" id="options0" name="options0" data-role="tagsinput" placeholder="">
+                                            <div class="mb-4">
+                                                <table class="table">
+                                                    <tr class="table-active">
+                                                        <td colspan="2"><span class="font-weight-semibold">Accounting Stock &#9432;</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">Stock on Hand</td>
+                                                        <td><span id="lbaccstockonhand">:0.00</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">Committed Stock</td>
+                                                        <td><span id="lbacccommitstock">:0.00</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">Available for Sale</td>
+                                                        <td><span id="lbaccavailforsale">:0.00</span></td>
+                                                    </tr>
+                                                </table>
                                             </div>
-                                            <div class="col-lg-3" style="margin-top: 25px;">
-                                                <button type="button" id="btnAddAttr" class="btn btn-link">+Add more attribute</button>
+                                            <div class="mb-4">
+                                                <table class="table">
+                                                    <tr class="table-active">
+                                                        <td colspan="2"><span class="font-weight-semibold">Physical Stock &#9432;</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">>Stock on Hand</td>
+                                                        <td><span id="lbphystockonhand">:0.00</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">Committed Stock</td>
+                                                        <td><span id="lbphycommitstock">:0.00</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-weight-semibold">Available for Sale</td>
+                                                        <td><span id="lbphyavailforsale">:0.00</span></td>
+                                                    </tr>
+                                                </table>
                                             </div>
+
                                         </div>
-                                    {% endif %}
+                                    </div>
                                 </div>
-                            </div> <!-- END ROW -->
-                            <div class="row" style="margin-top: 30px; padding:0;">
-                                <div class="col-lg-4" style="padding-left:0;">
-                                    <label for="vendor">Vendor</label>
-                                    <input type="text" class="form-control" id="vendor" name="vendor" placeholder="" value="{{item.vendor}}">
+
+                                <div class="tab-pane fade" id="Transactions">
+                                    <table id="gl_orderTable" class="table color-table product-table table-hover dataTable no-footer" role="grid" aria-describedby="myTable_info" style="font-size: small;">
+                                        <thead>
+                                            <tr role="row">
+                                                <td class="sorting_asc" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="ID: activate to sort column descending" style="width: 37px;">Order</td>
+                                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Product: activate to sort column ascending" style="width: 160px;">Player</td>
+                                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" style="width: 111px;">Item</td>
+                                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" style="width: 111px;">Quantity</td>
+                                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending" style="width: 60px;">Type</td>
+                                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 72px;">Price</td>
+                                                <td class="" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="" style="width: 20px;"></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item in orders %}
+                                                <tr role="row">
+                                                    <td class="sorting_1">{{item.order_id}}</td>
+                                                    <td>{{item.player_id}}</td>
+                                                    <td>{{item.item_id}}</td>
+                                                    <td>{{item.quantity}}</td>
+                                                    <td>{{item.type}}</td>
+                                                    <td>{{item.price}}</td>
+                                                    <td class="text-center"><button type="button" class="btn btn-primary" id='tbl-btn'>X</button></td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="col-lg-8" style="padding-right:0">
-                                    <label for="url">URL</label>
-                                    <input type="text" class="form-control" id="url" name="url" placeholder="www.amazon.com" value="{{item.url}}">
+
+                                <div class="tab-pane fade" id="Adjustments">
+                                    <div class="col-lg-11" style="margin-left: 20px;">
+                                        <form id="frmAdjust" action="{{ url_for('groups_list',name=cates[item.category]) }}" method="post">
+                                            <input type="hidden" id="pid" name="pid" value="{{item.id}}">
+                                            <div class="row" style="margin-top:20px;">
+                                                <label for="pname">Product Name</label>
+                                                <input type="text" class="form-control" id="pname" name="pname" placeholder="" value="{{item.product}}">
+                                            </div>
+                                            <div class="row" style='margin-top:30px;'>
+                                                <div class="col-lg-8">
+                                                    <label for="sku">SKU</label>
+                                                    <input type="text" class="form-control" id="sku" name="sku" placeholder="" value="{{item.sku}}">
+                                                </div>
+                                                <div class="col-lg-4" style="padding:0">
+                                                    <label for="cate">Category</label>   
+                                                    <select class="form-control form-control-lg" id="cate" name="cate">
+                                                        {% for key, val in cates.items() %}
+                                                            {% if key == item.category %}
+                                                            <option value="{{key}}" selected>{{val}}</option>
+                                                            {% else %}
+                                                            <option value="{{key}}">{{val}}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div> <!-- END ROW -->
+                                            <div class="row" style="margin-top:30px;">
+                                                <div class="col-lg-4" style="padding:0;">
+                                                    <label for="price">Price</label>
+                                                    <input type="number" class="form-control" id="price" name="price" placeholder="" value="{{item.price}}">
+                                                </div>
+                                                <div class="col-lg-4" style="">
+                                                    <label for="curr">Currency</label>
+                                                    <select class="form-control form-control-lg" id="curr" name="curr">
+                                                        {% for curr in currs %}
+                                                            {% if curr[0] == item.currency %}
+                                                            <option value="{{curr[0]}}" selected>{{curr[1]}}</option>
+                                                            {% else %}
+                                                            <option value="{{curr[0]}}">{{curr[1]}}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div> <!-- END ROW -->
+
+                                            <div class="row" style="margin-top:20px;">
+                                                <div id="dvAttr">
+                                                    {% if 'attributes' in item %}
+                                                        {% set cnt=0 %}                                    
+                                                        {% for key, value in item.attributes.items() %}
+                                                        <div class="row">
+                                                            <div class="col-lg-3">
+                                                                <label for="attr{{loop.index-1}}">Attribute</label>
+                                                                <input type="text" class="form-control" id="attr{{loop.index-1}}" name="attr{{loop.index-1}}" placeholder="eg:color" value="{{key}}">
+                                                            </div>
+                                                            <div class="col-lg-5">
+                                                                <label for="options{{loop.index-1}}">Options</label>
+                                                                <input type="text" class="form-control" id="options{{loop.index-1}}" name="options{{loop.index-1}}" data-role="tagsinput" placeholder="" value="{{value}}">
+                                                            </div>
+                                                            {% if loop.first %}
+                                                            <div class="col-lg-3" style="margin-top: 25px;">
+                                                                <button type="button" id="btnAddAttr" class="btn btn-link">+Add more attribute</button>
+                                                            </div>
+                                                            {% endif %}
+                                                        </div>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <div class="row">
+                                                            <div class="col-lg-3">
+                                                                <label for="attr0">Attribute</label>
+                                                                <input type="text" class="form-control" id="attr0" name="attr0" placeholder="eg:color">
+                                                            </div>
+                                                            <div class="col-lg-5">
+                                                                <label for="options0">Options</label>
+                                                                <input type="text" class="form-control" id="options0" name="options0" data-role="tagsinput" placeholder="">
+                                                            </div>
+                                                            <div class="col-lg-3" style="margin-top: 25px;">
+                                                                <button type="button" id="btnAddAttr" class="btn btn-link">+Add more attribute</button>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div> <!-- END ROW -->
+                                            <div class="row" style="margin-top: 30px; padding:0;">
+                                                <div class="col-lg-4">
+                                                    <label for="vendor">Vendor</label>
+                                                    <select class="form-control form-control-lg" id="vendor" name="vendor">
+                                                        {% for key, val in vendors.items() %}
+                                                            {% if key == item.vendor %}
+                                                            <option value="{{key}}" selected>{{val}}</option>
+                                                            {% else %}
+                                                            <option value="{{key}}">{{val}}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-8" style="padding-right:0">
+                                                    <label for="url">URL</label>
+                                                    <input type="text" class="form-control" id="url" name="url" placeholder="www.amazon.com" value="{{item.url}}">
+                                                </div>
+                                            </div> <!-- END ROW -->
+                                            <div class="row" style="margin-top: 30px; margin-bottom: 30px;">
+                                                <div class="col-lg-10"></div>
+                                                <div class="col-lg-2">
+                                                    <button type="button" class="form-control btn-primary" id="gl_btnUpdate">Update</button>
+                                                </div>
+                                            </div> <!-- END ROW -->
+                                        </form>
+                                    </div>
                                 </div>
-                            </div> <!-- END ROW -->
-                            <div class="row" style="margin-top: 30px; margin-bottom: 30px;">
-                                <div class="col-lg-10"></div>
-                                <div class="col-lg-2">
-                                    <button type="submit" class="form-control btn-primary" id="btnUpdate">Update</button>
+
+                                <div class="tab-pane fade" id="History">
+                                    <table id="gl_historyTable" class="table color-table product-table table-hover dataTable no-footer" role="grid" aria-describedby="myTable_info" style="font-size: x-small;">
+                                        <thead>
+                                            <tr role="row" style="background-color: grey;">
+                                                <td class="sorting_asc" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="ID: activate to sort column descending" style="width: 100px;">TYPE</td>
+                                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Product: activate to sort column ascending" style="width: 100px;">DATE</td>
+                                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" style="width: 200px;">REASON</td>
+                                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" style="width: 220px;">ADJUSTMENTS REFERENCE#</td>
+                                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending" style="width: 180px;">DESCRIPTION</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for hist in history %}
+                                                <tr role="row">
+                                                    <td class="sorting_1">{{hist.type}}</td>
+                                                    <td>{{hist.date}}</td>
+                                                    <td>{{hist.reason}}</td>
+                                                    <td>{{hist.adjustments}}</td>
+                                                    <td>{{hist.description}}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
                                 </div>
-                            </div> <!-- END ROW -->
-                        </form>
-                        </div>
-                        <div id="Transactions" class="tab-pane fade">
-                            <h3>Menu 1</h3>
-                            <p>Some content in menu 1.</p>
-                        </div>
-                        <div id="Adjustments" class="tab-pane fade">
-                            <h3>Menu 2</h3>
-                            <p>Some content in menu 2.</p>
-                        </div>
-                        <div id="History" class="tab-pane fade">
-                            <h3>Menu 2</h3>
-                            <p>Some content in menu 2.</p>
+                            </div>
+
                         </div>
                     </div>
 
                 </div>
             </div>
+            <!-- /horizotal form -->
+
         </div>
+
     </div>
-</div>
+
+
+<script>
+// Variables for Group List
+var gl_uid = "{{item.id}}";
+var gl_pname = "{{item.product}}";
+var gl_sku = "{{item.sku}}";
+var gl_cate = "{{item.category}}";
+var gl_price = "{{item.price}}";
+var gl_curr = "{{item.currency}}";
+
+var gl_attr0 = "";
+var gl_attr1 = -1;
+var gl_attr2 = -1;
+var gl_options0 = "";
+var gl_options1 = -1;
+var gl_options2 = -1;
+{% for key, value in item.attributes.items() %}
+    gl_attr{{loop.index-1}} = "{{key}}";
+    gl_options{{loop.index-1}} = "{{value}}";
+{% endfor %}
+
+var gl_vendor = "{{item.vendor}}";
+var gl_url = "{{item.url}}";
+
+</script>
 
 {% endblock %}

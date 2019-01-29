@@ -19,18 +19,19 @@
                                 <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending" style="width: 60px;">Type</td>
                                 <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 72px;">Price</td>
                                 <td class="" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="" style="width: 20px;"></td>
+                            </tr>
                         </thead>
                         <tbody>
                             {% for item in table %}
                                 <tr role="row">
-        					                  <td class="sorting_1">{{item.order_id}}</td>
+        					        <td class="sorting_1">{{item.order_id}}</td>
                                     <td>{{item.player_id}}</td>
                                     <td>{{item.item_id}}</td>
-        						                <td>{{item.quantity}}</td>
-        						                <td>{{item.type}}</td>
-        						                <td>{{item.price}}</td>
-        						                <td class="text-center"><button type="button" class="btn btn-primary" id='tbl-btn'>X</button></td>
-        					              </tr>
+                                    <td>{{item.quantity}}</td>
+                                    <td>{{item.type}}</td>
+                                    <td>{{item.price}}</td>
+                                    <td class="text-center"><button type="button" class="btn btn-primary" id='tbl-btn'>X</button></td>
+    				            </tr>
                             {% endfor %}
                         </tbody>
                 </table>

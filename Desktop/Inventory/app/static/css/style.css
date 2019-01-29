@@ -443,3 +443,9 @@ h5,
 h6 {
   font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
 }
+
+/* Added By XLZ */
+span {
+  font-size: small;
+}
+
