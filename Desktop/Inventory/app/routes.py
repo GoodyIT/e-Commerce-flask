@@ -6,8 +6,8 @@ from datetime import datetime as date
 from .forms import RegisterForm, LoginForm, ProductForm, PurchaseForm, GroupForm, VendorForm, BillingForm
 from .data import User
 from .inventory import Warehouse
-import os
 from werkzeug.utils import secure_filename
+import os, json
 
 curDirPath = os.path.dirname(os.path.realpath(__file__))
 UPLOAD_FOLDER = os.path.join(curDirPath,"uploads")
@@ -22,10 +22,15 @@ BREAD_CRUMB = {'Signup':['Sign Up','signup'], 'Login':['Login','login'],
 'Orders':['Orders','orders'], 'Integrations':['Integrations','integrations']}
 
 def allowed_file(filename):
+    ''' method for choosing form file path '''
+    curDirPath = os.path.dirname(os.path.realpath(__file__))
+    UPLOAD_FOLDER = os.path.join(curDirPath,"uploads")
+    ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def getGroups():
+    ''' SelectField method for getting group list '''
     groups = db.Groups.find()
     size = groups.count() - 1
     choices = {}
@@ -38,7 +43,22 @@ def getGroups():
         return {'none':'None'}
     return choices
 
+def getCategory():
+    ''' SelectField method for getting category list '''
+    categories = db.Category.find()
+    size = categories.count() - 1
+    choices = {}
+
+    while size >= 0:
+        choices[ categories[size]['id'] ] = categories[size]['name']
+        size -= 1
+
+    if len(choices) == 0:
+        return {'none':'None'}
+    return choices
+
 def getVendors():
+    ''' SelectField method for getting vendor list '''
     vendors = db.Vendor.find()
     size = vendors.count() - 1
     choices = {}
@@ -75,6 +95,302 @@ def home():
     products = db.Products.find()
     return render_template('index.html', breadCrumb=BREAD_CRUMB['Dashboard'][0],
     uname=current_user.get_id(), title='Home Page', total=products)
+
+# Get analytics
+@app.route('/analytics', methods=['POST'])
+@login_required
+def get_analytics():
+    requestData = json.loads(request.data)
+
+    if (requestData['type'] == 'init'):
+        analyticsByState = db.Orders.aggregate([
+            {
+                "$group" : {
+                    "_id":"$state",
+                    "price": {
+                        "$sum": {
+                            "$multiply": [ "$price", "$quantity" ]
+                        }
+                    },
+                    "quantity": {
+                        "$sum": "$quantity"
+                    },
+                    "count": { "$sum": 1 }
+                }
+            },
+            { "$sort": { "_id": 1} }
+        ])
+
+        analyticsByYearly = db.Orders.aggregate([
+            {
+                "$group":
+                {
+                    "_id": { "year": { "$year": "$date" } },
+                    "price": {
+                        "$sum": {
+                            "$multiply": [ "$price", "$quantity" ]
+                        }
+                    },
+                    "quantity": {
+                        "$sum": "$quantity"
+                    },
+                    "count": { "$sum": 1 }
+                }
+            },
+            { "$sort": { "_id": 1} }
+        ])
+        analyticsByGroup = db.Orders.aggregate([
+            {
+                "$group":
+                {
+                    "_id": "$group_id",
+                    "price": {
+                        "$sum": {
+                            "$multiply": [ "$price", "$quantity" ]
+                        }
+                    },
+                    "quantity": {
+                        "$sum": "$quantity"
+                    },
+                    "count": { "$sum": 1 }
+                }
+            },
+            {
+                "$lookup":
+                {
+                    "from": "Groups",
+                    "localField": "_id",
+                    "foreignField": "id",
+                    "as": "group"
+                }
+            }
+        ])
+
+        analyticsByGroupArray = []
+        for x in analyticsByGroup:
+            analyticsByGroupArray.append({'group': x['group'][0]['name'], 'quantity': x['quantity']})
+
+        totalQuantityAndCost = db.Orders.aggregate([
+            {
+                "$group": {
+                    "_id": "1",
+                    "price": {
+                        "$sum": {
+                            "$multiply": [ "$price", "$quantity" ]
+                        }
+                    },
+                    "quantity": {
+                        "$sum": "$quantity"
+                    },
+                    "count": { "$sum": 1 }
+                }
+            }
+        ])
+
+        totalQuantityAndCostArray = list(totalQuantityAndCost)
+        packedOrderCount    = db.Queue.count_documents({})
+        shippedOrderCount   = db.Orders.count_documents({"ship_id": None})
+        deliveredOrderCount = db.Orders.count_documents({"$and": [{"ship_id": {"$ne": None}}, {"invoice_id": None}]})
+        invoicedOrderCount  = db.Orders.count_documents({"$and": [{"ship_id": {"$ne": None}}, {"invoice_id": {"$ne": None}}]})
+
+        return jsonify({
+            "analyticsByYearly"   : list(analyticsByYearly),
+            "analyticsByState"    : list(analyticsByState),
+            "analyticsByGroup"    : analyticsByGroupArray,
+            "totalCost"           : totalQuantityAndCostArray[0]['price'],
+            "totalQuantity"       : totalQuantityAndCostArray[0]['quantity'],
+            "packedOrderCount"    : packedOrderCount,
+            "shippedOrderCount"   : shippedOrderCount,
+            "deliveredOrderCount" : deliveredOrderCount,
+            "invoicedOrderCount"  : invoicedOrderCount
+        })
+    if (requestData['type'] == 'by_daily'):
+        analyticsByDaily = db.Orders.aggregate([
+            {
+                "$group":
+                {
+                    "_id": { "year": { "$year": "$date" }, "day": { "$dayOfYear": "$date"} },
+                    "price": {
+                        "$sum": {
+                            "$multiply": [ "$price", "$quantity" ]
+                        }
+                    },
+                    "quantity": {
+                        "$sum": "$quantity"
+                    },
+                    "count": { "$sum": 1 }
+                }
+            },
+            { "$sort": { "_id": 1} }
+        ])
+        return jsonify({
+            "analyticsByDaily": list(analyticsByDaily)
+        })
+    if (requestData['type'] == 'by_weekly'):
+        analyticsByWeekly = db.Orders.aggregate([
+            {
+                "$group":
+                {
+                    "_id": { "year": { "$year": "$date" }, "week": { "$week": "$date"} },
+                    "price": {
+                        "$sum": {
+                            "$multiply": [ "$price", "$quantity" ]
+                        }
+                    },
+                    "quantity": {
+                        "$sum": "$quantity"
+                    },
+                    "count": { "$sum": 1 }
+                }
+            },
+            { "$sort": { "_id": 1} }
+        ])
+        return jsonify({
+            "analyticsByWeekly": list(analyticsByWeekly)
+        })
+    if (requestData['type'] == 'by_monthly'):
+        analyticsByMonthly = db.Orders.aggregate([
+            {
+                "$group":
+                {
+                    "_id": { "year": { "$year": "$date" }, "month": { "$month": "$date"} },
+                    "price": {
+                        "$sum": {
+                            "$multiply": [ "$price", "$quantity" ]
+                        }
+                    },
+                    "quantity": {
+                        "$sum": "$quantity"
+                    },
+                    "count": { "$sum": 1 }
+                }
+            },
+            { "$sort": { "_id": 1} }
+        ])
+        return jsonify({
+            "analyticsByMonthly": list(analyticsByMonthly)
+        })
+    if (requestData['type'] == 'by_yearly'):
+        analyticsByYearly = db.Orders.aggregate([
+            {
+                "$group":
+                {
+                    "_id": { "year": { "$year": "$date" } },
+                    "price": {
+                        "$sum": {
+                            "$multiply": [ "$price", "$quantity" ]
+                        }
+                    },
+                    "quantity": {
+                        "$sum": "$quantity"
+                    },
+                    "count": { "$sum": 1 }
+                }
+            },
+            { "$sort": { "_id": 1} }
+        ])
+        return jsonify({
+            "analyticsByYearly": list(analyticsByYearly)
+        })
+    if (requestData['type'] == 'by_state'):
+        analyticsByState = db.Orders.aggregate([
+            {
+                "$group" : {
+                    "_id":"$state",
+                    "price": {
+                        "$sum": {
+                            "$multiply": [ "$price", "$quantity" ]
+                        }
+                    },
+                    "quantity": {
+                        "$sum": "$quantity"
+                    },
+                    "count": { "$sum": 1 }
+                }
+            },
+            { "$sort": { "_id": 1} }
+        ])
+        return jsonify({
+            "analyticsByState": list(analyticsByState)
+        })
+    if (requestData['type'] == 'by_country'):
+        analyticsByCountry = db.Orders.aggregate([
+            {
+                "$group" : {
+                    "_id":"$country",
+                    "price": {
+                        "$sum": {
+                            "$multiply": [ "$price", "$quantity" ]
+                        }
+                    },
+                    "quantity": {
+                        "$sum": "$quantity"
+                    },
+                    "count": { "$sum": 1 }
+                }
+            },
+            { "$sort": { "_id": 1} }
+        ])
+        return jsonify({
+            "analyticsByCountry": list(analyticsByCountry)
+        })
+    return jsonify({})
+
+#store - games
+@app.route('/store/games')
+def games():
+    return render_template('grid-games.html', title='Games')
+
+#store - office
+@app.route('/store/office')
+def office():
+    return render_template('grid-office.html', title='Office')
+
+#store - electronics
+@app.route('/store/electronics')
+def electronics():
+    return render_template('grid-electronics.html', title='Electronics')
+
+#store - gear
+@app.route('/store/gear')
+def gear():
+    return render_template('grid-gear.html', title='Gear')
+
+#store - computers
+@app.route('/store/computers')
+def computers():
+    return render_template('grid-computers.html', title='Computers')
+
+#store - toys
+@app.route('/store/toys')
+def toys():
+    return render_template('grid-toys.html', title='Toys')
+
+#store - accessories
+@app.route('/store/accessories')
+def accessories():
+    return render_template('grid-accessories.html', title='Accessories')
+
+#store
+@app.route('/store')
+def store():
+    return render_template('store.html', title='Store')
+
+# shipping
+@app.route('/shipping')
+@login_required
+def shipping():
+    orders = db.Orders.find()
+    c = 0
+    current = {}
+
+    while c < orders.count():
+        if orders[c]['item_id'] in current:
+            current[orders[c]['item_id']] += 1
+        else:
+            current[orders[c]['item_id']] = 1
+        c += 1
+    return render_template('shipping.html', title='Shipping', orders=current)
 
 # Purchase
 @app.route('/purchase/items')
@@ -132,6 +448,21 @@ def bills():
         return redirect(url_for('bills'))
     return render_template('bills.html', breadCrumb=BREAD_CRUMB['Orders'][0],
     uname=current_user.get_id(), title='Billing', form=form)
+
+# groups - categorize
+@app.route('/groups/category', methods=['GET','POST'])
+@login_required
+def groups_category():
+    form = CategoryForm()
+    if form.validate_on_submit():
+        new_item = {
+            'id' : str(uid()),
+            'name' : form.name.data,
+        }
+        db.Category.insert_one(new_item)
+        flash('New Category Added.')
+        return redirect(url_for('addItem'))
+    return render_template('groups-category.html', title='Groups Category', form=form)
 
 # groups add
 @app.route('/groups/add', methods=['GET','POST'])
@@ -208,6 +539,7 @@ def groups_list(name):
         cates = getGroups()
         product_id = items[0]['id']
 
+        #bug - temp solution
         vendors = {'none':'None'}
 
         ordrs = db.Orders.find({'item_id':product_id})

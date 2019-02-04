@@ -50,6 +50,11 @@ class GroupForm(FlaskForm):
     brand = StringField('Manufacturer')
     submit = SubmitField('Add Group')
 
+class CategoryForm(FlaskForm):
+    ''' Category Add Form '''
+    name = StringField('Category Name')
+    submit = SubmitField('Add Group')
+
 class UpperForm(FlaskForm):
     ''' Group Form '''
     vendor = SelectField('Category', choices=[('Choice1', 'First'),('Choice2','Second'),('Choice3', 'Third')])

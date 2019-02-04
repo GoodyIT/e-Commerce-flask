@@ -17,9 +17,6 @@
 
     <link href="../static/vendor/css/tagsinput.css" rel="stylesheet" type="text/css">
 
-
-
-
 	<!-- Global stylesheets -->
 	<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
 	<link href="../static/global_assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
@@ -49,9 +46,6 @@
 	<script src="../static/global_assets/js/demo_pages/dashboard.js"></script>
 	<!-- /theme JS files -->
 
-
-
-
     <!-- Title Page -->
     {% if title %}
         <title>{{title}}</title>
@@ -63,12 +57,11 @@
 <!-- Container -->
 <body>
 
-
 	<!-- Main navbar -->
 	<div class="navbar navbar-expand-md navbar-dark">
 		<div class="navbar-brand wmin-0 mr-5">
 			<a href="{{url_for('home')}}" class="d-inline-block">
-				<img src="../static/global_assets/images/logo_light.png" alt="">
+				<img src="../static/global_assets/images/logo.png" alt="">
 			</a>
 		</div>
 
@@ -180,18 +173,18 @@
 					</div>
 				</li>
 				<li class="nav-item dropdown">
-					<a href="{{url_for('integrations')}}" class="navbar-nav-link dropdown-toggle {% if breadCrumb == 'Integrations' %}active{% endif %}" data-toggle="dropdown">
+					<a href="{{url_for('shipping')}}" class="navbar-nav-link dropdown-toggle {% if breadCrumb == 'Shipping' %}active{% endif %}" data-toggle="dropdown">
 						<i class="icon-fold mr-2"></i>
-						Integrations
+						Shipping
 					</a>
 
 					<div class="dropdown-menu dropdown-menu-right dropdown-content">
-						<a href="{{url_for('integrations')}}" class="dropdown-item"><i class="icon-collaboration"></i> Integrations</a>
+						<a href="{{url_for('shipping')}}" class="dropdown-item"><i class="icon-collaboration"></i>Shipping</a>
 						<a href="{{url_for('contacts')}}" class="dropdown-item"><i class="icon-phone"></i> Contacts</a>
 					</div>
 				</li>
-				
-				
+
+
 				<!--
 				<li class="nav-item dropdown">
 					<a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
@@ -208,7 +201,7 @@
 					</div>
 				</li>
 				-->
-				
+
 				<a href="{{url_for('logout')}}" class="navbar-nav-link">
 					<i class="icon-switch2 mr-2"></i>
 					Logout
@@ -236,8 +229,6 @@
 		</div>
 	</div>
 	<!-- /page header -->
-
-
 
 
     <div class="preloader">
