@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-import os
-
-import scrapy, pymongo, datetime, time, pprint, re, json, configparser
+import scrapy, csv, pprint, re, json, configparser
 from urllib.parse import urlparse
-from bson import ObjectId
 
 
 class AmazonComSpider(scrapy.Spider):
@@ -19,19 +16,30 @@ class AmazonComSpider(scrapy.Spider):
     LOGGED_IN = False
     cart_page_url = 'https://www.amazon.com/gp/cart/view.html?ref_=nav_cart'
     products_passed = []
+    fieldnames = ['ID', 'Name', 'Price', 'Group', 'Category', 'Vendor', 'URL']
+    changed_product_ids = []
+    input_file = 'test_items.tsv'
+    #output_file = 'test_items_output.tsv'
+
 
     def __init__(self, category = None, *args, **kwargs):
         config = configparser.ConfigParser()
-        config.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), '', 'credentials.ini'))
-
+        config.read('D:/inventory_flask_app/test/Desktop/pricing_scraper/AmazonPriceWatch/credentials.ini')
         self.LOGIN_EMAIL = config[self.active_config]['email']
         self.LOGIN_PASSWORD = config[self.active_config]['password']
-
         self.LOGGED_IN = False
-        # setting DB connection
-        client = pymongo.MongoClient()
-        db = client.price_watch
-        self.collection = db.products
+        self.collection = []
+        with open(self.input_file, newline = '') as csvfile:
+            reader = csv.DictReader(csvfile, fieldnames = self.fieldnames, dialect = 'excel-tab')
+            for row in reader:
+                self.collection.append(row)
+
+    def closed(self, reason):
+        with open(self.input_file, 'w', newline = '') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames = self.fieldnames, dialect = 'excel-tab')
+            for row in self.collection:
+                if row['ID'] in self.changed_product_ids:
+                    writer.writerow(row)
 
     def start_requests(self):
         yield scrapy.Request(
@@ -50,7 +58,7 @@ class AmazonComSpider(scrapy.Spider):
 
     def fill_login_form(self, response):
         print('#########################')
-        print('fill_login_form -> USER: ' + self.LOGIN_EMAIL)
+        print('USER: ' + self.LOGIN_EMAIL)
         print('#########################')
 
         yield scrapy.FormRequest.from_response(
@@ -86,15 +94,15 @@ class AmazonComSpider(scrapy.Spider):
 
         product_id = None
         product_url = None
-        for product in self.collection.find():
+        for product in self.collection:
             if 'URL' in product and product['URL']:
                 url_data = urlparse(product['URL'])
                 if url_data.hostname == 'www.amazon.com':
-                    product_id = str(product['_id'])
+                    product_id = str(product['ID'])
                     product_url = product['URL']
                     if not product_id in self.products_passed:
                         break
-        if product_id:
+        if product_id and not product_id in self.products_passed:
             return {'product_id': product_id, 'product_url': product_url}
         else:
             return None
@@ -217,16 +225,11 @@ class AmazonComSpider(scrapy.Spider):
                 price_str = div_sel.xpath('.//td[contains(@class, "grand-total-price")]/strong/text()').extract_first()
                 if price_str:
                     price = float(price_str.replace('USD', '').strip())
-                    self.collection.update_one(
-                        { '_id': ObjectId(product_id) },
-                        { '$push': { 'Last Check - Time': datetime.datetime.now() } },
-                        upsert = True
-                    )
-                    self.collection.update_one(
-                        { '_id': ObjectId(product_id) },
-                        { '$push': { 'Last Check - Price': price } },
-                        upsert = True
-                    )
+                    for i in range(0, len(self.collection)):
+                        if self.collection[i]['ID'] == product_id and self.collection[i]['Price'] != price:
+                            self.collection[i]['Price'] = price
+                            self.changed_product_ids.append(product_id)
+                            break
                     self.products_passed.append(product_id)
                     print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
                     print(product_id)
