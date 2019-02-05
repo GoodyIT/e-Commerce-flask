@@ -12,8 +12,9 @@
                       <div class="row" style="margin-top:20px; padding: 0 15px 0 15px;">
                           <div class="col-lg-12">
                               {% for x in form.type %}
-                                  {{x.label}}
                                   {{x}}
+                                  {{x.label}}
+                                  &nbsp;&nbsp;&nbsp;
                               {% endfor %}
                               {% for error in form.type.errors %}
                                   <span style="color: red;">[{{ error }}]</span>
@@ -69,6 +70,19 @@
                                   <span style="color: red;">[{{ error }}]</span>
                               {% endfor %}
                           </div>
+                      </div>
+                      <div class="row" style="margin-top:20px;">
+                        <div class="col-lg-6">
+                            <label for="subgroup-title" style="margin-right: 20px;">Sub-Groups</label>
+                            <input type="text" class="form-control" id="subgroup-title" name="subgroup-title" placeholder="title">
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="col-lg-3" style="margin-top: 20px;">
+                                <button type="button" id="btnAddSubgroup" class="btn btn-link">+Add sub group</button>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="row" style="margin-left: 20px;" id="dvSubgroupList">
                       </div>
                       <div class="row" style="margin-top: 30px; margin-bottom: 30px;">
                           <div class="col-lg-10"></div>

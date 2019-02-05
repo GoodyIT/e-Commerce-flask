@@ -1,21 +1,16 @@
 from app import app, db, login
-from flask import render_template, json, url_for, flash, redirect, request, jsonify, g, Flask
+from flask import render_template, json, url_for, flash, redirect, request, jsonify, g, Flask, send_from_directory
 from flask_login import login_user, logout_user, login_required, current_user
 from uuid import uuid4 as uid
 from datetime import datetime as date
+from werkzeug.utils import secure_filename
 from .forms import RegisterForm, LoginForm, ProductForm, PurchaseForm, GroupForm, VendorForm, BillingForm
 from .data import User
 from .inventory import Warehouse
-from werkzeug.utils import secure_filename
 import os, json
 
-curDirPath = os.path.dirname(os.path.realpath(__file__))
-UPLOAD_FOLDER = os.path.join(curDirPath,"uploads")
-
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 CURRENCIES = [('USD', '$'),('EURO','€'),('POUND', '£')]
 
-# BREAD_CRUMB => 'key':['title','param of url_for()']
 BREAD_CRUMB = {'Signup':['Sign Up','signup'], 'Login':['Login','login'],
 'Dashboard':['Dashboard','home'], 'Queue':['Queue','queue'],
 'Reports':['Reports','reports'], 'Products':['Products','products'],
@@ -23,8 +18,6 @@ BREAD_CRUMB = {'Signup':['Sign Up','signup'], 'Login':['Login','login'],
 
 def allowed_file(filename):
     ''' method for choosing form file path '''
-    curDirPath = os.path.dirname(os.path.realpath(__file__))
-    UPLOAD_FOLDER = os.path.join(curDirPath,"uploads")
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -43,33 +36,6 @@ def getGroups():
         return {'none':'None'}
     return choices
 
-def getCategory():
-    ''' SelectField method for getting category list '''
-    categories = db.Category.find()
-    size = categories.count() - 1
-    choices = {}
-
-    while size >= 0:
-        choices[ categories[size]['id'] ] = categories[size]['name']
-        size -= 1
-
-    if len(choices) == 0:
-        return {'none':'None'}
-    return choices
-
-def getVendors():
-    ''' SelectField method for getting vendor list '''
-    vendors = db.Vendor.find()
-    size = vendors.count() - 1
-    choices = {}
-
-    while size >= 0:
-        choices[ vendors[size]['id'] ] = vendors[size]['name']
-        size -= 1
-
-    if len(choices) == 0:
-        return {'none':'None'}
-    return choices
 
 # load user
 @login.user_loader
@@ -84,6 +50,7 @@ def load_user(username):
 def not_found_error(error):
     return render_template('404.html'), 404
 
+# Internal handling
 @app.errorhandler(500)
 def internal_error(error):
     return render_template('500.html'), 500
@@ -93,15 +60,19 @@ def internal_error(error):
 @login_required
 def home():
     products = db.Products.find()
-    return render_template('index.html', breadCrumb=BREAD_CRUMB['Dashboard'][0],
-    uname=current_user.get_id(), title='Home Page', total=products)
+    return render_template(
+        'index.html', 
+        breadCrumb=BREAD_CRUMB['Dashboard'][0],
+        uname=current_user.get_id(), 
+        title='Home Page', 
+        total=products
+        )
 
 # Get analytics
 @app.route('/analytics', methods=['POST'])
 @login_required
 def get_analytics():
     requestData = json.loads(request.data)
-
     if (requestData['type'] == 'init'):
         analyticsByState = db.Orders.aggregate([
             {
@@ -169,7 +140,6 @@ def get_analytics():
         analyticsByGroupArray = []
         for x in analyticsByGroup:
             analyticsByGroupArray.append({'group': x['group'][0]['name'], 'quantity': x['quantity']})
-
         totalQuantityAndCost = db.Orders.aggregate([
             {
                 "$group": {
@@ -186,13 +156,11 @@ def get_analytics():
                 }
             }
         ])
-
         totalQuantityAndCostArray = list(totalQuantityAndCost)
         packedOrderCount    = db.Queue.count_documents({})
         shippedOrderCount   = db.Orders.count_documents({"ship_id": None})
         deliveredOrderCount = db.Orders.count_documents({"$and": [{"ship_id": {"$ne": None}}, {"invoice_id": None}]})
         invoicedOrderCount  = db.Orders.count_documents({"$and": [{"ship_id": {"$ne": None}}, {"invoice_id": {"$ne": None}}]})
-
         return jsonify({
             "analyticsByYearly"   : list(analyticsByYearly),
             "analyticsByState"    : list(analyticsByState),
@@ -335,46 +303,207 @@ def get_analytics():
             "analyticsByCountry": list(analyticsByCountry)
         })
     return jsonify({})
-
+    
 #store - games
+@app.route('/games')
+def games1():
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    return redirect(url_for('games', gid=groupId, subgroup=subGroup))
+
 @app.route('/store/games')
 def games():
-    return render_template('grid-games.html', title='Games')
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    if groupId is None:
+        groupId='ALL'
+    if subGroup is None:
+        subGroup = 'ALL'
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    if groupId == 'ALL' and subGroup == 'ALL':
+        products = db.Products.find({"category_type": "GAMES"})
+    else: 
+        if groupId != 'ALL' and subGroup == 'ALL':
+            products = db.Products.find({"category": groupId})
+        else:
+            products = db.Products.find({"category": groupId, "subgroup": subGroup})
+    return render_template('grid-games.html', title='Games', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - office
 @app.route('/store/office')
 def office():
-    return render_template('grid-office.html', title='Office')
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    if groupId is None:
+        groupId='ALL'
+    if subGroup is None:
+        subGroup = 'ALL'
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    if groupId == 'ALL' and subGroup == 'ALL':
+        products = db.Products.find({"category_type": "OFFICE"})
+    else: 
+        if groupId != 'ALL' and subGroup == 'ALL':
+            products = db.Products.find({"category": groupId})
+        else:
+            products = db.Products.find({"category": groupId, "subgroup": subGroup})
+    return render_template('grid-office.html', title='Office', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - electronics
 @app.route('/store/electronics')
 def electronics():
-    return render_template('grid-electronics.html', title='Electronics')
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    if groupId is None:
+        groupId='ALL'
+    if subGroup is None:
+        subGroup = 'ALL'
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    if groupId == 'ALL' and subGroup == 'ALL':
+        products = db.Products.find({"category_type": "ELECTRONICS"})
+    else: 
+        if groupId != 'ALL' and subGroup == 'ALL':
+            products = db.Products.find({"category": groupId})
+        else:
+            products = db.Products.find({"category": groupId, "subgroup": subGroup})
+    return render_template('grid-electronics.html', title='Electronics', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - gear
 @app.route('/store/gear')
 def gear():
-    return render_template('grid-gear.html', title='Gear')
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    if groupId is None:
+        groupId='ALL'
+    if subGroup is None:
+        subGroup = 'ALL'
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    if groupId == 'ALL' and subGroup == 'ALL':
+        products = db.Products.find({"category_type": "GEAR"})
+    else: 
+        if groupId != 'ALL' and subGroup == 'ALL':
+            products = db.Products.find({"category": groupId})
+        else:
+            products = db.Products.find({"category": groupId, "subgroup": subGroup})
+    return render_template('grid-gear.html', title='Gear', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - computers
 @app.route('/store/computers')
 def computers():
-    return render_template('grid-computers.html', title='Computers')
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    if groupId is None:
+        groupId='ALL'
+    if subGroup is None:
+        subGroup = 'ALL'
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    if groupId == 'ALL' and subGroup == 'ALL':
+        products = db.Products.find({"category_type": "COMPUTERS"})
+    else: 
+        if groupId != 'ALL' and subGroup == 'ALL':
+            products = db.Products.find({"category": groupId})
+        else:
+            products = db.Products.find({"category": groupId, "subgroup": subGroup})
+    return render_template('grid-computers.html', title='Computers', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - toys
 @app.route('/store/toys')
 def toys():
-    return render_template('grid-toys.html', title='Toys')
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    if groupId is None:
+        groupId='ALL'
+    if subGroup is None:
+        subGroup = 'ALL'
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    if groupId == 'ALL' and subGroup == 'ALL':
+        products = db.Products.find({"category_type": "TOYS"})
+    else: 
+        if groupId != 'ALL' and subGroup == 'ALL':
+            products = db.Products.find({"category": groupId})
+        else:
+            products = db.Products.find({"category": groupId, "subgroup": subGroup})
+    return render_template('grid-toys.html', title='Toys', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - accessories
 @app.route('/store/accessories')
 def accessories():
-    return render_template('grid-accessories.html', title='Accessories')
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    if groupId is None:
+        groupId='ALL'
+    if subGroup is None:
+        subGroup = 'ALL'
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    if groupId == 'ALL' and subGroup == 'ALL':
+        products = db.Products.find({"category_type": "ACCESSORIES"})
+    else: 
+        if groupId != 'ALL' and subGroup == 'ALL':
+            products = db.Products.find({"category": groupId})
+        else:
+            products = db.Products.find({"category": groupId, "subgroup": subGroup})
+    return render_template('grid-accessories.html', title='Accessories', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store
 @app.route('/store')
 def store():
-    return render_template('store.html', title='Store')
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    return render_template('store.html', title='Store', groups=groupsList)
 
 # shipping
 @app.route('/shipping')
@@ -396,8 +525,8 @@ def shipping():
 @app.route('/purchase/items')
 def post_purchase():
     if request.method == 'POST':
-        print(request.data);
-
+        print("++++++++++NEW REQUEST++++++++++++")
+        print(request.data)
         return redirect(url_for('post_purchase'))
     return render_template('purchase.html', breadCrumb=BREAD_CRUMB['Orders'][0],
     uname=current_user.get_id(), title='Purchase Order')
@@ -431,7 +560,7 @@ def purchase():
             'notes'         : form.item_notes.data,
             'terms'         : form.terms_notes.data
         }
-
+        print(new_item)
         db.Purchase.insert_one(new_item)
         flash('Item Added.')
 
@@ -479,7 +608,8 @@ def groups_add():
             'manufacturer' : form.manufacturer.data,
             'tax' : form.tax.data,
             'brand' : form.brand.data,
-            'total' : 0
+            'total' : 0,
+            'sub_group': request.form.getlist('subgroups')
         }
         db.Groups.insert_one(new_item)
         flash('New Group Added.')
@@ -526,6 +656,7 @@ def groups_list(name):
                 attrs[request.form.get('attr2')] = request.form.get('options2')
         if bool(attrs):
             update_item['attributes'] = attrs
+        print(update_item)
 
         db.Products.update_one({"id": request.form.get("pid")},{"$set":update_item},upsert=True)
 
@@ -547,12 +678,25 @@ def groups_list(name):
 
         hists = db.History.find({'pid':product_id})
 
+        #print( items.__dict__ )        print(items[0])
     except TypeError:
         flash("Group Does Not Exist")
         return redirect(url_for('groups'))
+    if request.method == 'GET':
+        CURRENCIES=[('USD', '$'),('EURO','€'),('POUND', '£')]
+        
     return render_template('groups-list.html', breadCrumb=BREAD_CRUMB['Products'][0],
     uname=current_user.get_id(), title='Groups List', items=items, cates=cates,
     vendors=vendors, currs=CURRENCIES, orders=ordrs, history=hists)
+
+@app.route('/getSubgroups', methods=['POST'])
+@login_required
+def getSubgroups():
+    if request.method == 'POST':
+        item = request.json
+        print("++++++++++NEW REQUEST++++++++++++ item: ", item)
+        group = db.Groups.find_one({'id':item['id']})
+        return jsonify(subgroups=group['sub_group'])
 
 @app.route('/updateProduct', methods=['POST'])
 @login_required
@@ -568,6 +712,7 @@ def updateProduct():
 def getProduct():
     if request.method == 'POST':
         item = request.json
+        print("++++++++++NEW REQUEST++++++++++++ item: ", item)
         prdt = db.Products.find_one({'id':item['pid']})
 
         return jsonify(id=prdt['id'], product=prdt['product'], sku=prdt['sku'], #'images' : prdt['images'],
@@ -653,6 +798,8 @@ def vendor():
 @app.route('/products/add', methods=['GET','POST'])
 @login_required
 def addItem():
+    curDirPath = os.path.dirname(os.path.realpath(__file__))
+    UPLOAD_FOLDER = os.path.join(curDirPath,"uploads")
     form = ProductForm()
     form.update_category()
     file_urls = []
@@ -669,11 +816,10 @@ def addItem():
                 imgfilepath = os.path.join(UPLOAD_FOLDER, filename)
                 file.save(imgfilepath)
                 # append image urls
-                file_urls.append(imgfilepath)
-
+                file_urls.append('../uploads/' + filename)
         strjson = ",".join(file_urls)
+        # print("------strjson: "+strjson)
         return jsonify(target_file=strjson)
-
     if form.validate_on_submit():
         # add new vendor
         vendor = ""
@@ -687,13 +833,18 @@ def addItem():
         if form.attr2.data != "":
             attrs[form.attr2.data] = form.options2.data
         images = form.hdfiles.data
-
+        #images = images.split(",")
+        print("\n routes | addItem: ----------------------------")
+        
+        category_type = db.Groups.find_one({"id": form.category.data})["type"]
         new_item = {
             'id' : str(uid()),
             'product' : form.product.data,
             'sku' : form.sku.data,
             'images' : images,
+            'category_type': category_type,
             'category' : form.category.data,
+            'subgroup' : form.subgroup.data,
             'price' : form.price.data,
             'currency' : form.currency.data,
             'attributes' : attrs,
@@ -769,33 +920,82 @@ def activity_log():
     uname=current_user.get_id(), title='Activity Log')
 
 # inventory - product orders
-@app.route('/reports/purchases-orders')
+@app.route('/reports/purchases-orders', methods=['GET','POST'])
 @login_required
 def purchases_orders():
+    if request.method == 'POST':
+        result = db.Orders.find({
+            "date": {
+                "$gt": date.strptime(request.json["from"], "%Y-%m-%dT%H:%M:%S.%fZ"),
+                "$lte": date.strptime(request.json["to"], "%Y-%m-%dT%H:%M:%S.%fZ")
+            },
+        }, {
+            "_id": 0
+        })
+        return jsonify({"report": list(result)})
     return render_template('purchases-orders.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Purchases Orders')
 
 # inventory - product receivable
-@app.route('/reports/purchases-receivable')
+@app.route('/reports/purchases-receivable', methods=['GET','POST'])
 @login_required
 def purchases_receivable():
+    if request.method == 'POST':
+        if request.json["receivable"] == 'Receivable':
+            result = db.Orders.find({
+                "invoice_id": {"$ne": None}
+            }, {
+                "_id": 0
+            })
+        else:
+            result = db.Orders.find({
+                "invoice_id": None
+            }, {
+                "_id": 0
+            })
+        return jsonify({"report": list(result)})
+    
     return render_template('purchases-receivable.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Purchases Details')
 
 # inventory - product sales
-@app.route('/reports/purchases-vendors')
+@app.route('/reports/purchases-vendors', methods=['GET','POST'])
 @login_required
 def purchases_vendors():
+    if request.method == 'POST':
+        products = db.Products.find({
+            "vendor": request.json["vendor"]
+        })
+        productIdArray = []
+        for product in products:
+            productIdArray.append(product["id"])
+        
+        result = db.Orders.find({
+            "product_id": {
+                "$in": productIdArray
+            }
+        }, {
+            "_id": 0
+        })
+        return jsonify({"report": list(result)})
+    vendors = db.Vendor.find()
     return render_template('purchases-vendors.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Purchases By Vendors')
+    uname=current_user.get_id(), title='Purchases By Vendors', vendors=vendors)
 
 # inventory - product sales
-@app.route('/reports/purchases-items')
+@app.route('/reports/purchases-items', methods=['GET','POST'])
 @login_required
 def purchases_items():
+    if request.method == 'POST':
+        result = db.Orders.find({
+            "product_id": request.json["product_id"]
+        }, {
+            "_id": 0
+        })
+        return jsonify({"report": list(result)})
+    products = db.Products.find()
     return render_template('purchases-items.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Purchases by Items')
-
+    uname=current_user.get_id(), title='Purchases by Items', products=products)
 # inventory - purchase bills
 @app.route('/reports/purchases-bills')
 @login_required
@@ -1025,3 +1225,7 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+@app.route('/uploads/<path:path>')
+def send_images(path):
+    return send_from_directory('uploads', path)

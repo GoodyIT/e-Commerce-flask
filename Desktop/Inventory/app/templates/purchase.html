@@ -21,22 +21,22 @@
                 <div class="card-body">
                     <form action="" method="post">
                         {{ form.hidden_tag() }}
-                        <div class="vendor-block" style="margin-bottom: 10px; height: 100px">
-                            <div class="col-lg-2" style="text-align; center;">
-                                <h5 style="text-color: red;">Vendor Name</h5>
-                            </div>
-                            <div class="col-lg-5" style="padding:0;">
-                                <!-- <select name="vendor" class="form-control form-control-lg" id="vendor">
-                                    <option value={{form.vendor}}></option>
-                                </select> -->
-                                {{form.vendor(class_="form-control form-control-lg")}}
-                            </div>
-                            <div class="col-lg-5">
-                            </div>
-                        </div> <!-- end vendor-block -->
+                        <div class="vendor-block" style="margin-bottom: 10px; height: 100px;">
+                                <div class="col-lg-2" style="text-align: center; float: left;">
+                                    <h5 style="color: red;">Vendor Name</h5>
+                                </div>
+                                <div class="col-lg-5" style="padding:0; float: left;">
+                                    <!-- <select name="vendor" class="form-control form-control-lg" id="vendor">
+                                        <option value={{form.vendor}}></option>
+                                    </select> -->
+                                    {{form.vendor(class_="form-control form-control-lg")}}
+                                </div>
+                                <div class="col-lg-4">
+                                </div>
+                            </div> <!-- end vendor-block -->
                         <div class="row">
                             <div class="col-lg-2" style="text-align: center;">
-                                <h5 style="text-color: red;">Deliver To</h5>
+                                <h5 style="color: red;">Deliver To</h5>
                             </div>
                             <div class="col-lg-5">
                                 <div class="row" style="margin-bottom: 15px; margin-top: 15px;">
@@ -54,7 +54,7 @@
                         <hr>
                         <div class="row" style="margin-bottom: 30px">
                             <div class="col-lg-2">
-                                <h5 style="text-color: red;">Purchase Order #</h5>
+                                <h5 style="color: red;">Purchase Order #</h5>
                             </div>
                             <div class="col-lg-5">
                                 <input type="text" class="form-control" id="purchase" name="purchase" placeholder="PO-23942032342">
@@ -67,7 +67,7 @@
                         </div>
                         <div class="row" style="margin-bottom: 30px">
                             <div class="col-lg-2">
-                                <h5 style="text-color: red;">Reference Order #</h5>
+                                <h5 style="color: red;">Reference Order #</h5>
                             </div>
                             <div class="col-lg-5">
                                 <input type="text" class="form-control" id="reference" name="reference" placeholder="aXl9023-x23ak22-32qaL3">
@@ -80,7 +80,7 @@
                         </div>
                         <div class="row" style="margin-bottom: 30px">
                             <div class="col-lg-2">
-                                <h5 style="text-color: red;">Current Date</h5>
+                                <h5 style="color: red;">Current Date</h5>
                             </div>
                             <div class="col-lg-3">
                                 <input type="text" class="form-control" id="datepick" name="current_date" size="30">
@@ -89,7 +89,7 @@
                                 {% endfor %}
                             </div>
                             <div class="col-lg-2">
-                                <h5 style="text-color: red;">Delivery Date</h5>
+                                <h5 style="color: red;">Delivery Date</h5>
                             </div>
                             <div class="col-lg-3">
                                 <input type="text" class="form-control" id="deliverypick" name="delivery_date" size="30">
@@ -175,7 +175,7 @@
                         <div class="row" style="margin-top: 50px;">
                             <div class="col-lg-4"></div>
                             <div class="col-lg-6">
-                                <h5 style="text-color: red;">Notes</h5>                
+                                <h5 style="color: red;">Notes</h5>                
                                 <textarea id="notes" class="form-control" name="item_notes" rows="5"></textarea>
                                 {% for error in form.item_notes.errors %}
                                     <span style="color: red;">[{{ error }}]</span>
@@ -186,7 +186,7 @@
                         <div class="row" style="margin-top: 25px;">
                             <div class="col-lg-4"></div>
                             <div class="col-lg-6">
-                                <h5 style="text-color: red;">Terms & Conditions</h5>                
+                                <h5 style="color: red;">Terms & Conditions</h5>                
                                 <textarea class="form-control" id="terms" name="terms_notes" rows="5"></textarea>
                                 {% for error in form.terms_notes.errors %}
                                     <span style="color: red;">[{{ error }}]</span>
@@ -224,15 +224,8 @@
                 </div>
             </div>
             <!-- /horizotal form -->
-
         </div>
 
     </div>
-
-
-
-
-
-
 
 {% endblock %}
