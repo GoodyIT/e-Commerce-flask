@@ -31,11 +31,21 @@
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </div>
+        </div> <!-- END ROW -->
+        <div class="row" style='margin-top:30px;'>
             <div class="col-lg-4" style="padding:0">
                 <label for="category">Group</label>         
                 {{form.category(class="form-control form-control-lg")}}
 
                 {% for error in form.category.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div class="col-lg-4" style="">
+                <label for="category">Sub Group</label>         
+                {{form.subgroup(class="form-control form-control-lg")}}
+
+                {% for error in form.subgroup.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </div>

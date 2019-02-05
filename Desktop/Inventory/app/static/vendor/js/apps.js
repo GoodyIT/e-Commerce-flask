@@ -694,6 +694,26 @@ $(function() {
 
     });
 
+    var cntSubgroup = 0;
+    $("#btnAddSubgroup").on("click", function(){
+        if ($("#subgroup-title").val() != "") {
+            var htmlAddSubgroup = `
+            <div class="row" style="margin-top:10px;">
+                <div class="col-lg-6">
+                    <div style="display: flex; flex-direction: row; align-items: center;">
+                        <label for="subgroup-${cntSubgroup}" style="margin-right: 20px;">${cntSubgroup+1}</label>
+                        <input type="text" class="form-control" name="subgroups" value="${$("#subgroup-title").val()}">
+                    </div>
+                </div>
+            </div>
+            `;
+
+            $("div#dvSubgroupList").append(htmlAddSubgroup);
+            $("#subgroup-title").val("");
+            cntSubgroup++;
+        }
+    });
+
     ////// Upload image drag&drop
     Dropzone.autoDiscover = false;
     Dropzone.options.frmDropZone = {
@@ -765,6 +785,28 @@ $(function() {
 
         });
     }
+    
+    updateSubgroupSelect();
+    function updateSubgroupSelect() {
+        console.log("aaaaa");
+        $.ajax({
+            url: "/getSubgroups",
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({'id':$('#category').val()}),
+        })
+        .done(function(result) {
+            var subgroupHtml = "";
+            result.subgroups.forEach((subgroup) => {
+                subgroupHtml +=  `<option value="${subgroup}">${subgroup}</option>`;
+            });
+            $('#subgroup').html(subgroupHtml);
+        });
+    }
+    $('#category').on('change', function() {
+        updateSubgroupSelect();
+    })
 })
 
 function initDashboard() {

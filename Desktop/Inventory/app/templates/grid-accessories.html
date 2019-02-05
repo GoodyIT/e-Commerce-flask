@@ -6,7 +6,7 @@
 
   <!-- Breadcrumbs -->
   <div class="breadcrumbs">
-    <div class="container"> <a href="#">Home</a> <span class="separator"><i class="iconfont pe-7s-angle-right"></i></span> <span>Electronics</span> </div>
+    <div class="container"> <a href="#">Home</a> <span class="separator"><i class="iconfont pe-7s-angle-right"></i></span> <span>Accessories</span> </div>
   </div>
   <!-- Breadcrumbs End -->
 
@@ -14,36 +14,32 @@
     <div class="container filter-box">
       <div class="filter-list-wrap" id="1">
         <dl class="filter-list clearfix J_filterList filter-list-row">
-          <dt>Category :</dt>
-          <dd class="category-all active">All </dd>
-          <dd class="item"> <a href="#">Category 1</a> </dd>
-          <dd class="item"> <a href="#">Category 2</a> </dd>
-          <dd class="item"> <a href="#">Category 3</a> </dd>
-          <dd class="item"> <a href="#">Category 3</a> </dd>
-          <dd class="item"> <a href="#">Category 4</a> </dd>
-          <dd class="item"> <a href="#">Category 5</a> </dd>
-          <dd class="item"> <a href="#">Category 6</a> </dd>
-          <dd class="item"> <a href="#">Category 7</a> </dd>
-          <dd class="item"> <a href="#">Category 8</a> </dd>
-          <dd class="item"> <a href="#">Category 9</a> </dd>
-          <dd class="item"> <a href="#">Category 10</a> </dd>
-          <dd class="item"> <a href="#">Category 11</a> </dd>
-          <dd class="item"> <a href="#">Category 12</a> </dd>
+            <dt>Category :</dt>
+            <a href="accessories"><dd class="category-all {{'active' if activeGroupId == 'ALL'}}">All </dd></a>
+            {% for group in groups['ACCESSORIES'] %}
+              <a href="accessories?gid={{group.id}}"><dd class="item {{'active' if activeGroupId == group.id}}"> {{group.name}}</dd></a>
+            {% endfor %}
           <dd class=""> <a data-id="1" class="more J_filterToggle" href="#"><i class="iconfont pe-7s-angle-down"></i></a></dd>
         </dl>
       </div>
       <div class="filter-list-wrap" id="2">
         <dl class="filter-list clearfix J_filterList filter-list-row">
-          <dt>Device :</dt>
-          <dd class="category-all active">All </dd>
-          <dd class="item"> <a href="#">Category 1</a> </dd>
-          <dd class="item"> <a href="#">Category 2</a> </dd>
-          <dd class="item"> <a href="#">Category 3</a> </dd>
-          <dd class="item"> <a href="#">Category 4</a> </dd>
-          <dd class="item"> <a href="#" >Category 5</a> </dd>
-          <dd class="item"> <a href="#">Category 6</a> </dd>
-          <dd class="item"> <a href="#">Category 7</a> </dd>
-          <dd class="item"> <a href="#">Category 8</a> </dd>
+          <dt>Sub :</dt>
+          <a href="accessories?gid={{activeGroupId}}"><dd class="category-all {{'active' if activeSubGroup == 'ALL'}}">All </dd></a>
+
+          {% for group in groups['ACCESSORIES'] %}
+            {% if activeGroupId == 'ALL' %}
+              {% for subgroup in group.sub_group %}
+                <a href="accessories?gid={{group.id}}&subgroup={{subgroup}}"><dd class="item {{'active' if activeSubGroup == subgroup}}">{{group.name}}/{{subgroup}}</dd></a>
+              {% endfor %}
+            {% else %}
+              {% if activeGroupId == group.id %}
+                {% for subgroup in group.sub_group %}
+                    <a href="accessories?gid={{group.id}}&subgroup={{subgroup}}"><dd class="item {{'active' if activeSubGroup == subgroup}}">{{subgroup}}</dd></a>
+                {% endfor %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
           <dd><a data-id="2" class="more J_filterToggle" href="#"><i class="iconfont pe-7s-angle-down"></i></a></dd>
         </dl>
       </div>
@@ -71,342 +67,47 @@
         </div>
         <div class="goods-list-box">
           <ul class="products-grid">
-            <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-12">
-              <div class="item-inner">
-                <div class="item-img">
-                  <div class="mgk-pro-hover"> <span class="sale-new-label top-right"><span class="labelsale">Sale</span></span><a href="#" title="Retis lapen casen" class="product-image"> <img class="img-responsive" src="../static/products-images//product-img.jpg"
-                                                     alt="Retis lapen casen"> <span class="product-img-back">
-                                            <img class="img-responsive" src="../static/products-images//product-img1.jpg"
-                                                 alt="Retis lapen casen"> </span> </a></div>
-                  <div class="item-title"> <a title="Retis lapen casen" href="product_detail.html">Beatae vitae dicta</a> </div>
-                  <div class="quick-view"> <a title="Quick View" href="#" class="link-quickview"><i class="icons pe-7s-search"></i> </a> </div>
-                </div>
-                <div class="item-info">
-                  <div class="info-inner">
-                    <div class="actions">
-                      <div class="item-price">
-                        <div class="price-box">
-                          <p class="old-price"> <span class="price-label">Regular Price:</span> <span class="price"> $167.00 </span> </p>
-                          <p class="special-price"> <span class="price-label">Special Price</span> <span class="price"> $156.00 </span> </p>
+              {% for item in products %}
+              <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                <div class="item-inner">
+                  <div class="item-img">
+                    <div class="mgk-pro-hover"> <span class="sale-new-label top-right"><span class="labelsale">Sale</span></span>
+                        <a href="#" title="{{item.product}}" class="product-image"> 
+                          {% if item.images == '' %}
+                            <img class="img-responsive" src="../static/products-images/product-img1.jpg" alt="{{item.product}}"> 
+                          {% else %}
+                            <img class="img-responsive" src="{{item.images}}" alt="{{item.product}}"> 
+                          {% endif %}
+                          <span class="product-img-back">
+                            <img class="img-responsive" src="../static/products-images/product-img1.jpg" alt="{{item.product}}">
+                          </span> 
+                        </a>
+                      </div>
+                    <div class="item-title"> <a title="{{item.product}}" href="product_detail.html">{{item.product}}</a> </div>
+                    <div class="quick-view"> <a title="Quick View" href="#" class="link-quickview"><i class="icons pe-7s-search"></i> </a> </div>
+                  </div>
+                  <div class="item-info">
+                    <div class="info-inner">
+                      <div class="actions">
+                        <div class="item-price">
+                          <div class="price-box">
+                            <p class="old-price"> <span class="price-label">Regular Price:</span> <span class="price"> $167.00 </span> </p>
+                            <p class="special-price"> <span class="price-label">Special Price</span> <span class="price"> ${{item.price}} </span> </p>
+                          </div>
                         </div>
-                      </div>
-                      <div class="actions-cart">
-                        <button type="button" title="Add to Cart" class="button btn-cart"></button>
-                      </div>
-                      <ul class="add-to-links">
-                        <li class="pull-right-no pull-compare"><span class="separator">|</span> <a href="#" title="Compare" class="link-compare"><i class="fa fa-retweet"></i>Compare</a></li>
-                        <li class="pull-left-no pull-wishlist"><a href="#" title="Wishlist" class="link-wishlist"><i class="fa fa-heart-o"></i>Wishlist</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-12">
-              <div class="item-inner">
-                <div class="item-img">
-                  <div class="mgk-pro-hover"> <a href="#" title="Retis lapen casen" class="product-image"> <img class="img-responsive" src="../static/products-images//product-img.jpg"
-                                                     alt="Retis lapen casen"> <span class="product-img-back">
-                                            <img class="img-responsive" src="../static/products-images//product-img1.jpg"
-                                                 alt="Retis lapen casen"> </span> </a></div>
-                  <div class="item-title"> <a title="Retis lapen casen" href="product_detail.html">Beatae vitae dicta</a> </div>
-                  <div class="quick-view"> <a title="Quick View" href="#" class="link-quickview"><i class="icons pe-7s-search"></i> </a> </div>
-                </div>
-                <div class="item-info">
-                  <div class="info-inner">
-                    <div class="actions">
-                      <div class="item-price">
-                        <div class="price-box"> <span class="regular-price"> <span class="price">$155.00</span> </span> </div>
-                      </div>
-                      <div class="actions-cart">
-                        <button type="button" title="Add to Cart" class="button btn-cart"></button>
-                      </div>
-                      <ul class="add-to-links">
-                        <li class="pull-right-no pull-compare"><span class="separator">|</span> <a href="#" title="Compare" class="link-compare"><i class="fa fa-retweet"></i>Compare</a></li>
-                        <li class="pull-left-no pull-wishlist"><a href="#" title="Wishlist" class="link-wishlist"><i class="fa fa-heart-o"></i>Wishlist</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-12">
-              <div class="item-inner">
-                <div class="item-img">
-                  <div class="mgk-pro-hover"><span class="sale-new-label top-left"><span class="labelnew">New</span></span> <a href="#" title="Retis lapen casen" class="product-image"> <img class="img-responsive" src="../static/products-images//product-img.jpg"
-                                                     alt="Retis lapen casen"> <span class="product-img-back">
-                                            <img class="img-responsive" src="../static/products-images//product-img1.jpg"
-                                                 alt="Retis lapen casen"> </span> </a></div>
-                  <div class="item-title"> <a title="Retis lapen casen" href="product_detail.html">Beatae vitae dicta</a> </div>
-                  <div class="quick-view"> <a title="Quick View" href="#" class="link-quickview"><i class="icons pe-7s-search"></i> </a> </div>
-                </div>
-                <div class="item-info">
-                  <div class="info-inner">
-                    <div class="actions">
-                      <div class="item-price">
-                        <div class="price-box"> <span class="regular-price"> <span class="price">$155.00</span> </span> </div>
-                      </div>
-                      <div class="actions-cart">
-                        <button type="button" title="Add to Cart" class="button btn-cart"></button>
-                      </div>
-                      <ul class="add-to-links">
-                        <li class="pull-right-no pull-compare"><span class="separator">|</span> <a href="#" title="Compare" class="link-compare"><i class="fa fa-retweet"></i>Compare</a></li>
-                        <li class="pull-left-no pull-wishlist"><a href="#" title="Wishlist" class="link-wishlist"><i class="fa fa-heart-o"></i>Wishlist</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-12">
-              <div class="item-inner">
-                <div class="item-img">
-                  <div class="mgk-pro-hover"> <span class="sale-new-label top-right"><span class="labelsale">Sale</span></span><a href="#" title="Retis lapen casen" class="product-image"> <img class="img-responsive" src="../static/products-images//product-img.jpg"
-                                                     alt="Retis lapen casen"> <span class="product-img-back">
-                                            <img class="img-responsive" src="../static/products-images//product-img1.jpg"
-                                                 alt="Retis lapen casen"> </span> </a></div>
-                  <div class="item-title"> <a title="Retis lapen casen" href="product_detail.html">Beatae vitae dicta</a> </div>
-                  <div class="quick-view"> <a title="Quick View" href="#" class="link-quickview"><i class="icons pe-7s-search"></i> </a> </div>
-                </div>
-                <div class="item-info">
-                  <div class="info-inner">
-                    <div class="actions">
-                      <div class="item-price">
-                        <div class="price-box">
-                          <p class="old-price"> <span class="price-label">Regular Price:</span> <span class="price"> $167.00 </span> </p>
-                          <p class="special-price"> <span class="price-label">Special Price</span> <span class="price"> $156.00 </span> </p>
+                        <div class="actions-cart">
+                          <button type="button" title="Add to Cart" class="button btn-cart"></button>
                         </div>
+                        <ul class="add-to-links">
+                          <li class="pull-right-no pull-compare"><span class="separator">|</span> <a href="#" title="Compare" class="link-compare"><i class="fa fa-retweet"></i>Compare</a></li>
+                          <li class="pull-left-no pull-wishlist"><a href="#" title="Wishlist" class="link-wishlist"><i class="fa fa-heart-o"></i>Wishlist</a></li>
+                        </ul>
                       </div>
-                      <div class="actions-cart">
-                        <button type="button" title="Add to Cart" class="button btn-cart"></button>
-                      </div>
-                      <ul class="add-to-links">
-                        <li class="pull-right-no pull-compare"><span class="separator">|</span> <a href="#" title="Compare" class="link-compare"><i class="fa fa-retweet"></i>Compare</a></li>
-                        <li class="pull-left-no pull-wishlist"><a href="#" title="Wishlist" class="link-wishlist"><i class="fa fa-heart-o"></i>Wishlist</a></li>
-                      </ul>
                     </div>
                   </div>
                 </div>
-              </div>
-            </li>
-            <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-12">
-              <div class="item-inner">
-                <div class="item-img">
-                  <div class="mgk-pro-hover"> <a href="#" title="Retis lapen casen" class="product-image"> <img class="img-responsive" src="../static/products-images//product-img.jpg"
-                                                     alt="Retis lapen casen"> <span class="product-img-back">
-                                            <img class="img-responsive" src="../static/products-images//product-img1.jpg"
-                                                 alt="Retis lapen casen"> </span> </a></div>
-                  <div class="item-title"> <a title="Retis lapen casen" href="product_detail.html">Beatae vitae dicta</a> </div>
-                  <div class="quick-view"> <a title="Quick View" href="#" class="link-quickview"><i class="icons pe-7s-search"></i> </a> </div>
-                </div>
-                <div class="item-info">
-                  <div class="info-inner">
-                    <div class="actions">
-                      <div class="item-price">
-                        <div class="price-box">
-                          <p class="old-price"> <span class="price-label">Regular Price:</span> <span class="price"> $167.00 </span> </p>
-                          <p class="special-price"> <span class="price-label">Special Price</span> <span class="price"> $156.00 </span> </p>
-                        </div>
-                      </div>
-                      <div class="actions-cart">
-                        <button type="button" title="Add to Cart" class="button btn-cart"></button>
-                      </div>
-                      <ul class="add-to-links">
-                        <li class="pull-right-no pull-compare"><span class="separator">|</span> <a href="#" title="Compare" class="link-compare"><i class="fa fa-retweet"></i>Compare</a></li>
-                        <li class="pull-left-no pull-wishlist"><a href="#" title="Wishlist" class="link-wishlist"><i class="fa fa-heart-o"></i>Wishlist</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-12">
-              <div class="item-inner">
-                <div class="item-img">
-                  <div class="mgk-pro-hover"> <a href="#" title="Retis lapen casen" class="product-image"> <img class="img-responsive" src="../static/products-images//product-img.jpg"
-                                                     alt="Retis lapen casen"> <span class="product-img-back">
-                                            <img class="img-responsive" src="../static/products-images//product-img1.jpg"
-                                                 alt="Retis lapen casen"> </span> </a></div>
-                  <div class="item-title"> <a title="Retis lapen casen" href="product_detail.html">Beatae vitae dicta</a> </div>
-                  <div class="quick-view"> <a title="Quick View" href="#" class="link-quickview"><i class="icons pe-7s-search"></i> </a> </div>
-                </div>
-                <div class="item-info">
-                  <div class="info-inner">
-                    <div class="actions">
-                      <div class="item-price">
-                        <div class="price-box">
-                          <p class="old-price"> <span class="price-label">Regular Price:</span> <span class="price"> $167.00 </span> </p>
-                          <p class="special-price"> <span class="price-label">Special Price</span> <span class="price"> $156.00 </span> </p>
-                        </div>
-                      </div>
-                      <div class="actions-cart">
-                        <button type="button" title="Add to Cart" class="button btn-cart"></button>
-                      </div>
-                      <ul class="add-to-links">
-                        <li class="pull-right-no pull-compare"><span class="separator">|</span> <a href="#" title="Compare" class="link-compare"><i class="fa fa-retweet"></i>Compare</a></li>
-                        <li class="pull-left-no pull-wishlist"><a href="#" title="Wishlist" class="link-wishlist"><i class="fa fa-heart-o"></i>Wishlist</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-12">
-              <div class="item-inner">
-                <div class="item-img">
-                  <div class="mgk-pro-hover"> <a href="#" title="Retis lapen casen" class="product-image"> <img class="img-responsive" src="../static/products-images//product-img.jpg"
-                                                     alt="Retis lapen casen"> <span class="product-img-back">
-                                            <img class="img-responsive" src="../static/products-images//product-img1.jpg"
-                                                 alt="Retis lapen casen"> </span> </a></div>
-                  <div class="item-title"> <a title="Retis lapen casen" href="product_detail.html">Beatae vitae dicta</a> </div>
-                  <div class="quick-view"> <a title="Quick View" href="#" class="link-quickview"><i class="icons pe-7s-search"></i> </a> </div>
-                </div>
-                <div class="item-info">
-                  <div class="info-inner">
-                    <div class="actions">
-                      <div class="item-price">
-                        <div class="price-box">
-                          <p class="old-price"> <span class="price-label">Regular Price:</span> <span class="price"> $167.00 </span> </p>
-                          <p class="special-price"> <span class="price-label">Special Price</span> <span class="price"> $156.00 </span> </p>
-                        </div>
-                      </div>
-                      <div class="actions-cart">
-                        <button type="button" title="Add to Cart" class="button btn-cart"></button>
-                      </div>
-                      <ul class="add-to-links">
-                        <li class="pull-right-no pull-compare"><span class="separator">|</span> <a href="#" title="Compare" class="link-compare"><i class="fa fa-retweet"></i>Compare</a></li>
-                        <li class="pull-left-no pull-wishlist"><a href="#" title="Wishlist" class="link-wishlist"><i class="fa fa-heart-o"></i>Wishlist</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-12">
-              <div class="item-inner">
-                <div class="item-img">
-                  <div class="mgk-pro-hover"> <a href="#" title="Retis lapen casen" class="product-image"> <img class="img-responsive" src="../static/products-images//product-img.jpg"
-                                                     alt="Retis lapen casen"> <span class="product-img-back">
-                                            <img class="img-responsive" src="../static/products-images//product-img1.jpg"
-                                                 alt="Retis lapen casen"> </span> </a></div>
-                  <div class="item-title"> <a title="Retis lapen casen" href="product_detail.html">Beatae vitae dicta</a> </div>
-                  <div class="quick-view"> <a title="Quick View" href="#" class="link-quickview"><i class="icons pe-7s-search"></i> </a> </div>
-                </div>
-                <div class="item-info">
-                  <div class="info-inner">
-                    <div class="actions">
-                      <div class="item-price">
-                        <div class="price-box">
-                          <p class="old-price"> <span class="price-label">Regular Price:</span> <span class="price"> $167.00 </span> </p>
-                          <p class="special-price"> <span class="price-label">Special Price</span> <span class="price"> $156.00 </span> </p>
-                        </div>
-                      </div>
-                      <div class="actions-cart">
-                        <button type="button" title="Add to Cart" class="button btn-cart"></button>
-                      </div>
-                      <ul class="add-to-links">
-                        <li class="pull-right-no pull-compare"><span class="separator">|</span> <a href="#" title="Compare" class="link-compare"><i class="fa fa-retweet"></i>Compare</a></li>
-                        <li class="pull-left-no pull-wishlist"><a href="#" title="Wishlist" class="link-wishlist"><i class="fa fa-heart-o"></i>Wishlist</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-12">
-              <div class="item-inner">
-                <div class="item-img">
-                  <div class="mgk-pro-hover"> <a href="#" title="Retis lapen casen" class="product-image"> <img class="img-responsive" src="../static/products-images//product-img.jpg"
-                                                     alt="Retis lapen casen"> <span class="product-img-back">
-                                            <img class="img-responsive" src="../static/products-images//product-img1.jpg"
-                                                 alt="Retis lapen casen"> </span> </a></div>
-                  <div class="item-title"> <a title="Retis lapen casen" href="product_detail.html">Beatae vitae dicta</a> </div>
-                  <div class="quick-view"> <a title="Quick View" href="#" class="link-quickview"><i class="icons pe-7s-search"></i> </a> </div>
-                </div>
-                <div class="item-info">
-                  <div class="info-inner">
-                    <div class="actions">
-                      <div class="item-price">
-                        <div class="price-box">
-                          <p class="old-price"> <span class="price-label">Regular Price:</span> <span class="price"> $167.00 </span> </p>
-                          <p class="special-price"> <span class="price-label">Special Price</span> <span class="price"> $156.00 </span> </p>
-                        </div>
-                      </div>
-                      <div class="actions-cart">
-                        <button type="button" title="Add to Cart" class="button btn-cart"></button>
-                      </div>
-                      <ul class="add-to-links">
-                        <li class="pull-right-no pull-compare"><span class="separator">|</span> <a href="#" title="Compare" class="link-compare"><i class="fa fa-retweet"></i>Compare</a></li>
-                        <li class="pull-left-no pull-wishlist"><a href="#" title="Wishlist" class="link-wishlist"><i class="fa fa-heart-o"></i>Wishlist</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-12">
-              <div class="item-inner">
-                <div class="item-img">
-                  <div class="mgk-pro-hover"> <a href="#" title="Retis lapen casen" class="product-image"> <img class="img-responsive" src="../static/products-images//product-img.jpg"
-                                                     alt="Retis lapen casen"> <span class="product-img-back">
-                                            <img class="img-responsive" src="../static/products-images//product-img1.jpg"
-                                                 alt="Retis lapen casen"> </span> </a></div>
-                  <div class="item-title"> <a title="Retis lapen casen" href="product_detail.html">Beatae vitae dicta</a> </div>
-                  <div class="quick-view"> <a title="Quick View" href="#" class="link-quickview"><i class="icons pe-7s-search"></i> </a> </div>
-                </div>
-                <div class="item-info">
-                  <div class="info-inner">
-                    <div class="actions">
-                      <div class="item-price">
-                        <div class="price-box">
-                          <p class="old-price"> <span class="price-label">Regular Price:</span> <span class="price"> $167.00 </span> </p>
-                          <p class="special-price"> <span class="price-label">Special Price</span> <span class="price"> $156.00 </span> </p>
-                        </div>
-                      </div>
-                      <div class="actions-cart">
-                        <button type="button" title="Add to Cart" class="button btn-cart"></button>
-                      </div>
-                      <ul class="add-to-links">
-                        <li class="pull-right-no pull-compare"><span class="separator">|</span> <a href="#" title="Compare" class="link-compare"><i class="fa fa-retweet"></i>Compare</a></li>
-                        <li class="pull-left-no pull-wishlist"><a href="#" title="Wishlist" class="link-wishlist"><i class="fa fa-heart-o"></i>Wishlist</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-12">
-              <div class="item-inner">
-                <div class="item-img">
-                  <div class="mgk-pro-hover"> <a href="#" title="Retis lapen casen" class="product-image"> <img class="img-responsive" src="../static/products-images//product-img.jpg"
-                                                         alt="Retis lapen casen"> <span class="product-img-back">
-                                                                    <img class="img-responsive"
-                                                                         src="../static/products-images//product-img1.jpg"
-                                                                         alt="Retis lapen casen"> </span> </a></div>
-                  <div class="item-title"> <a title="Retis lapen casen" href="product_detail.html">Beatae vitae dicta</a> </div>
-                  <div class="quick-view"> <a title="Quick View" href="#" class="link-quickview"><i class="icons pe-7s-search"></i> </a> </div>
-                </div>
-                <div class="item-info">
-                  <div class="info-inner">
-                    <div class="actions">
-                      <div class="item-price">
-                        <div class="price-box">
-                          <p class="old-price"> <span class="price-label">Regular Price:</span> <span class="price"> $167.00 </span> </p>
-                          <p class="special-price"> <span class="price-label">Special Price</span> <span class="price"> $156.00 </span> </p>
-                        </div>
-                      </div>
-                      <div class="actions-cart">
-                        <button type="button" title="Add to Cart" class="button btn-cart"></button>
-                      </div>
-                      <ul class="add-to-links">
-                        <li class="pull-right-no pull-compare"><span class="separator">|</span> <a href="#" title="Compare" class="link-compare"><i class="fa fa-retweet"></i>Compare</a></li>
-                        <li class="pull-left-no pull-wishlist"><a href="#" title="Wishlist" class="link-wishlist"><i class="fa fa-heart-o"></i>Wishlist</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
+              </li>
+            {% endfor %}
           </ul>
           <div class="xm-pagenavi"> <span class="numbers first iconfont pe-7s-angle-left"></span><span class="numbers current">1</span> <a class="numbers" href="#">2</a> <a class="numbers" href="#">3</a> <a class="numbers last iconfont pe-7s-angle-right" href="#"></a> </div>
         </div>

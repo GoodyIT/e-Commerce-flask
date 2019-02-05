@@ -164,91 +164,23 @@
                             </div>
                             <div class="nav-inner">
                                 <ul id="nav" class="hidden-xs">
-                                  <li class="level0 nav-5 level-top first"><a href="{{url_for('games')}}" class="level-top">
-                                      <span>Games</span><b class="caret"></b>
-                                  </a>
+                                  <li class="level0 nav-5 level-top first">
+                                      <a href="{{url_for('games')}}" class="level-top">
+                                        <span>Games</span><b class="caret"></b>
+                                      </a>
                                       <div class="level0-wrapper dropdown-6col">
                                           <div class="level0-wrapper2 container">
                                               <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
                                                   <ul class="level0">
-                                                      <li class="level1 nav-6-1 parent"><a href="#"><span>Category</span></a>
+                                                      {% for group in groups['GAMES'] %}
+                                                      <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}"><span>{{group.name}}</span></a>
                                                           <ul class="level2">
-                                                              <li class="level2 nav-2-1-1 first"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a></li>
+                                                            {% for subgroup in group.sub_group %}
+                                                              <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}"><span>{{subgroup}}</span></a></li>
+                                                            {% endfor %}
                                                           </ul>
                                                       </li>
-
-                                                      <li class="level1 nav-6-1 parent"><a href="#"><span>Category</span></a>
-                                                          <ul class="level2">
-                                                              <li class="level2 nav-2-1-1 first"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a></li>
-                                                          </ul>
-                                                      </li>
-                                                      <li class="level1 nav-6-1 parent"><a href="#"><span>Category</span></a>
-                                                          <ul class="level2">
-                                                              <li class="level2 nav-2-1-1 first"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a></li>
-                                                          </ul>
-                                                      </li>
-                                                      <!--level1 nav-6-1 parent item-->
-                                                      <li class="level1 nav-6-1 parent"><a href="#"><span>Category</span></a>
-                                                          <ul class="level2">
-                                                              <li class="level2 nav-2-1-1 first"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a></li>
-                                                          </ul>
-                                                      </li>
-                                                      <!--level1 nav-6-1 parent item-->
-                                                      <li class="level1 nav-6-1 parent"><a href="#"><span>Category</span></a>
-                                                          <ul class="level2">
-                                                              <li class="level2 nav-2-1-1 first"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a></li>
-                                                          </ul>
-                                                      </li>
-                                                      <!--level1 nav-6-1 parent item-->
-                                                      <li class="level1 nav-6-1 parent"><a href="#"><span>Category</span></a>
-                                                          <ul class="level2">
-                                                              <li class="level2 nav-2-1-1 first"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a></li>
-                                                          </ul>
-                                                      </li>
-                                                      <!--level1 nav-6-1 parent item-->
-                                                      <li class="level1 nav-6-1 parent"><a href="#"><span>Category</span></a>
-                                                          <ul class="level2">
-                                                              <li class="level2 nav-2-1-1 first"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a></li>
-                                                          </ul>
-                                                      </li>
-                                                      <!--level1 nav-6-1 parent item-->
-                                                      <li class="level1 nav-6-1 parent"><a href="#"><span>Category</span></a>
-                                                          <ul class="level2">
-                                                              <li class="level2 nav-2-1-1 first"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a></li>
-                                                              <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a></li>
-                                                          </ul>
-                                                      </li>
+                                                      {% endfor %}
                                                   </ul>
                                                   <!--level0-->
                                               </div>
@@ -261,396 +193,21 @@
                                           </div>
                                       </div>
                                     </li> <!-- end Games -->
-                                    <li class="level0 parent drop-menu">
+                                    <li class="level0 nav-5 level-top first">
                                         <a href="{{url_for('office')}}"><span>Office</span><b class="caret"></b> </a>
-                                        <ul class="level1">
-                                            <li class="level1 first"><a href="index.html"> <span>Home</span></a>
-                                                <ul class="level2">
-                                                    <li class="level2 nav-2-1-1 first"><a href="index.html"><span>Home Full Width</span></a> </li>
-                                                    <li class="level2 nav-2-1-1 first"><a href="index-boxed.html"><span>Home Boxed</span></a> </li>
-                                                </ul>
-                                            </li>
-                                            <li class="level1 first"><a href="grid.html"> <span>Grid</span></a>
-                                                <ul class="level2">
-                                                    <li class="level2 nav-2-1-1 first"><a href="grid.html"><span>Grid Without Sidebar</span></a> </li>
-                                                    <li class="level2 nav-2-1-1 first"><a href="grid1.html"><span>Grid Left Sidebar</span></a> </li>
-                                                    <li class="level2 nav-2-1-5 last"><a href="grid2.html"><span>Grid Right Sidebar</span></a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li class="level1 nav-10-2"><a href="list.html"> <span>List</span> </a></li>
-                                            <li class="level1 nav-10-3"><a href="product_detail.html"> <span>Product Detail</span> </a></li>
-                                            <li class="level1 first parent"><a href="aboutus.html"> <span>About Us</span></a>
-                                                <ul class="level2">
-                                                    <li class="level2 nav-2-1-1 first"><a href="aboutus.html"><span>About Us</span></a> </li>
-                                                    <li class="level2 nav-2-1-5"><a href="aboutus-left-sidebar.html"><span>About Us left Sidebar</span></a> </li>
-                                                    <li class="level2 nav-2-1-5 last"><a href="aboutus-right-sidebar.html"><span>About Us Right Sidebar</span></a> </li>
-                                                </ul>
-                                            </li>
-                                            <li class="level1 first parent"><a href="blog-articles-cards.html"> <span>Blog</span></a>
-                                                <ul class="level2">
-                                                    <li class="level2 nav-2-1-1 first"><a href="blog-articles-cards.html"><span>Blog Grid View</span></a> </li>
-                                                    <li class="level2 nav-2-1-5"><a href="blog-articles-cards-sidebar.html"><span>Blog Grid With Sidebar</span></a> </li>
-                                                    <li class="level2 nav-2-1-5"><a href="blog-articles-list.html"><span>Blog List View</span></a> </li>
-                                                    <li class="level2 nav-2-1-5"><a href="blog-articles-magazine.html"><span>Blog Articles Magazine</span></a> </li>
-                                                    <li class="level2 nav-2-1-5"><a href="blog-post-single.html"><span>Single Blog Post</span></a> </li>
-                                                    <li class="level2 nav-2-1-5"><a href="blog-post-image-single.html"><span>Single Blog With Image </span></a> </li>
-                                                    <li class="level2 nav-2-1-5"><a href="blog-post-audio-single.html"><span>Single Blog With Audio </span></a> </li>
-                                                    <li class="level2 nav-2-1-5 last"><a href="blog-post-video-single.html"><span>Single Blog With Video </span></a> </li>
-                                                </ul>
-                                            </li>
-                                            <li class="level1 nav-10-3"><a href="login.html"> <span>Log In</span> </a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="level0 nav-7 level-top parent">
-                                        <a href="{{url_for('electronics')}}" class="level-top"> <span>Electronics</span><b class="caret"></b> </a>
-                                        <div class="level0-wrapper dropdown-6col ">
-                                            <div class="level0-wrapper2 container">
-                                                <div class="shop-categories">
-                                                    <div class="main-product">
-                                                        <a class="product-image" href="#">
-                                                            <img src="../static/products-images/product-img.jpg" alt="product image">
-                                                        </a>
-                                                        <a class="product-name" href="#">Retis lapen casen</a>
-                                                        <span class="product-price">From ₹ 9,999</span>
-                                                    </div>
-
-                                                    <div class="main-product">
-                                                        <a class="product-image" href="#">
-                                                            <img src="../static/products-images/product-img.jpg" alt="product image">
-                                                        </a>
-                                                        <a class="product-name" href="#">Retis lapen casen</a>
-                                                        <span class="product-price">From ₹ 9,999</span>
-                                                    </div>
-
-                                                    <div class="main-product">
-                                                        <a class="product-image" href="#">
-                                                            <img src="../static/products-images/product-img.jpg" alt="product image">
-                                                        </a>
-                                                        <a class="product-name" href="#">Retis lapen casen</a>
-                                                        <span class="product-price">From ₹ 9,999</span>
-                                                    </div>
-
-                                                    <div class="main-product">
-                                                        <a class="product-image" href="#">
-                                                            <img src="../static/products-images/product-img.jpg" alt="product image">
-                                                        </a>
-                                                        <a class="product-name" href="#">Retis lapen casen</a>
-                                                        <span class="product-price">From ₹ 9,999</span>
-                                                    </div>
-
-                                                    <div class="main-product">
-                                                        <a class="product-image" href="#">
-                                                            <img src="../static/products-images/product-img.jpg" alt="product image">
-                                                        </a>
-                                                        <a class="product-name" href="#">Retis lapen casen</a>
-                                                        <span class="product-price">From ₹ 9,999</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="level0 nav-6 level-top parent"><a href="{{url_for('gear')}}" class="level-top">
-                                        <span>Gear</span><b class="caret"></b> </a>
-                                        <div class="level0-wrapper dropdown-6col">
-                                            <div class="level0-wrapper2 container">
-                                                <div class="shop-categories">
-                                                    <div class="main-product">
-                                                        <a class="product-image" href="#">
-                                                            <img src="../static/products-images/product-img.jpg" alt="product image">
-                                                        </a>
-                                                        <a class="product-name" href="#">Retis lapen casen</a>
-                                                        <span class="product-price">From ₹ 9,999</span>
-                                                    </div>
-
-                                                    <div class="main-product">
-                                                        <a class="product-image" href="#">
-                                                            <img src="../static/products-images/product-img.jpg" alt="product image">
-                                                        </a>
-                                                        <a class="product-name" href="#">Retis lapen casen</a>
-                                                        <span class="product-price">From ₹ 9,999</span>
-                                                    </div>
-
-                                                    <div class="main-product">
-                                                        <a class="product-image" href="#">
-                                                            <img src="../static/products-images/product-img.jpg" alt="product image">
-                                                        </a>
-                                                        <a class="product-name" href="#">Retis lapen casen</a>
-                                                        <span class="product-price">From ₹ 9,999</span>
-                                                    </div>
-
-                                                    <div class="main-product">
-                                                        <a class="product-image" href="#">
-                                                            <img src="../static/products-images/product-img.jpg" alt="product image">
-                                                        </a>
-                                                        <a class="product-name" href="#">Retis lapen casen</a>
-                                                        <span class="product-price">From ₹ 9,999</span>
-                                                    </div>
-
-                                                    <div class="main-product">
-                                                        <a class="product-image" href="#">
-                                                            <img src="../static/products-images/product-img.jpg" alt="product image">
-                                                        </a>
-                                                        <a class="product-name" href="#">Retis lapen casen</a>
-                                                        <span class="product-price">From ₹ 9,999</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </li>
-                                    <li class="level0 parent drop-menu"><a href="{{url_for('computers')}}"><span>Computers<b class="caret"></b></span>
-                                        <!--<span class="category-label-hot">Hot</span> -->
-                                    </a>
-                                        <ul class="level1">
-                                            <li class="level1 first parent"><a href="#"><span>Category</span></a>
-                                                <ul class="level2">
-                                                    <li class="level2 first"><a href="#"><span>Sub Category</span></a></li>
-                                                    <li class="level2 nav-1-1-2"><a href="#"><span>Sub Category</span></a>
-                                                    </li>
-                                                    <li class="level2 nav-1-1-3"><a
-                                                            href="#"><span>Sub Category</span></a>
-                                                    </li>
-                                                    <li class="level2 nav-1-1-4"><a
-                                                            href="#"><span>Sub Category</span></a></li>
-                                                    <li class="level2 nav-1-1-5 last"><a href="#"><span>Sub Category</span></a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li class="level1 first parent"><a href="#"><span>Category</span></a>
-                                                <ul class="level2">
-                                                    <li class="level2 nav-2-1-1 first"><a
-                                                            href="#"><span>Sub Category</span></a>
-                                                    </li>
-                                                    <li class="level2 nav-2-1-2"><a href="#"><span>T-Sub Category</span></a>
-                                                    </li>
-                                                    <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                    <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a>
-                                                    </li>
-                                                    <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li class="level1 parent"><a href="#"><span>Category</span></a>
-                                                <ul class="level2">
-                                                    <li class="level2 nav-2-1-1 first"><a
-                                                            href="#"><span>Sub Category</span></a>
-                                                    </li>
-                                                    <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a>
-                                                    </li>
-                                                    <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                    <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a>
-                                                    </li>
-                                                    <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="level0 nav-7 level-top parent"><a class="level-top" href="{{url_for('toys')}}"> <span>Toys
-                                        <b class="caret"></b></span> </a>
                                         <div class="level0-wrapper dropdown-6col">
                                             <div class="level0-wrapper2 container">
                                                 <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
                                                     <ul class="level0">
-                                                        <li class="level1 nav-7-1 first parent item"><a
-                                                                href="#">
-                                                            <span>Category</span> </a>
-                                                            <ul class="level1">
-                                                                <li class="level2 nav-6-1-1"><a
-                                                                        href="product_detail.html"><span>Sub Category</span></a>
-                                                                </li>
-                                                                <!--level2 nav-6-1-1-->
-                                                                <li class="level2 nav-6-1-1"><a
-                                                                        href="product_detail.html"><span>Sub Category</span></a>
-                                                                </li>
-                                                                <!--level2 nav-6-1-1-->
-                                                                <li class="level2 nav-6-1-1"><a
-                                                                        href="product_detail.html"><span>Sub Category</span></a>
-                                                                </li>
-                                                                <!--level2 nav-6-1-1-->
-                                                                <li class="level2 nav-6-1-1"><a
-                                                                        href="product_detail.html"><span>Sub Category</span></a>
-                                                                </li>
-                                                                <!--level2 nav-6-1-1-->
-                                                            </ul>
-                                                        </li>
-                                                        <li class="level1 nav-7-3 parent item"><a
-                                                                href="#">
-                                                            <span>Category</span> </a>
-                                                            <ul class="level1">
-                                                                <li class="level2 nav-6-1-1"><a
-                                                                        href="product_detail.html"><span>Sub Category</span></a>
-                                                         </li>
-                                                                <!--level2 nav-6-1-1-->
-                                                                <li class="level2 nav-6-1-1"><a
-                                                                        href="product_detail.html"><span>Sub Category</span></a>
-                                                                </li>
-                                                                <!--level2 nav-6-1-1-->
-                                                                <li class="level2 nav-6-1-1"><a
-                                                                        href="product_detail.html"><span>Sub Category</span></a>
-                                                                </li>
-                                                                <!--level2 nav-6-1-1-->
-                                                                <li class="level2 nav-6-1-1"><a
-                                                                        href="product_detail.html"><span>Sub Category</span></a>
-                                                                </li>
-                                                                <!--level2 nav-6-1-1-->
-                                                            </ul>
-                                                        </li>
-                                                        <li class="level1 nav-7-4 parent item"><a
-                                                                href="#">
-                                                            <span>Category</span>
-                                                        </a>
-                                                            <ul class="level1">
-                                                                <li class="level2 nav-6-1-1"><a
-                                                                        href="product_detail.html"><span>Sub Category</span></a>
-                                                                </li>
-                                                                <!--level2 nav-6-1-1-->
-                                                                <li class="level2 nav-6-1-1"><a
-                                                                        href="product_detail.html"><span>Sub Category</span></a>
-                                                                </li>
-                                                                <!--level2 nav-6-1-1-->
-                                                                <li class="level2 nav-6-1-1"><a
-                                                                        href="product_detail.html"><span>Sub Category</span></a>
-                                                                </li>
-                                                                <!--level2 nav-6-1-1-->
-                                                                <li class="level2 nav-6-1-1"><a
-                                                                        href="product_detail.html"><span>Sub Category</span></a>
-                                                                </li>
-                                                                <!--level2 nav-6-1-1-->
-                                                            </ul>
-                                                        </li>
-                                                        <li class="level1 nav-7-4 parent item"><a
-                                                                href="#">
-                                                            <span>Category</span></a>
-                                                            <ul class="level1">
-                                                                <li class="level2 nav-6-1-1"><a
-                                                                        href="product_detail.html"><span>Sub Category</span></a>
-                                                                </li>
-                                                                <!--level2 nav-6-1-1-->
-                                                                <li class="level2 nav-6-1-1"><a
-                                                                        href="product_detail.html"><span>Sub Category</span></a>
-                                                                </li>
-                                                                <!--level2 nav-6-1-1-->
-                                                                <li class="level2 nav-6-1-1"><a
-                                                                        href="product_detail.html"><span>Sub Category</span></a>
-                                                                </li>
-                                                                <!--level2 nav-6-1-1-->
-                                                                <li class="level2 nav-6-1-1"><a
-                                                                        href="product_detail.html"><span>Sub Category</span></a>
-                                                                </li>
-                                                                <!--level2 nav-6-1-1-->
-                                                            </ul>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="fur-des">
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
-                                                            fringilla augue nec est tristique auctor. Donec non est at
-                                                            libero vulputate rutrum. Morbi ornare lectus quis justo
-                                                            gravida semper. Nulla tellus mi, vulputate adipiscing cursus eu.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="nav-block nav-block-right std grid12-4">
-                                                    <div class="nav-add-img"><a
-                                                            href="#"><img
-                                                            src="../static/images/nav-img.jpg" class="fade-on-hover" alt=""></a>
-                                                    </div>
-                                                    <div class="nav-des">
-                                                        <h3 class="heading">Responsive Magento Theme</h3>
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                                        <a title="Shop collection now" href="#" class="btn-button-st">Shop
-                                                            collection now</a></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="level0 nav-5 level-top first"><a href="{{url_for('accessories')}}" class="level-top">
-                                        <span>Accessories</span><b class="caret"></b>
-                                    </a>
-                                        <div class="level0-wrapper dropdown-6col">
-                                            <div class="level0-wrapper2 container">
-                                                <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
-                                                    <ul class="level0">
-                                                        <li class="level1 nav-6-1 parent"><a href="#"><span>Category</span></a>
+                                                        {% for group in groups['OFFICE'] %}
+                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}"><span>{{group.name}}</span></a>
                                                             <ul class="level2">
-                                                                <li class="level2 nav-2-1-1 first"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a></li>
+                                                                {% for subgroup in group.sub_group %}
+                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}"><span>{{subgroup}}</span></a></li>
+                                                                {% endfor %}
                                                             </ul>
                                                         </li>
-
-                                                        <li class="level1 nav-6-1 parent"><a href="#"><span>Category</span></a>
-                                                            <ul class="level2">
-                                                                <li class="level2 nav-2-1-1 first"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li class="level1 nav-6-1 parent"><a href="#"><span>Category</span></a>
-                                                            <ul class="level2">
-                                                                <li class="level2 nav-2-1-1 first"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <!--level1 nav-6-1 parent item-->
-                                                        <li class="level1 nav-6-1 parent"><a href="#"><span>Category</span></a>
-                                                            <ul class="level2">
-                                                                <li class="level2 nav-2-1-1 first"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <!--level1 nav-6-1 parent item-->
-                                                        <li class="level1 nav-6-1 parent"><a href="#"><span>Category</span></a>
-                                                            <ul class="level2">
-                                                                <li class="level2 nav-2-1-1 first"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <!--level1 nav-6-1 parent item-->
-                                                        <li class="level1 nav-6-1 parent"><a href="#"><span>Category</span></a>
-                                                            <ul class="level2">
-                                                                <li class="level2 nav-2-1-1 first"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <!--level1 nav-6-1 parent item-->
-                                                        <li class="level1 nav-6-1 parent"><a href="#"><span>Category</span></a>
-                                                            <ul class="level2">
-                                                                <li class="level2 nav-2-1-1 first"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <!--level1 nav-6-1 parent item-->
-                                                        <li class="level1 nav-6-1 parent"><a href="#"><span>Category</span></a>
-                                                            <ul class="level2">
-                                                                <li class="level2 nav-2-1-1 first"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-2"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-3"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-4"><a href="#"><span>Sub Category</span></a></li>
-                                                                <li class="level2 nav-2-1-5 last"><a href="#"><span>Sub Category</span></a></li>
-                                                            </ul>
-                                                        </li>
+                                                        {% endfor %}
                                                     </ul>
                                                     <!--level0-->
                                                 </div>
@@ -663,59 +220,172 @@
                                             </div>
                                         </div>
                                     </li>
-                                    <li class="nav-custom-link level0 level-top parent"><a class="level-top" href="#"><span>Custom</span><b class="caret"></b> </a>
+
+                                    <li class="level0 nav-5 level-top first">
+                                        <a href="{{url_for('electronics')}}" class="level-top"> <span>Electronics</span><b class="caret"></b> </a>
                                         <div class="level0-wrapper dropdown-6col">
                                             <div class="level0-wrapper2 container">
-                                                <div class="shop-categories">
-                                                    <div class="main-product">
-                                                        <a class="product-image" href="#">
-                                                            <img src="../static/products-images/product-img.jpg" alt="product image">
-                                                        </a>
-                                                        <a class="product-name" href="#">Retis lapen casen</a>
-                                                        <span class="product-price">From ₹ 9,999</span>
+                                                <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
+                                                    <ul class="level0">
+                                                        {% for group in groups['ELECTRONICS'] %}
+                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}"><span>{{group.name}}</span></a>
+                                                            <ul class="level2">
+                                                                {% for subgroup in group.sub_group %}
+                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}"><span>{{subgroup}}</span></a></li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    <!--level0-->
+                                                </div>
+                                                <div class="nav-block nav-block-right std grid12-4">
+                                                    <div class="nav-add-img"><a href="#"><img alt="Sample Product" src="../static/images/nav-img3.jpg"></a>
                                                     </div>
-
-                                                    <div class="main-product">
-                                                        <a class="product-image" href="#">
-                                                            <img src="../static/products-images/product-img.jpg" alt="product image">
-                                                        </a>
-                                                        <a class="product-name" href="#">Retis lapen casen</a>
-                                                        <span class="product-price">From ₹ 9,999</span>
+                                                    <div class="nav-add-img"><a href="#"><img alt="Sample Product" src="../static/images/nav-img.jpg"></a>
                                                     </div>
-
-                                                    <div class="main-product">
-                                                        <a class="product-image" href="#">
-                                                            <img src="../static/products-images/product-img.jpg" alt="product image">
-                                                        </a>
-                                                        <a class="product-name" href="#">Retis lapen casen</a>
-                                                        <span class="product-price">From ₹ 9,999</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="level0 nav-5 level-top">
+                                        <a href="{{url_for('gear')}}" class="level-top">
+                                            <span>Gear</span><b class="caret"></b> 
+                                        </a>
+                                        <div class="level0-wrapper dropdown-6col">
+                                            <div class="level0-wrapper2 container">
+                                                <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
+                                                    <ul class="level0">
+                                                        {% for group in groups['GEAR'] %}
+                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}"><span>{{group.name}}</span></a>
+                                                            <ul class="level2">
+                                                                {% for subgroup in group.sub_group %}
+                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}"><span>{{subgroup}}</span></a></li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    <!--level0-->
+                                                </div>
+                                                <div class="nav-block nav-block-right std grid12-4">
+                                                    <div class="nav-add-img"><a href="#"><img alt="Sample Product" src="../static/images/nav-img3.jpg"></a>
                                                     </div>
-
-                                                    <div class="main-product">
-                                                        <a class="product-image" href="#">
-                                                            <img src="../static/products-images/product-img.jpg" alt="product image">
-                                                        </a>
-                                                        <a class="product-name" href="#">Retis lapen casen</a>
-                                                        <span class="product-price">From ₹ 9,999</span>
+                                                    <div class="nav-add-img"><a href="#"><img alt="Sample Product" src="../static/images/nav-img.jpg"></a>
                                                     </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="level0 nav-5 level-top">
+                                        <a href="{{url_for('computers')}}">
+                                            <span>Computers<b class="caret"></b></span>
+                                        </a>
+                                        <div class="level0-wrapper dropdown-6col">
+                                            <div class="level0-wrapper2 container">
+                                                <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
+                                                    <ul class="level0">
+                                                        {% for group in groups['COMPUTERS'] %}
+                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}"><span>{{group.name}}</span></a>
+                                                            <ul class="level2">
+                                                                {% for subgroup in group.sub_group %}
+                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}"><span>{{subgroup}}</span></a></li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    <!--level0-->
+                                                </div>
+                                                <div class="nav-block nav-block-right std grid12-4">
+                                                    <div class="nav-add-img"><a href="#"><img alt="Sample Product" src="../static/images/nav-img3.jpg"></a>
+                                                    </div>
+                                                    <div class="nav-add-img"><a href="#"><img alt="Sample Product" src="../static/images/nav-img.jpg"></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
 
-                                                    <div class="main-product">
-                                                        <a class="product-image" href="#">
-                                                            <img src="../static/products-images/product-img.jpg" alt="product image">
-                                                        </a>
-                                                        <a class="product-name" href="#">Retis lapen casen</a>
-                                                        <span class="product-price">From ₹ 9,999</span>
+                                    <li class="level0 nav-5 level-top">
+                                        <a class="level-top" href="{{url_for('toys')}}"> 
+                                            <span>Toys<b class="caret"></b></span> 
+                                        </a>
+                                        <div class="level0-wrapper dropdown-6col">
+                                            <div class="level0-wrapper2 container">
+                                                <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
+                                                    <ul class="level0">
+                                                        {% for group in groups['TOYS'] %}
+                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}"><span>{{group.name}}</span></a>
+                                                            <ul class="level2">
+                                                                {% for subgroup in group.sub_group %}
+                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}"><span>{{subgroup}}</span></a></li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    <!--level0-->
+                                                </div>
+                                                <div class="nav-block nav-block-right std grid12-4">
+                                                    <div class="nav-add-img"><a href="#"><img alt="Sample Product" src="../static/images/nav-img3.jpg"></a>
+                                                    </div>
+                                                    <div class="nav-add-img"><a href="#"><img alt="Sample Product" src="../static/images/nav-img.jpg"></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="level0 nav-5 level-top">
+                                        <a href="{{url_for('accessories')}}" class="level-top">
+                                            <span>Accessories</span><b class="caret"></b>
+                                        </a>
+                                        <div class="level0-wrapper dropdown-6col">
+                                            <div class="level0-wrapper2 container">
+                                                <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
+                                                    <ul class="level0">
+                                                        {% for group in groups['ACCESSORIES'] %}
+                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}"><span>{{group.name}}</span></a>
+                                                            <ul class="level2">
+                                                                {% for subgroup in group.sub_group %}
+                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}"><span>{{subgroup}}</span></a></li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    <!--level0-->
+                                                </div>
+                                                <div class="nav-block nav-block-right std grid12-4">
+                                                    <div class="nav-add-img"><a href="#"><img alt="Sample Product" src="../static/images/nav-img3.jpg"></a>
+                                                    </div>
+                                                    <div class="nav-add-img"><a href="#"><img alt="Sample Product" src="../static/images/nav-img.jpg"></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="level0 nav-5 level-top">
+                                        <a class="level-top" href="#"><span>Custom</span><b class="caret"></b> </a>
+                                        <div class="level0-wrapper dropdown-6col">
+                                            <div class="level0-wrapper2 container">
+                                                <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
+                                                    <ul class="level0">
+                                                    </ul>
+                                                    <!--level0-->
+                                                </div>
+                                                <div class="nav-block nav-block-right std grid12-4">
+                                                    <div class="nav-add-img"><a href="#"><img alt="Sample Product" src="../static/images/nav-img3.jpg"></a>
+                                                    </div>
+                                                    <div class="nav-add-img"><a href="#"><img alt="Sample Product" src="../static/images/nav-img.jpg"></a>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </li>
                                 </ul>
-
                             </div>
-
                             <!-- end nav -->
-
                         </div>
                     </div>
                 </div>

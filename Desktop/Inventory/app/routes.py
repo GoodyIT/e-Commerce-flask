@@ -1,5 +1,5 @@
 from app import app, db, login
-from flask import render_template, json, url_for, flash, redirect, request, jsonify, g, Flask
+from flask import render_template, json, url_for, flash, redirect, request, jsonify, g, Flask, send_from_directory
 from flask_login import login_user, logout_user, login_required, current_user
 from uuid import uuid4 as uid
 from datetime import datetime as date
@@ -15,8 +15,6 @@ import os
 
 def allowed_file(filename):
     ''' method for choosing form file path '''
-    curDirPath = os.path.dirname(os.path.realpath(__file__))
-    UPLOAD_FOLDER = os.path.join(curDirPath,"uploads")
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -305,44 +303,204 @@ def get_analytics():
     return jsonify({})
     
 #store - games
+@app.route('/games')
+def games1():
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    return redirect(url_for('games', gid=groupId, subgroup=subGroup))
 @app.route('/store/games')
 def games():
-    return render_template('grid-games.html', title='Games')
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    if groupId is None:
+        groupId='ALL'
+    if subGroup is None:
+        subGroup = 'ALL'
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    if groupId == 'ALL' and subGroup == 'ALL':
+        products = db.Products.find({"category_type": "GAMES"})
+    else: 
+        if groupId != 'ALL' and subGroup == 'ALL':
+            products = db.Products.find({"category": groupId})
+        else:
+            products = db.Products.find({"category": groupId, "subgroup": subGroup})
+    return render_template('grid-games.html', title='Games', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - office
 @app.route('/store/office')
 def office():
-    return render_template('grid-games.html', title='Office')
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    if groupId is None:
+        groupId='ALL'
+    if subGroup is None:
+        subGroup = 'ALL'
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    if groupId == 'ALL' and subGroup == 'ALL':
+        products = db.Products.find({"category_type": "OFFICE"})
+    else: 
+        if groupId != 'ALL' and subGroup == 'ALL':
+            products = db.Products.find({"category": groupId})
+        else:
+            products = db.Products.find({"category": groupId, "subgroup": subGroup})
+    return render_template('grid-office.html', title='Office', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - electronics
 @app.route('/store/electronics')
 def electronics():
-    return render_template('grid-electronics.html', title='Electronics')
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    if groupId is None:
+        groupId='ALL'
+    if subGroup is None:
+        subGroup = 'ALL'
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    if groupId == 'ALL' and subGroup == 'ALL':
+        products = db.Products.find({"category_type": "ELECTRONICS"})
+    else: 
+        if groupId != 'ALL' and subGroup == 'ALL':
+            products = db.Products.find({"category": groupId})
+        else:
+            products = db.Products.find({"category": groupId, "subgroup": subGroup})
+    return render_template('grid-electronics.html', title='Electronics', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - gear
 @app.route('/store/gear')
 def gear():
-    return render_template('grid-gear.html', title='Gear')
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    if groupId is None:
+        groupId='ALL'
+    if subGroup is None:
+        subGroup = 'ALL'
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    if groupId == 'ALL' and subGroup == 'ALL':
+        products = db.Products.find({"category_type": "GEAR"})
+    else: 
+        if groupId != 'ALL' and subGroup == 'ALL':
+            products = db.Products.find({"category": groupId})
+        else:
+            products = db.Products.find({"category": groupId, "subgroup": subGroup})
+    return render_template('grid-gear.html', title='Gear', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - computers
 @app.route('/store/computers')
 def computers():
-    return render_template('grid-computers.html', title='Computers')
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    if groupId is None:
+        groupId='ALL'
+    if subGroup is None:
+        subGroup = 'ALL'
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    if groupId == 'ALL' and subGroup == 'ALL':
+        products = db.Products.find({"category_type": "COMPUTERS"})
+    else: 
+        if groupId != 'ALL' and subGroup == 'ALL':
+            products = db.Products.find({"category": groupId})
+        else:
+            products = db.Products.find({"category": groupId, "subgroup": subGroup})
+    return render_template('grid-computers.html', title='Computers', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - toys
 @app.route('/store/toys')
 def toys():
-    return render_template('grid-toys.html', title='Toys')
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    if groupId is None:
+        groupId='ALL'
+    if subGroup is None:
+        subGroup = 'ALL'
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    if groupId == 'ALL' and subGroup == 'ALL':
+        products = db.Products.find({"category_type": "TOYS"})
+    else: 
+        if groupId != 'ALL' and subGroup == 'ALL':
+            products = db.Products.find({"category": groupId})
+        else:
+            products = db.Products.find({"category": groupId, "subgroup": subGroup})
+    return render_template('grid-toys.html', title='Toys', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - accessories
 @app.route('/store/accessories')
 def accessories():
-    return render_template('grid-accessories.html', title='Accessories')
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    if groupId is None:
+        groupId='ALL'
+    if subGroup is None:
+        subGroup = 'ALL'
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    if groupId == 'ALL' and subGroup == 'ALL':
+        products = db.Products.find({"category_type": "ACCESSORIES"})
+    else: 
+        if groupId != 'ALL' and subGroup == 'ALL':
+            products = db.Products.find({"category": groupId})
+        else:
+            products = db.Products.find({"category": groupId, "subgroup": subGroup})
+    return render_template('grid-accessories.html', title='Accessories', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store
 @app.route('/store')
 def store():
-    return render_template('store.html', title='Store')
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    return render_template('store.html', title='Store', groups=groupsList)
 
 # shipping
 @app.route('/shipping')
@@ -428,7 +586,8 @@ def groups_add():
             'manufacturer' : form.manufacturer.data,
             'tax' : form.tax.data,
             'brand' : form.brand.data,
-            'total' : 0
+            'total' : 0,
+            'sub_group': request.form.getlist('subgroups')
         }
         db.Groups.insert_one(new_item)
         flash('New Group Added.')
@@ -493,6 +652,15 @@ def groups_list(name):
         CURRENCIES=[('USD', '$'),('EURO','€'),('POUND', '£')]
     return render_template('groups-list.html', title='Groups List', items=items, cates=getGroups(), currs=CURRENCIES)
 
+@app.route('/getSubgroups', methods=['POST'])
+@login_required
+def getSubgroups():
+    if request.method == 'POST':
+        item = request.json
+        print("++++++++++NEW REQUEST++++++++++++ item: ", item)
+        group = db.Groups.find_one({'id':item['id']})
+        return jsonify(subgroups=group['sub_group'])
+
 # ajax request :XLZ
 @app.route('/getProduct', methods=['POST'])
 @login_required
@@ -526,6 +694,8 @@ def vendor():
 @app.route('/products/add', methods=['GET','POST'])
 @login_required
 def addItem():
+    curDirPath = os.path.dirname(os.path.realpath(__file__))
+    UPLOAD_FOLDER = os.path.join(curDirPath,"uploads")
     form = ProductForm()
     form.update_category()
     file_urls = []
@@ -542,11 +712,10 @@ def addItem():
                 imgfilepath = os.path.join(UPLOAD_FOLDER, filename)
                 file.save(imgfilepath)
                 # append image urls
-                file_urls.append(imgfilepath)
+                file_urls.append('../uploads/' + filename)
         strjson = ",".join(file_urls)
-        #print("------strjson: "+strjson)
+        # print("------strjson: "+strjson)
         return jsonify(target_file=strjson)
-
     if form.validate_on_submit():
         # add new vendor
         vendor = ""
@@ -570,14 +739,16 @@ def addItem():
         images = form.hdfiles.data
         #images = images.split(",")
         print("\n routes | addItem: ----------------------------")
-        print(attrs)
-
+        
+        category_type = db.Groups.find_one({"id": form.category.data})["type"]
         new_item = {
             'id' : str(uid()),
             'product' : form.product.data,
             'sku' : form.sku.data,
             'images' : images,
+            'category_type': category_type,
             'category' : form.category.data,
+            'subgroup' : form.subgroup.data,
             'price' : form.price.data,
             'currency' : form.currency.data,
             'attributes' : attrs,
@@ -900,3 +1071,7 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+@app.route('/uploads/<path:path>')
+def send_images(path):
+    return send_from_directory('uploads', path)

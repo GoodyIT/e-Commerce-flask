@@ -56,6 +56,9 @@ celerybeat-schedule
 # virtualenv
 venv/
 
+# impage store
+uploads/
+
 # Translations
 *.mo
 
