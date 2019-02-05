@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 from .forms import RegisterForm, LoginForm, ProductForm, PurchaseForm, GroupForm, VendorForm, BillingForm
 from .data import User
 from .inventory import Warehouse
+from .zincapi_communication import post_shipping_request, post_cancellation_request
 import os, json
 
 CURRENCIES = [('USD', '$'),('EURO','€'),('POUND', '£')]
@@ -880,6 +881,9 @@ def addItem():
 def products():
     if request.method == 'POST':
         item = request.json
+        #order = db.Orders.find_one({'order_id':item['id']})
+        #post_cancellation_request(order['merchant_order_id'])
+        
         db.Products.remove({'id':item['id']})
 
         #Add History

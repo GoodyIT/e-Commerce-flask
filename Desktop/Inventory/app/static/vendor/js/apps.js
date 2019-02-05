@@ -2,6 +2,9 @@
 $(function() {
 
     $('#shipping-items').paginate({itemsPerPage: 4});
+    $('#shipping-awaiting-items').paginate({itemsPerPage: 4});
+    $('#shipping-shipped-items').paginate({itemsPerPage: 4});
+    $('#shipping-delivered-items').paginate({itemsPerPage: 4});
 
     var groupName = $('#groupName').html();
     $('#groupName').hide();
@@ -406,6 +409,24 @@ $(function() {
             location.reload();
         });
     });
+
+    $(document).ready(function(){
+	    var url = 'http://' + document.domain + ':' + location.port + '/test'
+		console.log(url)
+	    //connect to the socket server.
+	    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
+
+	    //receive details from server
+	    socket.on('my event', function(msg) {
+	        console.log("Received message: " + msg.message);
+
+	        var pathname = window.location.pathname;
+	        if (pathname === "/shipping") {
+	        	console.log('In /shipping');
+	        	location.reload();
+	        };
+	    });
+	});
 
     $("#analytics_by_date_type").on('change', function () {
         $("#analytics_by_date").remove();
@@ -895,7 +916,6 @@ $(function() {
 
     updateSubgroupSelect();
     function updateSubgroupSelect() {
-        console.log("aaaaa");
         $.ajax({
             url: "/getSubgroups",
             type: "post",
