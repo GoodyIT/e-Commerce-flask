@@ -2,128 +2,114 @@
 
 {% block body %}
 
-<div class="row col-lg-12">
-    <h2>Invoice</h2>
-</div>
-<div class="row col-lg-12">
+<div class="row col-lg-12" style="color: #808080; padding: 20px;">
     <form action="" method="post">
         {{ form.hidden_tag() }}
-        <div class="col-lg-4">
-            <div class="row" style="margin-bottom: 30px">
-            </div>
-        </div>
-        <div class="col-lg-8">
+        <div class="col-lg-12">
             <div class="col-lg-8"></div>
-            <div class="col-lg-4">
-                <div class="row" style="margin-top: 20px">
-                    <label for="datepick">Date</label>
+            <div class="col-lg-4" style="padding-left: 0px;">
+                <div class="row" style="margin-top: 20px;">
+                    <label for="datepick" style="font-weight: 400;">Date</label>
                     <input type="text" class="form-control" id="datepick" name="currentDate" size="30">
                 </div>
-                <div class="row" style="margin-top: 20px">
-                    <label for="deliveryDate">Payment Terms</label>
+                <div class="row" style="margin-top: 20px;">
+                    <label for="deliveryDate" style="font-weight: 400;">Payment Terms</label>
                     <input type="text" class="form-control" id="deliverypick" name="deliveryDate" size="30">
                 </div>
-                <div class="row" style="margin-top: 20px">
-                    <h4>Balance</h4>
+                <div class="row" style="margin-top: 20px; margin-bottom: 20px; font-weight: 500; padding-left: 20px; background-color: #f5f5f5;">
+                    <h4>Balance : $0.00</h4>
                 </div>
             </div>
         </div>
         <hr>
         <div class="row">
             <div class="col-lg-12">
-                <table class ="table table-bordered" style="padding:10px;" id="tbPurchase">
-                    <thead>
-                        <tr>
-                            <th>Item Details</th>
-                            <th>League</th>
-                            <th>Quantity</th>
-                            <th>Rate</th>
-                            <th>Tax</th>
-                            <th>Amount</th>
+                <table class ="table" id="tbPurchase" style="border: none;">
+                    <thead style="border: none;">
+                        <tr style="color: white; border: none;">
+                            <th style="background-color: #353940;">Item Details</th>
+                            <th style="background-color: #353940;">League</th>
+                            <th style="background-color: #353940;">Quantity</th>
+                            <th style="background-color: #353940;">Rate</th>
+                            <th style="background-color: #353940;">Tax</th>
+                            <th style="background-color: #353940;">Amount</th>
+                            <th style="width: 100px; border: none;"></th>
                         </tr>
                     </thead>
-                    <tbody id="purchase-tbody">
-                        <tr>
-                            <td><input type="text" id="item_details" placeholder="Lego Set XR"></td>
-                            <td><input type="text" id="league" placeholder="Silver +"></td>
-                            <td><input type="number" id="quantity" placeholder="1"></td>
-                            <td><input type="number" id="rate" placeholder="1.00"></td>
-                            <td><input type="number" id="tax" placeholder="1%"></td>
-                            <td><input type="number" id="amount" placeholder="$7.25"></td>
-                            <td><button type="button" class="btn btn-primary add-row">Add</button></td>
+                    <tbody id="purchase-tbody" style="border: none;">
+                        <tr style="border: none;">
+                            <td style="padding: 0;"><input type="text" id="item_details" placeholder="Lego Set XR" style="width: 100%;"></td>
+                            <td style="padding: 0;"><input type="text" id="league" placeholder="Silver +" style="width: 100%;"></td>
+                            <td style="padding: 0;"><input type="number" id="quantity" placeholder="1" style="width: 100%;"></td>
+                            <td style="padding: 0;"><input type="number" id="rate" placeholder="1.00" style="width: 100%;"></td>
+                            <td style="padding: 0;"><input type="number" id="tax" placeholder="1%" style="width: 100%;"></td>
+                            <td style="padding: 0;"><input type="number" id="amount" placeholder="$7.25" style="width: 100%;"></td>
+                            <td style="padding: 0; border: none;"></td>
                         </tr>
                     </tbody>
                 </table>
+                <button type="button" class="btn btn-primary add-row">&nbsp;+ Add more item&nbsp;</button>
             </div>
         </div> <!-- end row -->
         <div class="row">
-            <div class="col-lg-4"></div>
-            <div class="col-lg-6">
-                <div class="col-lg-4">
-                    <h5>Sub Total</h5>
+            <div class="col-lg-8"></div>
+            <div class="col-lg-4">
+                <div class="row" style="margin-top: 20px;">
+                    <label for="deliveryDate" style="font-weight: 400;">Discount</label>
+                    <input type="text" class="form-control" id="item_discount" name="item_discount" size="30" placeholder="$0.00">
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-8"></div>
+            <div class="col-lg-4">
+                <div class="col-lg-6" style="padding: 0px;">
+                    <h5 style="font-weight: 400;">Sub Total</h5>
+                </div>
+                <div class="col-lg-6">  
+                    <h5 id="tbTotal" style="font-weight: 400;">0.00</h5>
+                </div>
+            </div>
+        </div> <!-- end row -->
+        <div class="row">
+            <div class="col-lg-8"></div>
+            <div class="col-lg-4">
+                <div class="col-lg-6" style="padding: 0px;">
+                    <h5 style="font-weight: 400;">Discount</h5>
                 </div>
                 <div class="col-lg-6">
-                </div>
-                <div class="col-lg-2">
-                    <h5 id="tbTotal">0.00</h5>
+                    <h5 id="tbDiscount" style="font-weight: 400;">0.00</h5>
                 </div>
             </div>
-            <div class="col-lg-2"></div>
         </div> <!-- end row -->
         <div class="row">
-            <div class="col-lg-4"></div>
-            <div class="col-lg-6">
-                <div class="col-lg-4">
-                    <h5>Discount</h5>
-                </div>
-                <div class="col-lg-6">
-                    <input type="text" id="item_discount" placeholder="$0.00"></input>
-                </div>
-                <div class="col-lg-2">
-                    <h5 id="tbDiscount">0.00</h5>
-                </div>
-            </div>
-            <div class="col-lg-2"></div>
-        </div> <!-- end row -->
-        <div class="row">
-            <div class="col-lg-4"></div>
-            <div class="col-lg-6">
-                <div class="col-lg-4">
+            <div class="col-lg-8"></div>
+            <div class="col-lg-4">
+                <div class="col-lg-6" style="border-top: solid 1px #353940;">
                     <h5><b>Total</b></h5>
                 </div>
-                <div class="col-lg-6">
-                </div>
-                <div class="col-lg-2">
+                <div class="col-lg-6" style="border-top: solid 1px #353940;">
                     <h5 id="tbFinal">0.00</h5>
                 </div>
             </div>
-            <div class="col-lg-2"></div>
         </div> <!-- end row -->
         <div class="row" style="margin-top: 50px;">
-            <div class="col-lg-4"></div>
-            <div class="col-lg-6">
-                <h5 style="text-color: red;">Notes</h5>
-                <!--<input type="text" class="form-control" id="notes"
-                name="item_notes" style="height: 100px">-->
+            <div class="col-lg-12">
+                <h5>Notes</h5>
                 <textarea id="notes" class="form-control" 
                 name="item_notes" rows="5"></textarea>
             </div>
-            <div class="col-lg-2"></div>
         </div>
         <div class="row" style="margin-top: 25px;">
-            <div class="col-lg-4"></div>
-            <div class="col-lg-6">
-                <h5 style="text-color: red;">Terms & Conditions</h5>
-                <!--<input type="text" class="form-control" id="terms"
-                name="terms_notes" style="height: 100px">-->
+            <div class="col-lg-12">
+                <h5>Terms & Conditions</h5>
                 <textarea class="form-control" id="terms"
                 name="terms_notes" rows="5"></textarea>
             </div>
-            <div class="col-lg-2"></div>
         </div>
-        <div class="row" style="margin-top:20px; padding-bottom: 10px;">
+        <div class="row" style="margin-top:20px; padding-top: 30px; padding-bottom: 30px; background-color: #f5f5f5;">
             <div class="col-lg-4"></div>
-
             <div class="col-lg-2">
                 <input type="button" class="btn btn-primary pull-right" id="export_to_pdf"
                 style="" value="Export To PDF">
@@ -136,15 +122,10 @@
                 <input type="button" class="btn btn-primary pull-right" id="export_to_csv"
                 style="" value="Export To CSV">
             </div>
-            <div class="col-lg-2"></div>
-        </div>
-        <div class="row" style="margin-top:20px; padding-bottom: 10px;">
-            <div class="col-lg-9"></div>
-                <div class="col-lg-1">
-                    <input type="button" class="btn btn-primary pull-right" id="submit"
-                    style="" value="Submit">
-                </div>
-            <div class="col-lg-2"></div>
+            <div class="col-lg-2">
+                <input type="button" class="btn btn-primary pull-right" id="submit"
+                style="" value="Submit Invoice">
+            </div>
         </div>
     </form>
 </div> <!-- end row -->
