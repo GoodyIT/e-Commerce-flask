@@ -70,7 +70,7 @@ $(function() {
                     "<td>" + rate + "</td>" +
                     "<td>" + tax + "</td>" +
                     "<td>" + amount + "</td>" +
-                    "<td><button type='button' class='btn btn-primary btnDelete'>Delete</button></td></tr>"
+                    "<td style='border: none;'><button type='button' class='btn btn-primary btnDelete'>Delete</button></td></tr>"
         $("table tbody").append(markup);
 
         var rows = [];

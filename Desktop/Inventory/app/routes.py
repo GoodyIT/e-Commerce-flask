@@ -695,6 +695,8 @@ def groups_list(name):
 def getSubgroups():
     if request.method == 'POST':
         item = request.json
+        if not item: return jsonify(subgroups=[])
+        
         print("++++++++++NEW REQUEST++++++++++++ item: ", item)
         group = db.Groups.find_one({'id':item['id']})
         return jsonify(subgroups=group['sub_group'])
