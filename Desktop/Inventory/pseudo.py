@@ -62,11 +62,15 @@ def createQueues(count, year):
         product_num = random.randint(0, db.Products.count_documents({})-1)
         product_id  = products[product_num]['id']
         group_id    = products[product_num]['category']
+        subgroup    = products[product_num]['subgroup']
+        product_name= products[product_num]['product']
         order = {
             'order_id': str(uid()),
             'player_id': str(uid()),
             'product_id': product_id,
+            'product_name': product_name,
             'group_id': group_id,
+            'subgroup': subgroup,
             'quantity': random.randint(1, 10),
             'type': types[random.randint(0,1)],
             'price': random.randint(1, 100),
@@ -92,13 +96,17 @@ def createOrders(count, year):
         product_num = random.randint(0, db.Products.count_documents({})-1)
         product_id  = products[product_num]['id']
         group_id    = products[product_num]['category']
+        subgroup    = products[product_num]['subgroup']
+        product_name= products[product_num]['product']
         ship_id     = str(uid()) if random.randint(0,1) else None
         invoice_id  = str(uid()) if (random.randint(0, 1) == 1 and ship_id is not None) else None
         order = {
             'order_id': str(uid()),
             'player_id': str(uid()),
             'product_id': product_id,
+            'product_name': product_name,
             'group_id': group_id,
+            'subgroup': subgroup,
             'quantity': random.randint(1, 10),
             'type': types[random.randint(0,1)],
             'price': random.randint(1, 100),

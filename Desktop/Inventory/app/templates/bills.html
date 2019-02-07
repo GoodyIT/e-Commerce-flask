@@ -3,28 +3,33 @@
 {% block body %}
 
 <div class="row col-lg-12" style="color: #808080; padding: 20px;">
+    <div style="width: 350px; position: absolute; z-index: 99; top: 60px; left: 30px;">
+        <form action="{{ url_for('uploadLogo') }}" method="post" class="dropzone" id="frm-drop-zone-logo" enctype="multipart/form-data">
+    </div>
     <form action="" method="post">
-        {{ form.hidden_tag() }}
+        <input type="hidden" id="logo_file" />
         <div class="col-lg-12">
-            <div class="col-lg-8"></div>
+            <div class="col-lg-8">
+                
+            </div>
             <div class="col-lg-4" style="padding-left: 0px;">
                 <div class="row" style="margin-top: 20px;">
                     <label for="datepick" style="font-weight: 400;">Date</label>
-                    <input type="text" class="form-control" id="datepick" name="currentDate" size="30">
+                    <input type="text" class="form-control" id="bills_datepick" name="currentDate" size="30">
                 </div>
                 <div class="row" style="margin-top: 20px;">
                     <label for="deliveryDate" style="font-weight: 400;">Payment Terms</label>
-                    <input type="text" class="form-control" id="deliverypick" name="deliveryDate" size="30">
+                    <input type="text" class="form-control" id="bills_deliverypick" name="deliveryDate" size="30">
                 </div>
                 <div class="row" style="margin-top: 20px; margin-bottom: 20px; font-weight: 500; padding-left: 20px; background-color: #f5f5f5;">
-                    <h4>Balance : $0.00</h4>
+                    <h4>Balance : <span id="bills_balance">$0.00</span></h4>
                 </div>
             </div>
         </div>
         <hr>
         <div class="row">
             <div class="col-lg-12">
-                <table class ="table" id="tbPurchase" style="border: none;">
+                <table class ="table" id="bills_tbPurchase" style="border: none;">
                     <thead style="border: none;">
                         <tr style="color: white; border: none;">
                             <th style="background-color: #353940;">Item Details</th>
@@ -36,19 +41,19 @@
                             <th style="width: 100px; border: none;"></th>
                         </tr>
                     </thead>
-                    <tbody id="purchase-tbody" style="border: none;">
+                    <tbody id="bills_purchase-tbody" style="border: none;">
                         <tr style="border: none;">
-                            <td style="padding: 0;"><input type="text" id="item_details" placeholder="Lego Set XR" style="width: 100%;"></td>
-                            <td style="padding: 0;"><input type="text" id="league" placeholder="Silver +" style="width: 100%;"></td>
-                            <td style="padding: 0;"><input type="number" id="quantity" placeholder="1" style="width: 100%;"></td>
-                            <td style="padding: 0;"><input type="number" id="rate" placeholder="1.00" style="width: 100%;"></td>
-                            <td style="padding: 0;"><input type="number" id="tax" placeholder="1%" style="width: 100%;"></td>
-                            <td style="padding: 0;"><input type="number" id="amount" placeholder="$7.25" style="width: 100%;"></td>
+                            <td style="padding: 0;"><input type="text" id="bills_item_details" placeholder="Lego Set XR" style="width: 100%;"></td>
+                            <td style="padding: 0;"><input type="text" id="bills_league" placeholder="Silver +" style="width: 100%;"></td>
+                            <td style="padding: 0;"><input type="number" id="bills_quantity" placeholder="1" style="width: 100%;"></td>
+                            <td style="padding: 0;"><input type="number" id="bills_rate" placeholder="1.00" style="width: 100%;"></td>
+                            <td style="padding: 0;"><input type="number" id="bills_tax" placeholder="1%" style="width: 100%;"></td>
+                            <td style="padding: 0;"><input type="number" id="bills_amount" placeholder="$7.25" style="width: 100%;"></td>
                             <td style="padding: 0; border: none;"></td>
                         </tr>
                     </tbody>
                 </table>
-                <button type="button" class="btn btn-primary add-row">&nbsp;+ Add more item&nbsp;</button>
+                <button type="button" class="btn btn-primary" id="bills_add_row">&nbsp;+ Add more item&nbsp;</button>
             </div>
         </div> <!-- end row -->
         <div class="row">
@@ -56,7 +61,7 @@
             <div class="col-lg-4">
                 <div class="row" style="margin-top: 20px;">
                     <label for="deliveryDate" style="font-weight: 400;">Discount</label>
-                    <input type="text" class="form-control" id="item_discount" name="item_discount" size="30" placeholder="$0.00">
+                    <input type="text" class="form-control" id="bills_item_discount" name="item_discount" size="30" placeholder="$0.00" value="0"/>
                 </div>
             </div>
         </div>
@@ -68,7 +73,7 @@
                     <h5 style="font-weight: 400;">Sub Total</h5>
                 </div>
                 <div class="col-lg-6">  
-                    <h5 id="tbTotal" style="font-weight: 400;">0.00</h5>
+                    <h5 id="bills_tbTotal" style="font-weight: 400;">0.00</h5>
                 </div>
             </div>
         </div> <!-- end row -->
@@ -79,7 +84,7 @@
                     <h5 style="font-weight: 400;">Discount</h5>
                 </div>
                 <div class="col-lg-6">
-                    <h5 id="tbDiscount" style="font-weight: 400;">0.00</h5>
+                    <h5 id="bills_tbDiscount" style="font-weight: 400;">0.00</h5>
                 </div>
             </div>
         </div> <!-- end row -->
@@ -90,36 +95,36 @@
                     <h5><b>Total</b></h5>
                 </div>
                 <div class="col-lg-6" style="border-top: solid 1px #353940;">
-                    <h5 id="tbFinal">0.00</h5>
+                    <h5 id="bills_tbFinal">0.00</h5>
                 </div>
             </div>
         </div> <!-- end row -->
         <div class="row" style="margin-top: 50px;">
             <div class="col-lg-12">
                 <h5>Notes</h5>
-                <textarea id="notes" class="form-control" 
+                <textarea id="bills_notes" class="form-control" 
                 name="item_notes" rows="5"></textarea>
             </div>
         </div>
         <div class="row" style="margin-top: 25px;">
             <div class="col-lg-12">
                 <h5>Terms & Conditions</h5>
-                <textarea class="form-control" id="terms"
+                <textarea class="form-control" id="bills_terms"
                 name="terms_notes" rows="5"></textarea>
             </div>
         </div>
         <div class="row" style="margin-top:20px; padding-top: 30px; padding-bottom: 30px; background-color: #f5f5f5;">
             <div class="col-lg-4"></div>
             <div class="col-lg-2">
-                <input type="button" class="btn btn-primary pull-right" id="export_to_pdf"
+                <input type="button" class="btn btn-primary pull-right" id="bills_export_to_pdf"
                 style="" value="Export To PDF">
             </div>
             <div class="col-lg-2">
-                <input type="button" class="btn btn-primary pull-right" id="export_to_excel"
+                <input type="button" class="btn btn-primary pull-right" id="bills_export_to_excel"
                 style="" value="Export To Excel">
             </div>
             <div class="col-lg-2">
-                <input type="button" class="btn btn-primary pull-right" id="export_to_csv"
+                <input type="button" class="btn btn-primary pull-right" id="bills_export_to_csv"
                 style="" value="Export To CSV">
             </div>
             <div class="col-lg-2">

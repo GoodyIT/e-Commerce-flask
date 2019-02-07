@@ -15,7 +15,7 @@
     <link href="../static/vendor/css/style.css" rel="stylesheet" type="text/css">
     <link href="../static/vendor/font-awesome/5.1/css/font-awesome.css" rel="stylesheet" type="text/css">
     <link href="../static/vendor/css/tagsinput.css" rel="stylesheet" type="text/css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Title Page -->
     {% if title %}
         <title>{{title}}</title>
@@ -58,6 +58,7 @@
                       <li><a href="{{url_for('orders')}}"><span class="glyphicon glyphicon-user"></span>Current Orders</a></li>
                       <li><a href="{{url_for('purchase')}}"><span class="glyphicon glyphicon-user"></span>Purchase Order</a></li>
                       <li><a href="{{url_for('bills')}}"><span class="glyphicon glyphicon-user"></span>Billing</a></li>
+                      <li><a href="{{url_for('checkout')}}"><span class="glyphicon glyphicon-user"></span>Checkout</a></li>
                   </ul>
               </li>
               <li class="dropdown"><a href="{{url_for('shipping')}}" class="dropdown-toggle" data-toggle="dropdown">Shipping<b class="caret"></b></a>
@@ -95,6 +96,7 @@
         <script src="https://unpkg.com/jspdf"></script>
         <script src="https://unpkg.com/jspdf-autotable"></script>
         <script src="../static/vendor/js/apps.js"></script>
+        <script src="../static/vendor/js/bills.js"></script>
         <script src="../static/vendor/js/purchases-orders.js"></script>
         <script src="../static/vendor/js/purchases-vendors.js"></script>
         <script src="../static/vendor/js/purchases-receivable.js"></script>

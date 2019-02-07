@@ -334,6 +334,11 @@ def games():
     return render_template('grid-games.html', title='Games', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - office
+@app.route('/office')
+def office1():
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    return redirect(url_for('office', gid=groupId, subgroup=subGroup))
 @app.route('/store/office')
 def office():
     groupId = request.args.get("gid")
@@ -360,6 +365,11 @@ def office():
     return render_template('grid-office.html', title='Office', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - electronics
+@app.route('/electronics')
+def electrnoics1():
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    return redirect(url_for('electronics', gid=groupId, subgroup=subGroup))
 @app.route('/store/electronics')
 def electronics():
     groupId = request.args.get("gid")
@@ -386,6 +396,11 @@ def electronics():
     return render_template('grid-electronics.html', title='Electronics', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - gear
+@app.route('/gear')
+def gear1():
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    return redirect(url_for('gear', gid=groupId, subgroup=subGroup))
 @app.route('/store/gear')
 def gear():
     groupId = request.args.get("gid")
@@ -412,6 +427,11 @@ def gear():
     return render_template('grid-gear.html', title='Gear', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - computers
+@app.route('/computers')
+def computers1():
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    return redirect(url_for('games', gid=groupId, subgroup=subGroup))
 @app.route('/store/computers')
 def computers():
     groupId = request.args.get("gid")
@@ -438,6 +458,11 @@ def computers():
     return render_template('grid-computers.html', title='Computers', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
 
 #store - toys
+@app.route('/toys')
+def toys1():
+    groupId = request.args.get("gid")
+    subGroup = request.args.get("subgroup")
+    return redirect(url_for('games', gid=groupId, subgroup=subGroup))
 @app.route('/store/toys')
 def toys():
     groupId = request.args.get("gid")
@@ -692,6 +717,28 @@ def vendor():
         return redirect(url_for('vendor'))
     return render_template('vendor.html', title='Vendor', form=form)
 
+@app.route('/uploadLogo', methods=['POST'])
+@login_required
+def uploadLogo():
+    curDirPath = os.path.dirname(os.path.realpath(__file__))
+    UPLOAD_FOLDER = os.path.join(curDirPath,"uploads/logo")
+    file_urls = []
+    if(request.method == 'POST') and 'file' in request.files:
+        file_obj = request.files
+        for f in file_obj:
+            file = request.files.get(f)
+            if file.filename == '':
+                flash('No selected file')
+            imgfilepath = ""
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                imgfilepath = os.path.join(UPLOAD_FOLDER, filename)
+                file.save(imgfilepath)
+                # append image urls
+                file_urls.append('../uploads/logo/' + filename)
+        strjson = file_urls[0]
+        return jsonify(target_file=strjson)
+    return ''
 # products - add item
 @app.route('/products/add', methods=['GET','POST'])
 @login_required
@@ -701,6 +748,7 @@ def addItem():
     form = ProductForm()
     form.update_category()
     file_urls = []
+    print(request.files)
     if(request.method == 'POST') and 'photos' in request.files:
         print("\n routes | addItem --- POST : ||||||| ----------------------------\n")
         file_obj = request.files
@@ -715,8 +763,8 @@ def addItem():
                 file.save(imgfilepath)
                 # append image urls
                 file_urls.append('../uploads/' + filename)
-        strjson = ",".join(file_urls)
-        # print("------strjson: "+strjson)
+        strjson = file_urls[0]
+        print("------strjson: "+strjson)
         return jsonify(target_file=strjson)
     if form.validate_on_submit():
         # add new vendor
@@ -981,6 +1029,49 @@ def reports():
 @login_required
 def billing():
     return render_template('billing.html', title='Billing')
+
+# checkout
+@app.route('/checkout')
+@login_required
+def checkout():
+    ordersByProduct = db.Orders.aggregate([
+        { "$match": { "invoice_id": None } },
+        {
+            "$group": 
+            {
+                "_id": { 
+                    "product_id": "$product_id",
+                    "product_name": "$product_name"
+                },
+                "price": {
+                    "$sum": { 
+                        "$multiply": [ "$price", "$quantity" ]
+                    } 
+                },
+                "quantity": { 
+                    "$sum": "$quantity"
+                },
+                "count": { "$sum": 1 },
+            }
+        },
+        { "$sort": { "_id": 1} }
+    ])
+    total = db.Orders.aggregate([
+        { "$match": { "invoice_id": None } },
+        {
+            "$group": {
+                "_id": None,
+                "price": {
+                    "$sum": {
+                        "$multiply": [ "$price", "$quantity" ]
+                    }
+                },
+                "count": { "$sum": 1 },
+            }
+        }
+    ])
+    ordersByProductList = list(ordersByProduct)
+    return render_template('checkout.html', title='Checkout', ordersByProduct=ordersByProductList, total=(list(total))[0])
 
 # exports
 @app.route('/files')

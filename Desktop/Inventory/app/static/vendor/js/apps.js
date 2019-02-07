@@ -149,7 +149,7 @@ $(function() {
         var discount = $("#item_discount").val();
         var current = $("#tbTotal").text();
         $("#tbDiscount").html(discount);
-        $("#tbFinal").html(parseFloat(current)-discount).toFixed(2);
+        $("#tbFinal").html((parseFloat(current)-discount).toFixed(2));
     });
 
     $('#export_to_pdf').on('click', function(e) {
@@ -721,21 +721,22 @@ $(function() {
         acceptedFiles: '.jpg, .jpeg, .png, .gif',
         maxFilesize: 2, // MB
     }
-    jQuery(".dropzone").dropzone({
+    jQuery("#frm-drop-zone").dropzone({
         success : function(file, response) {
             //console.log(file);
             //console.log("------response: ",response);
             if (response['target_file'] != '') {
-                var currentValue = jQuery("#hdfiles").val(); //jQuery("#frmNP input[name='hdfiles'").val();
-                if (currentValue == '') {
-                    jQuery("#hdfiles").val(response['target_file']);
-                } else {
-                    jQuery("#hdfiles").val(currentValue + "," + response['target_file']);
-                }
+                jQuery("#hdfiles").val(response['target_file']);
             }
         }
     });
-
+    jQuery("#frm-drop-zone-logo").dropzone({
+        success : function(file, response) {
+            if (response['target_file'] != '') {
+                jQuery("#logo_file").val(response['target_file']);
+            }
+        }
+    });
     function getProduct(pid) {
         $.ajax({
             url: "/getProduct",
@@ -788,7 +789,6 @@ $(function() {
     
     updateSubgroupSelect();
     function updateSubgroupSelect() {
-        console.log("aaaaa");
         $.ajax({
             url: "/getSubgroups",
             type: "post",
