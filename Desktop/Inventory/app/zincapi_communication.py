@@ -5,10 +5,15 @@ import configparser
 
 config = configparser.ConfigParser()
 config.read('shipping.ini')
-_IP_PORT = config['GENERAL']['ip_port']
-_CLIENT_TOKEN = config['GENERAL']['client_token']
-_AMAZON_EMAIL = config['AMAZON']['email']
-_AMAZON_PASSWORD = config['AMAZON']['password']
+# _IP_PORT = config['GENERAL']['ip_port']
+# _CLIENT_TOKEN = config['GENERAL']['client_token']
+# _AMAZON_EMAIL = config['AMAZON']['email']
+# _AMAZON_PASSWORD = config['AMAZON']['password']
+
+_IP_PORT = "192.168.0.1:29019"
+_CLIENT_TOKEN = '$*&^Rjhdsfy888^(346764'
+_AMAZON_EMAIL = 'amazonmail@example.com'
+_AMAZON_PASSWORD = 'password-amazon'
 
 
 # maybe we have two types of failing - the request to zincapi could fail
