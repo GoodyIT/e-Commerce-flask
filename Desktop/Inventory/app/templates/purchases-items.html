@@ -6,9 +6,26 @@
     <div class="col-lg-5"></div>
     <div class="col-lg-4">
         <h4>Purchases By Items</h4>
-        <p>From 01 Jan 2019 To 31 Jan 2019</p>
     </div>
     <div class="col-lg-3"></div>
+</div>
+<div class="row" style="display: flex; align-items: center; text-align: right; margin-bottom: 10px;">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-5">
+        <select class="form-control form-control-lg" id="report_order_by_items_select">
+            <option value="">None</option>
+            {% for product in products %}
+            <option value="{{product.id}}">{{product.product}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-lg-5">
+        <button type="button" class="btn btn-primary btn-sm" id="report_order_by_items_export_csv">CSV Exports</button>
+        <button type="button" class="btn btn-primary btn-sm" id="report_order_by_items_export_excel">EXCEL Exports</button>
+        <button type="button" class="btn btn-primary btn-sm" id="report_order_by_items_export_doc">DOC Exports</button>
+        <button type="button" class="btn btn-primary btn-sm" id="report_order_by_items_export_pdf">PDF Exports</button>
+    </div>
+    <div class="col-lg-1"></div>
 </div>
 <div class="row report-block" style="background-color:#eeeeee">
     <div class="col-lg-1"><p>FIFO</p></div>
@@ -22,7 +39,7 @@
     <div class="col-lg-1"></div>
     <div class="col-lg-1"><h8>SALES PRICE</h8></div>
 </div>
-<div class="row" style="height:800px">
+<div class="row" style="height:800px" id="report_order_by_items_select_content">
     <div class="col-lg-5"></div>
     <div class="col-lg-4">
         <p>No Data To Display</p>

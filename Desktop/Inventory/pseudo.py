@@ -57,12 +57,16 @@ def createQueues(count, year):
     ''' Generates a Queue based on inputting values '''
     types = ['app', 'store']
     queues = []
-
+    products = db.Products.find({})
     while count > 0:
+        product_num = random.randint(0, db.Products.count_documents({})-1)
+        product_id  = products[product_num]['id']
+        group_id    = products[product_num]['category']
         order = {
             'order_id': str(uid()),
             'player_id': str(uid()),
-            'item_id': str(uid()),
+            'product_id': product_id,
+            'group_id': group_id,
             'quantity': random.randint(1, 10),
             'type': types[random.randint(0,1)],
             'price': random.randint(1, 100),
@@ -70,6 +74,7 @@ def createQueues(count, year):
             'city' : _getCity(),
             'state' : _getState(),
             'zip' : _getZip(),
+            'country': 'US',
             'date': _getDate(year)
             }
         queues.append(order)
@@ -82,19 +87,29 @@ def createQueues(count, year):
 def createOrders(count, year):
     types = ['app', 'store']
     orders = []
-
+    products = db.Products.find({})
     while count > 0:
+        product_num = random.randint(0, db.Products.count_documents({})-1)
+        product_id  = products[product_num]['id']
+        group_id    = products[product_num]['category']
+        ship_id     = str(uid()) if random.randint(0,1) else None
+        invoice_id  = str(uid()) if (random.randint(0, 1) == 1 and ship_id is not None) else None
         order = {
             'order_id': str(uid()),
             'player_id': str(uid()),
-            'item_id': str(uid()),
+            'product_id': product_id,
+            'group_id': group_id,
             'quantity': random.randint(1, 10),
             'type': types[random.randint(0,1)],
             'price': random.randint(1, 100),
+            'shipped': 'awaiting',
             'street': _street(),
             'city' : _getCity(),
             'state' : _getState(),
             'zip' : _getZip(),
+            'country': 'US',
+            'ship_id': ship_id,
+            'invoice_id': invoice_id,
             'date': _getDate(year)
             }
         orders.append(order)

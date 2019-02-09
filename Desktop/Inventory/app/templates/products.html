@@ -10,31 +10,31 @@
                     <h5 class="card-title m-b-0 align-self-center">Products List</h5>
                 </div>
                 <table id="productTable" class="table color-table table-bordered product-table table-hover dataTable no-footer" role="grid" aria-describedby="myTable_info" style="width: 760px;">
-                        <thead>
+                    <thead>
+                        <tr role="row">
+                            <td class="sorting_asc" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="ID: activate to sort column descending" style="width: 37px;">ID</td>
+                            <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Product: activate to sort column ascending" style="width: 160px;">Product</td>
+                            <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" style="width: 111px;">Category</td>
+                            <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending" style="width: 60px;">Price</td>
+                            <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 72px;">Currency</td>
+                            <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="QTY: activate to sort column ascending" style="width: 51px;">QTY</td>
+                            <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="VENDOR: activate to sort column ascending" style="width: 51px;">VENDOR</td>
+                            <td class="" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="" style="width: 20px;"></td>
+                    </thead>
+                    <tbody>
+                        {% for item in table %}
                             <tr role="row">
-                                <td class="sorting_asc" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="ID: activate to sort column descending" style="width: 37px;">ID</td>
-                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Product: activate to sort column ascending" style="width: 160px;">Product</td>
-                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" style="width: 111px;">Category</td>
-                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending" style="width: 60px;">Price</td>
-                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 72px;">Currency</td>
-                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="QTY: activate to sort column ascending" style="width: 51px;">QTY</td>
-                                <td class="sorting" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="VENDOR: activate to sort column ascending" style="width: 51px;">VENDOR</td>
-                                <td class="" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="" style="width: 20px;"></td>
-                        </thead>
-                        <tbody>
-                            {% for item in table %}
-                                <tr role="row">
-        					                  <td class="sorting_1">{{item.id}}</td>
-                                    <td>{{item.product}}</td>
-                                    <td>{{item.category}}</td>
-        						                <td>{{item.price}}</td>
-        						                <td>{{item.currency}}</td>
-        						                <td>{{item.quantity}}</td>
-                                    <td>{{item.vendor}}</td>
-        						                <td class="text-center"><button type="button" class="btn btn-primary" id='tbl-btn'>X</button></td>
-        					              </tr>
-                            {% endfor %}
-                        </tbody>
+                                <td class="sorting_1">{{item.id}}</td>
+                                <td>{{item.product}}</td>
+                                <td>{{item.category}}</td>
+                                <td>{{item.price}}</td>
+                                <td>{{item.currency}}</td>
+                                <td>{{item.quantity}}</td>
+                                <td>{{item.vendor}}</td>
+                                <td class="text-center"><button type="button" class="btn btn-primary" id='tbl-btn'>X</button></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
                 </table>
                 <div class="ml-auto text-light-blue" style="margin-top: 50px;">
                     <ul class="nav nav-tabs customtab default-customtab list-inline text-uppercase lp-5 font-medium font-12" style="float:right;" role="tablist">

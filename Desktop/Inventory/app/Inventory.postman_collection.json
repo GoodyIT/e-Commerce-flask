@@ -1,0 +1,141 @@
+{
+	"info": {
+		"_postman_id": "8c5ad11a-ceba-4396-b785-0563ca267481",
+		"name": "Inventory",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "order_shipped",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"_type\" : \"order_response\",\r\n  \"price_components\" : {\r\n    \"shipping\" : 0,\r\n    \"subtotal\" : 1999,\r\n    \"tax\" : 0,\r\n    \"total\" : 1999\r\n  },\r\n  \"merchant_order_ids\" : [\r\n    {\r\n      \"merchant_order_id\" : \"112-1234567-999999555\",\r\n      \"merchant\" : \"amazon\",\r\n      \"account\" : \"timbeaver@gmail.com\",\r\n      \"placed_at\" : \"2014-07-02T23:51:08.366Z\"\r\n    }\r\n  ],\r\n  \"tracking\" : [\r\n    {\r\n      \"product_id\" : \"18831b3d-fab9-4ef9-852a-53e5dad9377f\",\r\n      \"merchant_order_id\" : \"112-1234567-7272727\",\r\n      \"carrier\" : \"Fedex\",\r\n      \"tracking_number\" : \"9261290100129790891234\",\r\n      \"obtained_at\" : \"2014-07-03T23:22:48.165Z\"\r\n    }\r\n  ],\r\n  \"request\": {\r\n  \t\"products\": [\r\n  \t\t{\"product_id\": \"618aeaa8-1202-4caf-9273-5fbd1fbdcb69\",\r\n\t\t\"quantity\": 4,\r\n\t\t\"variants\": []}\r\n\t\t]\r\n  }\r\n}"
+				},
+				"url": {
+					"raw": "http://188.254.244.234:9000/shipping/status_updated",
+					"protocol": "http",
+					"host": [
+						"188",
+						"254",
+						"244",
+						"234"
+					],
+					"port": "9000",
+					"path": [
+						"shipping",
+						"status_updated"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "order_delivered",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"tracking\" : [\r\n    {\r\n      \"product_ids\" : [\r\n      \t\"112-1234567-999999999\"\r\n      ],\r\n      \"merchant_order_id\" : \"112-1234567-999999111\",\r\n      \"carrier\" : \"Fedex\",\r\n      \"tracking_number\" : \"9261290100129790891234\",\r\n      \"obtained_at\" : \"2014-07-03T23:22:48.165Z\",\r\n      \"delivery_status\": \"Delivered\",\r\n      \"tracking_url\": \"https://t.17track.net/en#nums=ZPYAA0051111007YQ\",\r\n      \"retailer_tracking_number\": \"TBA111189418000\",\r\n      \"retailer_tracking_url\": \"https://www.amazon.com/progress-tracker/package/ref=oh_aui_hz_st_btn?_encoding=UTF8&itemId=khlnkqmn1111n&orderId=112-111111-6553065\"\r\n    }\r\n  ]\r\n}"
+				},
+				"url": {
+					"raw": "http://188.254.244.234:9000/shipping/tracking_obtained",
+					"protocol": "http",
+					"host": [
+						"188",
+						"254",
+						"244",
+						"234"
+					],
+					"port": "9000",
+					"path": [
+						"shipping",
+						"tracking_obtained"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "order_processing",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"request_id\": \"99b07d1f7deef4e74a255a0e5628788d\",\r\n    \"message\": \"Request is currently processing and will complete soon.\",\r\n    \"request\": { \r\n        \"shipping_address\": {\r\n            \"address_line2\": \"\", \"last_name\": \"Beaver\", \"city\": \"Cambridge\", \"state\": \"MA\", \"zip_code\": \"02139\", \"country\": \"US\", \"phone_number\": \"5551230101\", \"address_line1\": \"77 Massachusetts Avenue\", \"first_name\": \"Tim\"\r\n            },\r\n        \"products\": [\r\n            {\r\n                \"quantity\": 8, \"variants\": [], \"product_id\": \"43ef8d1b-1f33-43d9-b48b-c9264c10ac42\"\r\n                }\r\n            ],\r\n        \"billing_address\": {\r\n            \"last_name\": \"Rogers\", \"state\": \"MA\", \"address_line2\": \"\", \"country\": \"US\", \"zip_code\": \"02139\", \"city\": \"Cambridge\", \"phone_number\": \"5551234567\", \"first_name\": \"William\", \"address_line1\": \"84 Massachusetts Ave\"\r\n            },\r\n        \"webhooks\": {\r\n            \"status_updated\": \"http://188.254.244.234:9000/shipping/status_updated\",\r\n            \"tracking_obtained\": \"http://188.254.244.234:9000/shipping/tracking_obtained\"\r\n            },\r\n        \"retailer\": \"amazon\",\r\n        \"shipping\": {\r\n            \"max_days\": 5, \"max_price\": 0, \"order_by\": \"price\"\r\n            },\r\n        \"max_price\": 0,\r\n        \"auto_retry_settings\": {\r\n            \"retry_delays\": [0, 0]\r\n            },\r\n        \"payment_method\": {\r\n            \"expiration_year\": \"2020\", \"expiration_month\": \"1\", \"name_on_card\": \"Ben Bitdiddle\", \"use_gift\": false\r\n            }\r\n        },\r\n    \"_type\": \"error\",\r\n    \"code\": \"request_processing\",\r\n    \"status_updates\": [\r\n        {\r\n            \"message\": \"Request was placed onto the queue and will launch when the retailer account is no longer busy with other requests.\", \"type\": \"request.queued\",\r\n            \"data\": {},\r\n            \"_created_at\": \"2019-01-26T08:43:18.409Z\"\r\n            },\r\n        {\r\n            \"message\": \"Initiated the request on the retailer.\", \"type\": \"request.launched\", \"data\": {}, \"_created_at\": \"2019-01-26T08:43:18.763Z\"\r\n            }\r\n        ],\r\n    \"data\": {}\r\n}"
+				},
+				"url": {
+					"raw": "http://188.254.244.234:9000/shipping/status_updated",
+					"protocol": "http",
+					"host": [
+						"188",
+						"254",
+						"244",
+						"234"
+					],
+					"port": "9000",
+					"path": [
+						"shipping",
+						"status_updated"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cancellation_successfull",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"_type\": \"cancellation_response\",\r\n  \"merchant_order_id\": \"112-1234567-999999444\",\r\n  \r\n  \"request\": {\r\n  \t\r\n\t\"request_id\": \"440e59a8c840fce6aa4dd1d7e883df4a\",\r\n\t\r\n    \"message\": \"Request is currently processing and will complete soon.\",\r\n    \"request\": {\r\n        \"shipping_address\": {\r\n            \"address_line2\": \"\", \"last_name\": \"Beaver\", \"city\": \"Cambridge\", \"state\": \"MA\", \"zip_code\": \"02139\", \"country\": \"US\", \"phone_number\": \"5551230101\", \"address_line1\": \"77 Massachusetts Avenue\", \"first_name\": \"Tim\"\r\n            },\r\n        \"products\": [\r\n            {\r\n                \"quantity\": 8, \"variants\": [], \"product_id\": \"43ef8d1b-1f33-43d9-b48b-c9264c10ac42\"\r\n                }\r\n            ],\r\n        \"billing_address\": {\r\n            \"last_name\": \"Rogers\", \"state\": \"MA\", \"address_line2\": \"\", \"country\": \"US\", \"zip_code\": \"02139\", \"city\": \"Cambridge\", \"phone_number\": \"5551234567\", \"first_name\": \"William\", \"address_line1\": \"84 Massachusetts Ave\"\r\n            },\r\n        \"webhooks\": {\r\n            \"status_updated\": \"http://188.254.244.234:9000/shipping/status_updated\",\r\n            \"tracking_obtained\": \"http://188.254.244.234:9000/shipping/tracking_obtained\"\r\n            },\r\n        \"retailer\": \"amazon\",\r\n        \"shipping\": {\r\n            \"max_days\": 5, \"max_price\": 0, \"order_by\": \"price\"\r\n            },\r\n        \"max_price\": 0,\r\n        \"auto_retry_settings\": {\r\n            \"retry_delays\": [0, 0]\r\n            },\r\n        \"payment_method\": {\r\n            \"expiration_year\": \"2020\", \"expiration_month\": \"1\", \"name_on_card\": \"Ben Bitdiddle\", \"use_gift\": false\r\n            }\r\n        },\r\n    \"_type\" : \"order_response\",\r\n    \"status_updates\": [\r\n        {\r\n            \"message\": \"Request was placed onto the queue and will launch when the retailer account is no longer busy with other requests.\", \"type\": \"request.queued\",\r\n            \"data\": {},\r\n            \"_created_at\": \"2019-01-26T08:43:18.409Z\"\r\n            },\r\n        {\r\n            \"message\": \"Initiated the request on the retailer.\", \"type\": \"request.launched\", \"data\": {}, \"_created_at\": \"2019-01-26T08:43:18.763Z\"\r\n            }\r\n        ],\r\n    \"data\": {}\r\n  }\r\n}"
+				},
+				"url": {
+					"raw": "http://188.254.244.234:9000/shipping/cancellation_order/succeed",
+					"protocol": "http",
+					"host": [
+						"188",
+						"254",
+						"244",
+						"234"
+					],
+					"port": "9000",
+					"path": [
+						"shipping",
+						"cancellation_order",
+						"succeed"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -8,7 +8,6 @@ def getGroups():
     groups = db.Groups.find()
     size = groups.count() - 1
     choices = []
-
     while size >= 0:
         choices.append((groups[size]['id'], groups[size]['name']))
         size -= 1
@@ -16,7 +15,15 @@ def getGroups():
     if len(choices) == 0:
         return [('none', 'None')]
     return choices
-
+def getSubgroups():
+    groups = db.Groups.find()
+    size = groups.count() - 1
+    choices = []
+    while size >= 0:
+        for subgroup in groups[size]['sub_group']:
+            choices.append((subgroup, subgroup))
+        size -= 1
+    return choices
 def getVendor():
     vendor = db.Vendor.find()
     size = vendor.count() - 1
@@ -41,7 +48,16 @@ class VendorForm(FlaskForm):
 
 class GroupForm(FlaskForm):
     ''' Group Add Form '''
-    type = RadioField('Type', choices=[('goods', 'Goods'),('service', 'Service')])
+    type = RadioField('Type', choices=[
+        ('GAMES', 'GAMES'),
+        ('OFFICE', 'OFFICE'),
+        ('ELECTRONICS', 'ELECTRONICS'),
+        ('GEAR', 'GEAR'),
+        ('COMPUTERS', 'COMPUTERS'),
+        ('TOYS', 'TOYS'),
+        ('ACCESSORIES', 'ACCESSORIES'),
+        ('CUSTOM', 'CUSTOM')
+    ])
     name = StringField('Group Name')
     description = StringField('Description')
     unit = StringField('Unit')
@@ -71,9 +87,9 @@ class PurchaseForm(FlaskForm):
     reference = StringField('Reference Order', validators=[DataRequired()])
     current_date = DateField('Current Date', format='%m/%d/%Y')
     delivery_date = DateField('Delivery Date', format='%m/%d/%Y')
-    discount = StringField('Discount', validators=[DataRequired()])
-    item_notes = StringField('Notes', validators=[DataRequired()])
-    terms_notes = StringField('Terms & Conditions', validators=[DataRequired()])
+    discount = StringField('Discount')
+    item_notes = StringField('Notes')
+    terms_notes = StringField('Terms & Conditions')
     orders = StringField()
     submit = SubmitField('Submit')
 
@@ -87,6 +103,7 @@ class ProductForm(FlaskForm):
     ''' Product Items '''
     product = StringField('Product Name', validators=[DataRequired()])
     category = SelectField('Category', choices=getGroups())
+    subgroup = SelectField('SubGroup', choices=getSubgroups())
     #print(category)
     sku = StringField('SKU', validators=[DataRequired()])
     price = IntegerField('Price', validators=[DataRequired()])

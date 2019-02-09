@@ -215,8 +215,7 @@ var Dashboard = function () {
             // Load data
             // ------------------------------
 
-            d3.csv('../../../../global_assets/demo_data/dashboard/traffic_sources.csv', function (error, data) {
-
+            d3.csv('static/global_assets/demo_data/dashboard/traffic_sources.csv', function (data) {
                 // Pull out values
                 data.forEach(function (d) {
                     d.date = format.parse(d.date);
@@ -609,7 +608,7 @@ var Dashboard = function () {
             // Load data
             // ------------------------------
 
-            d3.csv('../../../../global_assets/demo_data/dashboard/app_sales.csv', function(error, data) {
+            d3.csv('static/global_assets/demo_data/dashboard/app_sales.csv', function(error, data) {
                 formatted = data;
                 redraw();
             });
@@ -1003,8 +1002,7 @@ var Dashboard = function () {
             // Load data
             // ------------------------------
 
-            d3.json('../../../../global_assets/demo_data/dashboard/monthly_sales.json', function (error, data) {
-
+            d3.json('static/global_assets/demo_data/dashboard/monthly_sales.json', function (error, data) {
                 // Show what's wrong if error
                 if (error) return console.error(error);
 
@@ -1256,7 +1254,7 @@ var Dashboard = function () {
         if($(element).length > 0) {
 
             // Load data
-            d3.csv('../../../../global_assets/demo_data/dashboard/app_sales_heatmap.csv', function(error, data) {
+            d3.csv('static/global_assets/demo_data/dashboard/app_sales_heatmap.csv', function(error, data) {
 
 
                 // Bind data
@@ -1597,9 +1595,8 @@ var Dashboard = function () {
             // Load data
             // ------------------------------
 
-            d3.json('../../../../global_assets/demo_data/dashboard/monthly_sales.json', function (error, data) {
-
-                // Show what's wrong if error
+            d3.json('static/global_assets/demo_data/dashboard/monthly_sales.json', function (error, data) {
+                // Show what's wrong if erro    r
                 if (error) return console.error(error);
 
                 // Pull out values
@@ -3604,7 +3601,7 @@ var Dashboard = function () {
             // Load data
             // ------------------------------
 
-            d3.json('../../../../global_assets/demo_data/dashboard/bullets.json', function(error, data) {
+            d3.json('static/global_assets/demo_data/dashboard/bullets.json', function(error, data) {
 
                 // Show what's wrong if error
                 if (error) return console.error(error);
