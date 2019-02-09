@@ -15,9 +15,9 @@
       <div class="filter-list-wrap" id="1">
         <dl class="filter-list clearfix J_filterList filter-list-row">
           <dt>Category :</dt>
-          <a href="games"><dd class="category-all {{'active' if activeGroupId == 'ALL'}}">All </dd></a>
+          <a href="games?page=1"><dd class="category-all {{'active' if activeGroupId == 'ALL'}}">All </dd></a>
           {% for group in groups['GAMES'] %}
-            <a href="games?gid={{group.id}}"><dd class="item {{'active' if activeGroupId == group.id}}"> {{group.name}}</dd></a>
+            <a href="games?gid={{group.id}}&page=1"><dd class="item {{'active' if activeGroupId == group.id}}"> {{group.name}}</dd></a>
           {% endfor %}
           <dd class=""> <a data-id="1" class="more J_filterToggle" href="#"><i class="iconfont pe-7s-angle-down"></i></a></dd>
         </dl>
@@ -25,17 +25,17 @@
       <div class="filter-list-wrap" id="2">
         <dl class="filter-list clearfix J_filterList filter-list-row">
           <dt>Sub :</dt>
-          <a href="games?gid={{activeGroupId}}"><dd class="category-all {{'active' if activeSubGroup == 'ALL'}}">All </dd></a>
+          <a href="games?gid={{activeGroupId}}&page=1"><dd class="category-all {{'active' if activeSubGroup == 'ALL'}}">All </dd></a>
 
           {% for group in groups['GAMES'] %}
             {% if activeGroupId == 'ALL' %}
               {% for subgroup in group.sub_group %}
-                <a href="games?gid={{group.id}}&subgroup={{subgroup}}"><dd class="item {{'active' if activeSubGroup == subgroup}}">{{group.name}}/{{subgroup}}</dd></a>
+                <a href="games?gid={{group.id}}&subgroup={{subgroup}}&page=1"><dd class="item {{'active' if activeSubGroup == subgroup}}">{{group.name}}/{{subgroup}}</dd></a>
               {% endfor %}
             {% else %}
               {% if activeGroupId == group.id %}
                 {% for subgroup in group.sub_group %}
-                   <a href="games?gid={{group.id}}&subgroup={{subgroup}}"><dd class="item {{'active' if activeSubGroup == subgroup}}">{{subgroup}}</dd></a>
+                   <a href="games?gid={{group.id}}&subgroup={{subgroup}}&page=1"><dd class="item {{'active' if activeSubGroup == subgroup}}">{{subgroup}}</dd></a>
                 {% endfor %}
               {% endif %}
             {% endif %}
@@ -96,7 +96,7 @@
                           </div>
                         </div>
                         <div class="actions-cart">
-                          <button type="button" title="Add to Cart" class="button btn-cart"></button>
+                          <a data-id="{{item.id}}" data-name="{{item.product}}" data-image="{{item.images}}" data-price="{{item.price}}" title="Add to Cart" class="button btn-cart"></a>
                         </div>
                         <ul class="add-to-links">
                           <li class="pull-right-no pull-compare"><span class="separator">|</span> <a href="#" title="Compare" class="link-compare"><i class="fa fa-retweet"></i>Compare</a></li>
@@ -109,7 +109,13 @@
               </li>
             {% endfor %}
           </ul>
-          <div class="xm-pagenavi"> <span class="numbers first iconfont pe-7s-angle-left"></span><span class="numbers current">1</span> <a class="numbers" href="#">2</a> <a class="numbers" href="#">3</a> <a class="numbers last iconfont pe-7s-angle-right" href="#"></a> </div>
+          <div class="xm-pagenavi"> 
+            <a href="games?gid={{activeGroupId}}&subgroup={{activeSubGroup}}&page={{'1' if currentPage|int-1 == 0 else currentPage|int-1}}" class="numbers first iconfont pe-7s-angle-left"></a>
+            {% for _ in range(0, pageCount) %}
+              <a href="games?gid={{activeGroupId}}&subgroup={{activeSubGroup}}&page={{loop.index}}" class="numbers {{'current' if loop.index == currentPage|int}}">{{loop.index}}</a> 
+            {% endfor %}
+            <a href="games?gid={{activeGroupId}}&subgroup={{activeSubGroup}}&page={{pageCount if currentPage|int +1 > pageCount|int else currentPage|int + 1}}" class="numbers last iconfont pe-7s-angle-right"></a> 
+          </div>
         </div>
       </div>
     </div>

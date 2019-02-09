@@ -89,45 +89,19 @@
                                             </a></div>
                                             <div>
                                                 <div class="top-cart-content">
-                                                    <div class="block-subtitle hidden-xs">Recently added item(s)</div>
-                                                    <ul id="cart-sidebar" class="mini-products-list">
-                                                        <li class="item odd"><a href="#"
-                                                                                title="Ipsums Dolors Untra"
-                                                                                class="product-image"><img
-                                                                src="../static/products-images/product-img.jpg"
-                                                                alt="Lorem ipsum dolor" width="65"></a>
-                                                            <div class="product-details"><a href="#"
-                                                                                            title="Remove This Item"
-                                                                                            class="remove-cart"><i
-                                                                    class="pe-7s-close"></i></a>
-                                                                <p class="product-name"><a href="#">Lorem
-                                                                    ipsum dolor sit amet Consectetur</a></p>
-                                                                <strong>1</strong> x <span class="price">$20.00</span>
-                                                            </div>
-                                                        </li>
-                                                        <li class="item last odd"><a href="#"
-                                                                                     title="Ipsums Dolors Untra"
-                                                                                     class="product-image"><img
-                                                                src="../static/products-images/product-img.jpg"
-                                                                alt="Lorem ipsum dolor" width="65"></a>
-                                                            <div class="product-details"><a href="#"
-                                                                                            title="Remove This Item"
-                                                                                            class="remove-cart"><i
-                                                                    class="pe-7s-close"></i></a>
-                                                                <p class="product-name"><a href="#">Sed
-                                                                    do
-                                                                    eiusmod tempor incidist</a></p>
-                                                                <strong>2</strong> x <span class="price">$420.00</span>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="top-subtotal">Subtotal: <span
-                                                            class="price">$520.00</span>
-                                                    </div>
-                                                    <div class="actions">
-                                                        <button class="btn-checkout" type="button"><i
-                                                                class="fa fa-check"></i><span>Checkout</span></button>
-                                                    </div>
+                                                    <form action="{{url_for('checkout')}}" method="POST">
+                                                        <input type="hidden" name="cart-data" id="cart-data" />
+                                                        <div class="block-subtitle hidden-xs">Recently added item(s)</div>
+                                                        <ul id="cart-sidebar" class="mini-products-list">
+                                                        </ul>
+                                                        <div class="top-subtotal">Subtotal: <span
+                                                                class="price" id="cart-total-price">$0.00</span>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <button class="btn-checkout" type="submit" style="text-align: center;">
+                                                                <i class="fa fa-check"></i><span>Checkout</span></button>
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -165,7 +139,7 @@
                             <div class="nav-inner">
                                 <ul id="nav" class="hidden-xs">
                                   <li class="level0 nav-5 level-top first">
-                                      <a href="{{url_for('games')}}" class="level-top">
+                                      <a href="{{url_for('games', page = 1)}}" class="level-top">
                                         <span>Games</span><b class="caret"></b>
                                       </a>
                                       <div class="level0-wrapper dropdown-6col">
@@ -173,10 +147,10 @@
                                               <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
                                                   <ul class="level0">
                                                       {% for group in groups['GAMES'] %}
-                                                      <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}"><span>{{group.name}}</span></a>
+                                                      <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}&page=1"><span>{{group.name}}</span></a>
                                                           <ul class="level2">
                                                             {% for subgroup in group.sub_group %}
-                                                              <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}"><span>{{subgroup}}</span></a></li>
+                                                              <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}&page=1"><span>{{subgroup}}</span></a></li>
                                                             {% endfor %}
                                                           </ul>
                                                       </li>
@@ -194,16 +168,16 @@
                                       </div>
                                     </li> <!-- end Games -->
                                     <li class="level0 nav-5 level-top first">
-                                        <a href="{{url_for('office')}}"><span>Office</span><b class="caret"></b> </a>
+                                        <a href="{{url_for('office', page = 1)}}"><span>Office</span><b class="caret"></b> </a>
                                         <div class="level0-wrapper dropdown-6col">
                                             <div class="level0-wrapper2 container">
                                                 <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
                                                     <ul class="level0">
                                                         {% for group in groups['OFFICE'] %}
-                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}"><span>{{group.name}}</span></a>
+                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}&page=1"><span>{{group.name}}</span></a>
                                                             <ul class="level2">
                                                                 {% for subgroup in group.sub_group %}
-                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}"><span>{{subgroup}}</span></a></li>
+                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}&page=1"><span>{{subgroup}}</span></a></li>
                                                                 {% endfor %}
                                                             </ul>
                                                         </li>
@@ -222,16 +196,16 @@
                                     </li>
 
                                     <li class="level0 nav-5 level-top first">
-                                        <a href="{{url_for('electronics')}}" class="level-top"> <span>Electronics</span><b class="caret"></b> </a>
+                                        <a href="{{url_for('electronics', page = 1)}}" class="level-top"> <span>Electronics</span><b class="caret"></b> </a>
                                         <div class="level0-wrapper dropdown-6col">
                                             <div class="level0-wrapper2 container">
                                                 <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
                                                     <ul class="level0">
                                                         {% for group in groups['ELECTRONICS'] %}
-                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}"><span>{{group.name}}</span></a>
+                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}&page=1"><span>{{group.name}}</span></a>
                                                             <ul class="level2">
                                                                 {% for subgroup in group.sub_group %}
-                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}"><span>{{subgroup}}</span></a></li>
+                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}&page=1"><span>{{subgroup}}</span></a></li>
                                                                 {% endfor %}
                                                             </ul>
                                                         </li>
@@ -249,7 +223,7 @@
                                         </div>
                                     </li>
                                     <li class="level0 nav-5 level-top">
-                                        <a href="{{url_for('gear')}}" class="level-top">
+                                        <a href="{{url_for('gear', page = 1)}}" class="level-top">
                                             <span>Gear</span><b class="caret"></b> 
                                         </a>
                                         <div class="level0-wrapper dropdown-6col">
@@ -257,10 +231,10 @@
                                                 <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
                                                     <ul class="level0">
                                                         {% for group in groups['GEAR'] %}
-                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}"><span>{{group.name}}</span></a>
+                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}&page=1"><span>{{group.name}}</span></a>
                                                             <ul class="level2">
                                                                 {% for subgroup in group.sub_group %}
-                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}"><span>{{subgroup}}</span></a></li>
+                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}&page=1"><span>{{subgroup}}</span></a></li>
                                                                 {% endfor %}
                                                             </ul>
                                                         </li>
@@ -278,7 +252,7 @@
                                         </div>
                                     </li>
                                     <li class="level0 nav-5 level-top">
-                                        <a href="{{url_for('computers')}}">
+                                        <a href="{{url_for('computers', page = 1)}}">
                                             <span>Computers<b class="caret"></b></span>
                                         </a>
                                         <div class="level0-wrapper dropdown-6col">
@@ -286,10 +260,10 @@
                                                 <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
                                                     <ul class="level0">
                                                         {% for group in groups['COMPUTERS'] %}
-                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}"><span>{{group.name}}</span></a>
+                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}&page=1"><span>{{group.name}}</span></a>
                                                             <ul class="level2">
                                                                 {% for subgroup in group.sub_group %}
-                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}"><span>{{subgroup}}</span></a></li>
+                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}&page=1"><span>{{subgroup}}</span></a></li>
                                                                 {% endfor %}
                                                             </ul>
                                                         </li>
@@ -308,7 +282,7 @@
                                     </li>
 
                                     <li class="level0 nav-5 level-top">
-                                        <a class="level-top" href="{{url_for('toys')}}"> 
+                                        <a class="level-top" href="{{url_for('toys', page = 1)}}"> 
                                             <span>Toys<b class="caret"></b></span> 
                                         </a>
                                         <div class="level0-wrapper dropdown-6col">
@@ -316,10 +290,10 @@
                                                 <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
                                                     <ul class="level0">
                                                         {% for group in groups['TOYS'] %}
-                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}"><span>{{group.name}}</span></a>
+                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}&page=1"><span>{{group.name}}</span></a>
                                                             <ul class="level2">
                                                                 {% for subgroup in group.sub_group %}
-                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}"><span>{{subgroup}}</span></a></li>
+                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}&page=1"><span>{{subgroup}}</span></a></li>
                                                                 {% endfor %}
                                                             </ul>
                                                         </li>
@@ -337,7 +311,7 @@
                                         </div>
                                     </li>
                                     <li class="level0 nav-5 level-top">
-                                        <a href="{{url_for('accessories')}}" class="level-top">
+                                        <a href="{{url_for('accessories', page = 1)}}" class="level-top">
                                             <span>Accessories</span><b class="caret"></b>
                                         </a>
                                         <div class="level0-wrapper dropdown-6col">
@@ -345,10 +319,10 @@
                                                 <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
                                                     <ul class="level0">
                                                         {% for group in groups['ACCESSORIES'] %}
-                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}"><span>{{group.name}}</span></a>
+                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}&page=1"><span>{{group.name}}</span></a>
                                                             <ul class="level2">
                                                                 {% for subgroup in group.sub_group %}
-                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}"><span>{{subgroup}}</span></a></li>
+                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}&page=1"><span>{{subgroup}}</span></a></li>
                                                                 {% endfor %}
                                                             </ul>
                                                         </li>
@@ -602,6 +576,7 @@
 <script type="text/javascript" src="../static/store-js/jquery.mobile-menu.min.js"></script>
 <script type="text/javascript"
         src="../static/store-js/owl.carousel.min.js"></script>
+<script type="text/javascript" src="../static/store-js/app.js"></script>
 <script type="text/javascript" src="../static/store-js/revslider.js"></script>
 <script type="text/javascript" src="../static/store-js/countdown.js"></script>
 <script type="text/javascript" src="../static/store-js/jquery.bxslider.min.js"></script>

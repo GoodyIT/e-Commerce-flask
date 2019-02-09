@@ -123,7 +123,7 @@
     <div style="background-color: #f2f2f2; padding: 5px 20px 15px 20px; border: 1px solid lightgrey; border-radius: 3px;">
       <h4>Cart <span style="float: right; color: grey;" style="color:black"><i class="fa fa-shopping-cart"></i> <b>{{total.count}}</b></span></h4>
       {% for order in ordersByProduct %}
-        <p><a href="#" style="color: #333;">{{order._id.product_name}}</a> <span style="float: right; color: grey;">${{order.price}}</span></p>
+        <p><a href="#" style="color: #333;">{{order._id.product_name}}</a> <span style="float: right; color: grey;">${{order.price}} x {{order.quantity}}</span></p>
       {% endfor %}
       <hr style="border: 1px solid grey;" />
       <p>Total <span style="float: right; color: grey;" style="color:black"><b>${{total.price}}</b></span></p>

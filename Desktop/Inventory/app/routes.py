@@ -9,7 +9,7 @@ from .data import User
 from .inventory import Warehouse
 import json
 import os
-
+import math
 
 #app = Flask(__name__)
 
@@ -307,11 +307,13 @@ def get_analytics():
 def games1():
     groupId = request.args.get("gid")
     subGroup = request.args.get("subgroup")
-    return redirect(url_for('games', gid=groupId, subgroup=subGroup))
+    page     = request.args.get("page")
+    return redirect(url_for('games', gid=groupId, subgroup=subGroup, page=page))
 @app.route('/store/games')
 def games():
-    groupId = request.args.get("gid")
-    subGroup = request.args.get("subgroup")
+    groupId   = request.args.get("gid")
+    subGroup  = request.args.get("subgroup")
+    page      = request.args.get("page")
     if groupId is None:
         groupId='ALL'
     if subGroup is None:
@@ -325,24 +327,37 @@ def games():
     for x in groups:
         groupsList[x['_id']] = x['store']
     if groupId == 'ALL' and subGroup == 'ALL':
-        products = db.Products.find({"category_type": "GAMES"})
+        products = db.Products.find({"category_type": "GAMES"}).skip((int(page)-1)*8).limit(8)
     else: 
         if groupId != 'ALL' and subGroup == 'ALL':
-            products = db.Products.find({"category": groupId})
+            products = db.Products.find({"category": groupId}).skip((int(page)-1)*8).limit(8)
         else:
-            products = db.Products.find({"category": groupId, "subgroup": subGroup})
-    return render_template('grid-games.html', title='Games', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
+            products = db.Products.find({"category": groupId, "subgroup": subGroup}).skip((int(page)-1)*8).limit(8)
+    productArray = list(products)
+    pageCount = math.ceil(products.count()/8)
+    return render_template(
+        'grid-games.html', 
+        title='Games', 
+        groups=groupsList, 
+        products=productArray, 
+        activeGroupId=groupId, 
+        activeSubGroup=subGroup, 
+        pageCount=pageCount,
+        currentPage=page
+    )
 
 #store - office
 @app.route('/office')
 def office1():
     groupId = request.args.get("gid")
     subGroup = request.args.get("subgroup")
-    return redirect(url_for('office', gid=groupId, subgroup=subGroup))
+    page     = request.args.get("page")
+    return redirect(url_for('office', gid=groupId, subgroup=subGroup, page=page))
 @app.route('/store/office')
 def office():
-    groupId = request.args.get("gid")
-    subGroup = request.args.get("subgroup")
+    groupId   = request.args.get("gid")
+    subGroup  = request.args.get("subgroup")
+    page      = request.args.get("page")
     if groupId is None:
         groupId='ALL'
     if subGroup is None:
@@ -356,24 +371,37 @@ def office():
     for x in groups:
         groupsList[x['_id']] = x['store']
     if groupId == 'ALL' and subGroup == 'ALL':
-        products = db.Products.find({"category_type": "OFFICE"})
+        products = db.Products.find({"category_type": "OFFICE"}).skip((int(page)-1)*8).limit(8)
     else: 
         if groupId != 'ALL' and subGroup == 'ALL':
-            products = db.Products.find({"category": groupId})
+            products = db.Products.find({"category": groupId}).skip((int(page)-1)*8).limit(8)
         else:
-            products = db.Products.find({"category": groupId, "subgroup": subGroup})
-    return render_template('grid-office.html', title='Office', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
+            products = db.Products.find({"category": groupId, "subgroup": subGroup}).skip((int(page)-1)*8).limit(8)
+    productArray = list(products)
+    pageCount = math.ceil(products.count()/8)
+    return render_template(
+        'grid-office.html', 
+        title='Office', 
+        groups=groupsList, 
+        products=productArray, 
+        activeGroupId=groupId, 
+        activeSubGroup=subGroup, 
+        pageCount=pageCount,
+        currentPage=page
+    )
 
 #store - electronics
 @app.route('/electronics')
 def electrnoics1():
     groupId = request.args.get("gid")
     subGroup = request.args.get("subgroup")
-    return redirect(url_for('electronics', gid=groupId, subgroup=subGroup))
+    page     = request.args.get("page")
+    return redirect(url_for('electronics', gid=groupId, subgroup=subGroup, page=page))
 @app.route('/store/electronics')
 def electronics():
-    groupId = request.args.get("gid")
-    subGroup = request.args.get("subgroup")
+    groupId   = request.args.get("gid")
+    subGroup  = request.args.get("subgroup")
+    page      = request.args.get("page")
     if groupId is None:
         groupId='ALL'
     if subGroup is None:
@@ -387,24 +415,37 @@ def electronics():
     for x in groups:
         groupsList[x['_id']] = x['store']
     if groupId == 'ALL' and subGroup == 'ALL':
-        products = db.Products.find({"category_type": "ELECTRONICS"})
+        products = db.Products.find({"category_type": "ELECTRONICS"}).skip((int(page)-1)*8).limit(8)
     else: 
         if groupId != 'ALL' and subGroup == 'ALL':
-            products = db.Products.find({"category": groupId})
+            products = db.Products.find({"category": groupId}).skip((int(page)-1)*8).limit(8)
         else:
-            products = db.Products.find({"category": groupId, "subgroup": subGroup})
-    return render_template('grid-electronics.html', title='Electronics', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
+            products = db.Products.find({"category": groupId, "subgroup": subGroup}).skip((int(page)-1)*8).limit(8)
+    productArray = list(products)
+    pageCount = math.ceil(products.count()/8)
+    return render_template(
+        'grid-electronics.html', 
+        title='Electronics', 
+        groups=groupsList, 
+        products=productArray, 
+        activeGroupId=groupId, 
+        activeSubGroup=subGroup, 
+        pageCount=pageCount,
+        currentPage=page
+    )
 
 #store - gear
 @app.route('/gear')
 def gear1():
     groupId = request.args.get("gid")
     subGroup = request.args.get("subgroup")
-    return redirect(url_for('gear', gid=groupId, subgroup=subGroup))
+    page     = request.args.get("page")
+    return redirect(url_for('gear', gid=groupId, subgroup=subGroup, page=page))
 @app.route('/store/gear')
 def gear():
-    groupId = request.args.get("gid")
-    subGroup = request.args.get("subgroup")
+    groupId   = request.args.get("gid")
+    subGroup  = request.args.get("subgroup")
+    page      = request.args.get("page")
     if groupId is None:
         groupId='ALL'
     if subGroup is None:
@@ -418,24 +459,37 @@ def gear():
     for x in groups:
         groupsList[x['_id']] = x['store']
     if groupId == 'ALL' and subGroup == 'ALL':
-        products = db.Products.find({"category_type": "GEAR"})
+        products = db.Products.find({"category_type": "GEAR"}).skip((int(page)-1)*8).limit(8)
     else: 
         if groupId != 'ALL' and subGroup == 'ALL':
-            products = db.Products.find({"category": groupId})
+            products = db.Products.find({"category": groupId}).skip((int(page)-1)*8).limit(8)
         else:
-            products = db.Products.find({"category": groupId, "subgroup": subGroup})
-    return render_template('grid-gear.html', title='Gear', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
+            products = db.Products.find({"category": groupId, "subgroup": subGroup}).skip((int(page)-1)*8).limit(8)
+    productArray = list(products)
+    pageCount = math.ceil(products.count()/8)
+    return render_template(
+        'grid-gear.html', 
+        title='Gear', 
+        groups=groupsList, 
+        products=productArray, 
+        activeGroupId=groupId, 
+        activeSubGroup=subGroup, 
+        pageCount=pageCount,
+        currentPage=page
+    )
 
 #store - computers
 @app.route('/computers')
 def computers1():
     groupId = request.args.get("gid")
     subGroup = request.args.get("subgroup")
-    return redirect(url_for('games', gid=groupId, subgroup=subGroup))
+    page     = request.args.get("page")
+    return redirect(url_for('computers', gid=groupId, subgroup=subGroup, page=page))
 @app.route('/store/computers')
 def computers():
-    groupId = request.args.get("gid")
-    subGroup = request.args.get("subgroup")
+    groupId   = request.args.get("gid")
+    subGroup  = request.args.get("subgroup")
+    page      = request.args.get("page")
     if groupId is None:
         groupId='ALL'
     if subGroup is None:
@@ -449,24 +503,37 @@ def computers():
     for x in groups:
         groupsList[x['_id']] = x['store']
     if groupId == 'ALL' and subGroup == 'ALL':
-        products = db.Products.find({"category_type": "COMPUTERS"})
+        products = db.Products.find({"category_type": "COMPUTERS"}).skip((int(page)-1)*8).limit(8)
     else: 
         if groupId != 'ALL' and subGroup == 'ALL':
-            products = db.Products.find({"category": groupId})
+            products = db.Products.find({"category": groupId}).skip((int(page)-1)*8).limit(8)
         else:
-            products = db.Products.find({"category": groupId, "subgroup": subGroup})
-    return render_template('grid-computers.html', title='Computers', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
+            products = db.Products.find({"category": groupId, "subgroup": subGroup}).skip((int(page)-1)*8).limit(8)
+    productArray = list(products)
+    pageCount = math.ceil(products.count()/8)
+    return render_template(
+        'grid-computers.html', 
+        title='Computers', 
+        groups=groupsList, 
+        products=productArray, 
+        activeGroupId=groupId, 
+        activeSubGroup=subGroup, 
+        pageCount=pageCount,
+        currentPage=page
+    )
 
 #store - toys
 @app.route('/toys')
 def toys1():
     groupId = request.args.get("gid")
     subGroup = request.args.get("subgroup")
-    return redirect(url_for('games', gid=groupId, subgroup=subGroup))
+    page     = request.args.get("page")
+    return redirect(url_for('toys', gid=groupId, subgroup=subGroup, page=page))
 @app.route('/store/toys')
 def toys():
-    groupId = request.args.get("gid")
-    subGroup = request.args.get("subgroup")
+    groupId   = request.args.get("gid")
+    subGroup  = request.args.get("subgroup")
+    page      = request.args.get("page")
     if groupId is None:
         groupId='ALL'
     if subGroup is None:
@@ -480,19 +547,37 @@ def toys():
     for x in groups:
         groupsList[x['_id']] = x['store']
     if groupId == 'ALL' and subGroup == 'ALL':
-        products = db.Products.find({"category_type": "TOYS"})
+        products = db.Products.find({"category_type": "TOYS"}).skip((int(page)-1)*8).limit(8)
     else: 
         if groupId != 'ALL' and subGroup == 'ALL':
-            products = db.Products.find({"category": groupId})
+            products = db.Products.find({"category": groupId}).skip((int(page)-1)*8).limit(8)
         else:
-            products = db.Products.find({"category": groupId, "subgroup": subGroup})
-    return render_template('grid-toys.html', title='Toys', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
+            products = db.Products.find({"category": groupId, "subgroup": subGroup}).skip((int(page)-1)*8).limit(8)
+    productArray = list(products)
+    pageCount = math.ceil(products.count()/8)
+    return render_template(
+        'grid-toys.html', 
+        title='Toys', 
+        groups=groupsList, 
+        products=productArray, 
+        activeGroupId=groupId, 
+        activeSubGroup=subGroup, 
+        pageCount=pageCount,
+        currentPage=page
+    )
 
 #store - accessories
-@app.route('/store/accessories')
-def accessories():
+@app.route('/accessories')
+def accessories1():
     groupId = request.args.get("gid")
     subGroup = request.args.get("subgroup")
+    page     = request.args.get("page")
+    return redirect(url_for('accessories', gid=groupId, subgroup=subGroup, page=page))
+@app.route('/store/accessories')
+def accessories():
+    groupId   = request.args.get("gid")
+    subGroup  = request.args.get("subgroup")
+    page      = request.args.get("page")
     if groupId is None:
         groupId='ALL'
     if subGroup is None:
@@ -506,13 +591,24 @@ def accessories():
     for x in groups:
         groupsList[x['_id']] = x['store']
     if groupId == 'ALL' and subGroup == 'ALL':
-        products = db.Products.find({"category_type": "ACCESSORIES"})
+        products = db.Products.find({"category_type": "ACCESSORIES"}).skip((int(page)-1)*8).limit(8)
     else: 
         if groupId != 'ALL' and subGroup == 'ALL':
-            products = db.Products.find({"category": groupId})
+            products = db.Products.find({"category": groupId}).skip((int(page)-1)*8).limit(8)
         else:
-            products = db.Products.find({"category": groupId, "subgroup": subGroup})
-    return render_template('grid-accessories.html', title='Accessories', groups=groupsList, products=list(products), activeGroupId=groupId, activeSubGroup=subGroup)
+            products = db.Products.find({"category": groupId, "subgroup": subGroup}).skip((int(page)-1)*8).limit(8)
+    productArray = list(products)
+    pageCount = math.ceil(products.count()/8)
+    return render_template(
+        'grid-accessories.html', 
+        title='Accessories', 
+        groups=groupsList, 
+        products=productArray, 
+        activeGroupId=groupId, 
+        activeSubGroup=subGroup, 
+        pageCount=pageCount,
+        currentPage=page
+    )
 
 #store
 @app.route('/store')
@@ -1031,48 +1127,85 @@ def billing():
     return render_template('billing.html', title='Billing')
 
 # checkout
-@app.route('/checkout')
+@app.route('/checkout', methods=['GET','POST'])
 @login_required
 def checkout():
-    ordersByProduct = db.Orders.aggregate([
-        { "$match": { "invoice_id": None } },
-        {
-            "$group": 
+    if request.method == 'GET':
+        ordersByProduct = db.Orders.aggregate([
+            { "$match": { "invoice_id": None } },
             {
-                "_id": { 
-                    "product_id": "$product_id",
-                    "product_name": "$product_name"
-                },
-                "price": {
-                    "$sum": { 
-                        "$multiply": [ "$price", "$quantity" ]
-                    } 
-                },
-                "quantity": { 
-                    "$sum": "$quantity"
-                },
-                "count": { "$sum": 1 },
+                "$group": 
+                {
+                    "_id": { 
+                        "product_id": "$product_id",
+                        "product_name": "$product_name"
+                    },
+                    "price": {
+                        "$sum": { 
+                            "$multiply": [ "$price", "$quantity" ]
+                        } 
+                    },
+                    "quantity": { 
+                        "$sum": "$quantity"
+                    },
+                    "count": { "$sum": 1 },
+                }
+            },
+            { "$sort": { "_id": 1} }
+        ])
+        total = db.Orders.aggregate([
+            { "$match": { "invoice_id": None } },
+            {
+                "$group": {
+                    "_id": None,
+                    "price": {
+                        "$sum": {
+                            "$multiply": [ "$price", "$quantity" ]
+                        }
+                    },
+                    "count": { "$sum": 1 },
+                }
             }
-        },
-        { "$sort": { "_id": 1} }
-    ])
-    total = db.Orders.aggregate([
-        { "$match": { "invoice_id": None } },
-        {
-            "$group": {
-                "_id": None,
-                "price": {
-                    "$sum": {
-                        "$multiply": [ "$price", "$quantity" ]
-                    }
-                },
-                "count": { "$sum": 1 },
-            }
-        }
-    ])
-    ordersByProductList = list(ordersByProduct)
-    return render_template('checkout.html', title='Checkout', ordersByProduct=ordersByProductList, total=(list(total))[0])
+        ])
+        ordersByProductList = list(ordersByProduct)
+        return render_template('checkout.html', title='Checkout', ordersByProduct=ordersByProductList, total=(list(total))[0])
+    cartData = request.form.get('cart-data')
 
+    # when carts is empty
+    if cartData == '': 
+        return render_template('checkout.html', title='Checkout', ordersByProduct=[], total={"count": 0, "price": 0})    
+    
+    # when carts has some products
+    cartStrArray = cartData.split(';')
+    ordersByProduct = []
+    total = {"count": 0, "price": 0}
+    for x in cartStrArray:
+        y = x.split(',')
+        product = db.Products.find_one({"id": y[0]})
+        ordersByProduct.append({
+            "_id": { 
+                "product_id": product['id'],
+                "product_name": product['product']
+            },
+            "price": product['price'],
+            "count": int(y[1]),
+            "quantity": int(y[1])
+        })
+        total["count"] += int(y[1])
+        total["price"] += int(y[1])*product['price']
+
+    
+    return render_template('checkout.html', title='Checkout', ordersByProduct=ordersByProduct, total=total)
+
+    # return render_template('checkout.html', title='Checkout', ordersByProduct=[{
+    #     "_id": { 
+    #         "product_id": product['id'],
+    #         "product_name": product['product']
+    #     },
+    #     "price": product['price'],
+    #     "quantity": 1,
+    #     "count": 1,
+    # }], total={"count": 1, "price": product['price']})
 # exports
 @app.route('/files')
 @login_required
