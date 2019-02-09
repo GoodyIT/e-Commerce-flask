@@ -10,8 +10,42 @@ from .inventory import Warehouse
 import json
 import os
 import math
+import random, pandas
+from datetime import datetime
 
 #app = Flask(__name__)
+def _removeNewLine(input):
+    ''' Removes \n from string elements '''
+    if input.endswith('\n'):
+        return input[0:len(input)-1]
+    return input
+
+def _getCity():
+    ''' Returns a City from CSV '''
+    df = pandas.read_csv(os.path.dirname(__file__) + '/../uscities.csv')
+    return df['city'][random.randint(0,len(df['city']))]
+
+def _getState():
+    ''' Returns a City from CSV '''
+    df = pandas.read_csv(os.path.dirname(__file__) + '/../uscities.csv')
+    return df['state_id'][random.randint(0,len(df['state_id']))]
+
+def _getZip():
+    ''' Returns a City from CSV '''
+    df = pandas.read_csv(os.path.dirname(__file__) + '/../uscities.csv')
+    return df['zips'][random.randint(0,len(df['zips']))]
+
+def _street():
+    ''' Generates a address based around called names from streetNames.txt
+    file '''
+    ENDING = ['court', 'street', 'grove', 'avenue', 'place']
+    NUMBER = random.randint(1, 5000)
+    names = None
+
+    with open(os.path.dirname(__file__) + '/../streetNames.txt') as f:
+        names = f.readlines()
+    choice = random.choice(names)
+    return '{} {} {}'.format(str(NUMBER), _removeNewLine(choice), random.choice(ENDING))
 
 def allowed_file(filename):
     ''' method for choosing form file path '''
@@ -1169,8 +1203,11 @@ def checkout():
         ])
         ordersByProductList = list(ordersByProduct)
         return render_template('checkout.html', title='Checkout', ordersByProduct=ordersByProductList, total=(list(total))[0])
+    
+    ######################################
+    ### Adding Cart
+    ######################################
     cartData = request.form.get('cart-data')
-
     # when carts is empty
     if cartData == '': 
         return render_template('checkout.html', title='Checkout', ordersByProduct=[], total={"count": 0, "price": 0})    
@@ -1193,19 +1230,26 @@ def checkout():
         })
         total["count"] += int(y[1])
         total["price"] += int(y[1])*product['price']
-
-    
+        db.Orders.insert_one({
+            'order_id': str(uid()),
+            'player_id': str(uid()),
+            'product_id': product['id'],
+            'product_name': product['product'],
+            'group_id': product['category'],
+            'subgroup': product['subgroup'],
+            'quantity': int(y[1]),
+            'type': 'store',
+            'price': product['price'],
+            'street': _street(),
+            'city' : _getCity(),
+            'state' : _getState(),
+            'zip' : _getZip(),
+            'country': 'US',
+            'ship_id': None,
+            'invoice_id': None,
+            'date': datetime.now()
+        })
     return render_template('checkout.html', title='Checkout', ordersByProduct=ordersByProduct, total=total)
-
-    # return render_template('checkout.html', title='Checkout', ordersByProduct=[{
-    #     "_id": { 
-    #         "product_id": product['id'],
-    #         "product_name": product['product']
-    #     },
-    #     "price": product['price'],
-    #     "quantity": 1,
-    #     "count": 1,
-    # }], total={"count": 1, "price": product['price']})
 # exports
 @app.route('/files')
 @login_required
