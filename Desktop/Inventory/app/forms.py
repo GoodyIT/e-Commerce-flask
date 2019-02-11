@@ -3,6 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, TextAreaField, \
 IntegerField, DateField, SelectField, RadioField, FormField, HiddenField
 from wtforms.validators import DataRequired, ValidationError, EqualTo, Email
+from markupsafe import Markup
 
 def getGroups():
     groups = db.Groups.find()
@@ -91,7 +92,8 @@ class PurchaseForm(FlaskForm):
     item_notes = StringField('Notes')
     terms_notes = StringField('Terms & Conditions')
     orders = StringField()
-    submit = SubmitField('Submit')
+    submit_value = Markup('Submit form <i class="icon-paperplane ml-2"></i>')
+    submit = SubmitField(submit_value)
 
 class LoginForm(FlaskForm):
     ''' Login Form '''

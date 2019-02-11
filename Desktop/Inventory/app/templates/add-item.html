@@ -29,7 +29,14 @@
 
                         </div>
 
-                        <div class="col-md-9">
+                        <div class="col-md-9">                            
+                            <div class="row" style="margin-top:20px;">
+                                <div class="col-lg-10"></div>
+                                <div class="col-lg-2">
+                                    <label for="fileImport" class="btn btn-primary btn-block">Choose file to import</label>                                    
+                                    <input type="file" name="fileImport" id="fileImport" onchange="uploadFileImport('fileImport')" accept=".csv,.xls,.txt"  style="visibility:hidden;">
+                                </div>
+                            </div>
                             <form action="" method="post" enctype="multipart/form-data">
                                 {{ form.hidden_tag() }}
                                 <div class="row" style="margin-top:20px;">

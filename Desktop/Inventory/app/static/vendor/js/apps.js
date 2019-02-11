@@ -30,6 +30,8 @@ $(function() {
     // Tables
     $('#orderTable').DataTable();
     $('#productTable').DataTable();
+    $('#gl_orderTable').DataTable();
+    $('#gl_historyTable').DataTable();
 
     // DATEPICKER on Tables
     $( "#datepick" ).datepicker();
@@ -1246,10 +1248,37 @@ function initDashboard() {
             }
         });
 
+        /// Upload file 
+        uploadFileImport = function(id) {
+            //alert("uploadFileImport - id: "+id);
+            $.ajaxFileUpload({
+                secureuri: false,
+                fileElementId: id,
+                dataType: 'json',
+                data: {
+                    'param1': id,
+                },
+                url: "/importFile", 
+                success: function (data, status)
+                {
+                    //console.log("data: ",data);
+                    if(data.status != 'error')
+                    {
+                        //location.reload();
+                    } else {
+
+                    }
+                },
+                error: function (xhr, status, error) {
+                    //console.log("xhr: ",xhr);                
+
+                }
+            });
+        }
+
         // Analytics by date
         labelArray = [];
         dataArray  = [];
-
         res.analyticsByYearly.forEach(value => {
             labelArray.push(value['_id']['year']);
             dataArray.push(value['quantity']);

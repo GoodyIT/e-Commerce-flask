@@ -10,12 +10,19 @@ from .inventory import Warehouse
 from .zincapi_communication import post_shipping_request, post_cancellation_request
 import os, json
 
+import csv
+import pandas as pd #pip install pandas==0.16.1
+
+curDirPath = os.path.dirname(os.path.realpath(__file__))
+UPLOAD_FOLDER = os.path.join(curDirPath,"uploads")
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 CURRENCIES = [('USD', '$'),('EURO','€'),('POUND', '£')]
 
 BREAD_CRUMB = {'Signup':['Sign Up','signup'], 'Login':['Login','login'],
 'Dashboard':['Dashboard','home'], 'Queue':['Queue','queue'],
 'Reports':['Reports','reports'], 'Products':['Products','products'],
-'Orders':['Orders','orders'], 'Integrations':['Integrations','integrations']}
+'Orders':['Orders','orders'], 'Shipping':['Shipping','Contacts']}
 
 def allowed_file(filename):
     ''' method for choosing form file path '''
@@ -520,7 +527,7 @@ def shipping():
         else:
             current[orders[c]['item_id']] = 1
         c += 1
-    return render_template('shipping.html', title='Shipping', orders=current)
+    return render_template('shipping.html', breadCrumb=BREAD_CRUMB['Shipping'][0], title='Shipping', orders=current)
 
 # Purchase
 @app.route('/purchase/items')
@@ -615,23 +622,20 @@ def groups_add():
         db.Groups.insert_one(new_item)
         flash('New Group Added.')
         return redirect(url_for('groups'))
-    return render_template('groups-add.html', breadCrumb=BREAD_CRUMB['Products'][0],
-    uname=current_user.get_id(), title='Groups', form=form)
+    return render_template('groups-add.html', breadCrumb=BREAD_CRUMB['Products'][0], uname=current_user.get_id(), title='Groups', form=form)
 
 # groups
 @app.route('/groups')
 @login_required
 def groups():
     groups = db.Groups.find()
-    return render_template('groups.html', breadCrumb=BREAD_CRUMB['Products'][0],
-    uname=current_user.get_id(), title='Groups', groups=groups)
+    return render_template('groups.html', breadCrumb=BREAD_CRUMB['Products'][0], uname=current_user.get_id(), title='Groups', groups=groups)
 
 # groups list
 @app.route('/groups/<name>', methods=['GET','POST'])
 @login_required
 def groups_list(name):
     if request.method == 'POST':
-
         update_item = {
             'product' : request.form.get("pname"),
             'sku' : request.form.get("sku"),
@@ -687,8 +691,8 @@ def groups_list(name):
         CURRENCIES=[('USD', '$'),('EURO','€'),('POUND', '£')]
         
     return render_template('groups-list.html', breadCrumb=BREAD_CRUMB['Products'][0],
-    uname=current_user.get_id(), title='Groups List', items=items, cates=cates,
-    vendors=vendors, currs=CURRENCIES, orders=ordrs, history=hists)
+                            uname=current_user.get_id(), title='Groups List', items=items, cates=cates,
+                            vendors=vendors, currs=CURRENCIES, orders=ordrs, history=hists)
 
 @app.route('/getSubgroups', methods=['POST'])
 @login_required
@@ -719,8 +723,8 @@ def getProduct():
         prdt = db.Products.find_one({'id':item['pid']})
 
         return jsonify(id=prdt['id'], product=prdt['product'], sku=prdt['sku'], #'images' : prdt['images'],
-            category=prdt['category'], price=prdt['price'], currency=prdt['currency'],
-            attributes=prdt['attributes'], vendor=prdt['vendor'], url=prdt['url'])
+                        category=prdt['category'], price=prdt['price'], currency=prdt['currency'],
+                        attributes=prdt['attributes'], vendor=prdt['vendor'], url=prdt['url'])
 
 # get orders
 @app.route('/getOrders', methods=['POST'])
@@ -877,6 +881,65 @@ def addItem():
     return render_template('add-item.html', breadCrumb=BREAD_CRUMB['Products'][0],
     uname=current_user.get_id(), title='Add Item', form=form)
 
+@app.route('/importFile', methods=['GET','POST'])
+@login_required
+def importItem():
+    if request.method == 'POST':
+        ### Save uploaded file
+        f = request.files['fileImport']
+        #data_xls = pd.read_excel(f, sheet_name='Sheet1'); for i in data_xls.index:print(data_xls['Product Name'][i])
+        #data_csv = pd.read_csv(f, low_memory=False); print(list(data_csv))
+        filename = secure_filename(f.filename)
+        impfilepath = os.path.join(UPLOAD_FOLDER, filename)
+        f.save(impfilepath)
+
+        ### Read and Save into DB
+        with open(impfilepath, mode='r') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            line_count = 0
+            for row in csv_reader:                
+                if line_count == 0:
+                    print(f'-----> Column names are {", ".join([str(i) for i in row])}')
+                    #line_count += 1; continue
+                print(json.dumps(row,indent=4)) #print(f'\t{row["name"]} works in the {row["department"]} department, and was born in {row["birthday month"]}.')
+                #line_count += 1; continue
+                ## 0-Product Name, 1-SKU, 2-Category, 3-Price, 4-Currency, 5-Attributes, 6-Vendor, 7-URL
+                new_item = {
+                    'id' : str(uid()),
+                    'product' : row['Product Name'],
+                    'sku' : row['SKU'],
+                    #'images' : images,
+                    'category' : row['Category'],
+                    'price' : row['Price'],
+                    'currency' : row['Currency'],
+                    'attributes' : json.loads(row['Attributes'].replace('/',',')),
+                    'vendor' : row['Vendor'],
+                    'url' : row['URL'],
+                }
+                db.Products.insert_one(new_item)
+
+                ###Add History
+                new_hist_item = {
+                    'id' : str(uid()),
+                    'pid' : new_item['id'],
+                    'type' : 'ITEM',
+                    'date' : date.today().strftime('%Y/%m/%d'),
+                    'reason' : "New Item Created",
+                    'adjustments' : new_item['id'],
+                    'description' : "User ID: "+current_user.get_id(),
+                }
+                db.History.insert_one(new_hist_item)
+
+                ###Update Groups inventory count
+                current = db.Groups.find_one({'id': new_item['category']})
+                db.Groups.update_one(current,{"$set":{'total': current['total']+1}})
+
+                line_count += 1
+
+            print(f'Processed {line_count} lines.')        
+
+        return 'file uploaded successfully'
+
 # products
 @app.route('/products', methods=['GET','POST'])
 @login_required
@@ -891,11 +954,11 @@ def products():
         #Add History
         new_hist_item = {
             'id' : str(uid()),
-            'pid' : new_item['id'],
+            'pid' : item['id'],
             'type' : 'ITEM',
             'date' : date.today().strftime('%Y/%m/%d'),
             'reason' : "Item Deleted",
-            'adjustments' : new_item['id'],
+            'adjustments' : item['id'],
             'description' : "User ID: "+current_user.get_id(),
         }
         db.History.insert_one(new_hist_item)
@@ -907,16 +970,47 @@ def products():
         )
         return response
 
+    tblPrdt = []
     table = db.Products.find()
-    return render_template('products.html', breadCrumb=BREAD_CRUMB['Products'][0],
-    uname=current_user.get_id(), title='Products', table=table)
+    for prdt in table:
+        cid = prdt['category']
+        cname = ""
+        grp = db.Groups.find_one({'id':cid})
+        if grp:
+            cname = grp['name']
+        
+        vid = prdt['vendor']
+        vname = ""
+        vdr = db.Vendor.find_one({'id':vid})
+        if vdr:            
+            vname = vdr['name']
+        #print("--- prdt: ",prdt,", cid: ",cid,", cname: ",cname,", vname: ",vname)
+
+        qty = "-"
+        if 'quantity' in prdt:
+            qty = prdt['quantity']
+
+        tblPrdt.append({ #Variable 'table' is just iterator, so it indicates the NULL after finished loop
+            'id': prdt['id'],
+            'product': prdt['product'],
+            'category': cname,
+            'price': prdt['price'],
+            'currency': prdt['currency'],
+            'quantity': qty,
+            'vendor': vname,
+        })
+    '''
+    for prdt in table:
+        print("--- prdt: ",prdt)
+    '''
+
+    return render_template('products.html', breadCrumb=BREAD_CRUMB['Products'][0], uname=current_user.get_id(), title='Products', table=tblPrdt)
 
 # inventory - product orders
 @app.route('/reports/activity-mail')
 @login_required
 def activity_mail():
-    return render_template('activity-mail.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Activity Mail')
+    return render_template('activity-mail.html', breadCrumb=BREAD_CRUMB['Reports'][0], uname=current_user.get_id(), title='Activity Mail')
 
 # inventory - product orders
 @app.route('/reports/activity-log')
@@ -1147,7 +1241,7 @@ def files():
 @app.route('/contacts')
 @login_required
 def contacts():
-    return render_template('contacts.html', breadCrumb=BREAD_CRUMB['Integrations'][0],
+    return render_template('contacts.html', breadCrumb=BREAD_CRUMB['Shipping'][0],
     uname=current_user.get_id(), title='Contacts')
 
 # Orders
@@ -1167,9 +1261,32 @@ def orders():
         )
         return response
 
+    tblOrdrs = []
     table = db.Orders.find()
-    return render_template('orders.html', breadCrumb=BREAD_CRUMB['Orders'][0],
-    uname=current_user.get_id(), title='Queue', table=table)
+    for ordr in table:
+        uid = ordr['player_id']
+        pname = ""
+        plyr = db.Users.find_one({'uid':uid})
+        if plyr:
+            pname = plyr['name']
+        
+        iid = ordr['item_id']
+        iname = ""
+        itm = db.Products.find_one({'id':iid})
+        if itm:            
+            iname = itm['product']
+        #print("--- prdt: ",prdt,", cid: ",cid,", cname: ",cname,", vname: ",vname)
+
+        tblOrdrs.append({ #Variable 'table' is just iterator, so it indicates the NULL after finished loop
+            'order_id': ordr['order_id'],
+            'player': pname,
+            'item': iname,
+            'quantity': ordr['quantity'],
+            'type': ordr['type'],
+            'price': ordr['price']
+        })
+
+    return render_template('orders.html', breadCrumb=BREAD_CRUMB['Orders'][0], uname=current_user.get_id(), title='Queue', table=tblOrdrs)
 
 # Queue
 @app.route('/queue', methods=['GET','POST'])
@@ -1188,7 +1305,7 @@ def queue():
 
     queue = db.Queue.find()
     return render_template('queue.html', breadCrumb=BREAD_CRUMB['Queue'][0],
-    uname=current_user.get_id(), title='Queue', queue=queue)
+    uname=current_user.get_id(), title='Queue', queue=queue, qlen=queue.count())
 
 # signup page
 @app.route('/signup', methods=['GET', 'POST'])
