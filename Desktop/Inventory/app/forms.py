@@ -21,8 +21,9 @@ def getSubgroups():
     size = groups.count() - 1
     choices = []
     while size >= 0:
-        for subgroup in groups[size]['sub_group']:
-            choices.append((subgroup, subgroup))
+        if 'sub_group' in groups[size]:
+            for subgroup in groups[size]['sub_group']:
+                choices.append((subgroup, subgroup))
         size -= 1
     return choices
 def getVendor():

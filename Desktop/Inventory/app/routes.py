@@ -104,7 +104,8 @@ def get_analytics():
             {
                 "$group":
                 {
-                    "_id": { "year": { "$year": "$date" } },
+                    #"_id": { "year": { "$year": "$date" } },
+                    "_id": { "year": { "$substr": ["$date", 0, 4] } },
                     "price": {
                         "$sum": {
                             "$multiply": [ "$price", "$quantity" ]
@@ -147,7 +148,8 @@ def get_analytics():
 
         analyticsByGroupArray = []
         for x in analyticsByGroup:
-            analyticsByGroupArray.append({'group': x['group'][0]['name'], 'quantity': x['quantity']})
+            if len(x['group']) > 0:
+                analyticsByGroupArray.append({'group': x['group'][0]['name'], 'quantity': x['quantity']})
         totalQuantityAndCost = db.Orders.aggregate([
             {
                 "$group": {

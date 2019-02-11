@@ -15,8 +15,6 @@
     <link href="../static/vendor/font-awesome/5.1/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="../static/vendor/css/style.css" rel="stylesheet" type="text/css">
     <link href="../static/vendor/font-awesome/5.1/css/font-awesome.css" rel="stylesheet" type="text/css">
-    <link href="../static/css/style.css" rel="stylesheet" type="text/css">
-
     <link href="../static/vendor/css/tagsinput.css" rel="stylesheet" type="text/css">
 
 	<!-- Global stylesheets -->
@@ -28,28 +26,6 @@
 	<link href="../static/assets/css/components.min.css" rel="stylesheet" type="text/css">
 	<link href="../static/assets/css/colors.min.css" rel="stylesheet" type="text/css">
 	<!-- /global stylesheets -->
-
-	<!-- Core JS files -->
-	<!--<script src="../static/global_assets/js/main/jquery.min.js"></script>-->
-	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<script src="../static/vendor/pagination/jquery.paginate.js"></script>
-	<script src="../static/global_assets/js/main/bootstrap.bundle.min.js"></script>
-	<script src="../static/global_assets/js/plugins/loaders/blockui.min.js"></script>
-	<script src="../static/global_assets/js/plugins/ui/slinky.min.js"></script>
-	<!-- /core JS files -->
-
-	<!-- Theme JS files -->
-	<script src="../static/global_assets/js/plugins/visualization/d3/d3.min.js"></script>
-	<script src="../static/global_assets/js/plugins/visualization/d3/d3_tooltip.js"></script>
-	<script src="../static/global_assets/js/plugins/forms/styling/switchery.min.js"></script>
-	<script src="../static/global_assets/js/plugins/forms/selects/bootstrap_multiselect.js"></script>
-	<script src="../static/global_assets/js/plugins/ui/moment/moment.min.js"></script>
-	<script src="../static/global_assets/js/plugins/pickers/daterangepicker.js"></script>
-
-	<script src="../static/assets/js/app.js"></script>
-	<script src="../static/global_assets/js/demo_pages/dashboard.js"></script>
-	<!-- /theme JS files -->
 
     <!-- Title Page -->
     {% if title %}
@@ -293,7 +269,14 @@
 			</ul>
 
 			<!-- Core JS files -->
+			<!-- <script src="../static/global_assets/js/main/jquery.min.js"></script> -->
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
+			<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+			<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+			<script src="../static/vendor/pagination/jquery.paginate.js"></script>
+			<script src="../static/global_assets/js/main/bootstrap.bundle.min.js"></script>
+			<script src="../static/global_assets/js/plugins/loaders/blockui.min.js"></script>
+			<script src="../static/global_assets/js/plugins/ui/slinky.min.js"></script>
 			<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
             <script src="https://apis.google.com/js/platform.js" async defer></script>
             <script src="../static/vendor/jquery-easing/jquery.easing.js"></script>
@@ -301,7 +284,7 @@
             <script src="../static/vendor/bootstrap/js/bootstrap.js"></script>
             <script src="https://unpkg.com/jspdf"></script>
             <script src="https://unpkg.com/jspdf-autotable"></script>
-            <script src="../static/vendor/js/apps.js"></script>
+            
             <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 			<script src="https://fastcdn.org/FileSaver.js/1.1.20151003/FileSaver.min.js"></script>
 			<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
@@ -309,6 +292,21 @@
             <script src="../static/vendor/js/tagsinput.js"></script>
 			<!-- /core JS files -->
 
+			<!-- Theme JS files -->
+			<script src="../static/global_assets/js/plugins/visualization/d3/d3.min.js"></script>
+			<script src="../static/global_assets/js/plugins/visualization/d3/d3_tooltip.js"></script>
+			<script src="../static/global_assets/js/plugins/forms/styling/switchery.min.js"></script>
+			<script src="../static/global_assets/js/plugins/forms/selects/bootstrap_multiselect.js"></script>
+			<script src="../static/global_assets/js/plugins/ui/moment/moment.min.js"></script>
+			<script src="../static/global_assets/js/plugins/pickers/daterangepicker.js"></script>
+
+			<script src="../static/assets/js/app.js"></script>
+			<script src="../static/global_assets/js/demo_pages/dashboard.js"></script>
+			<!-- /theme JS files -->
+
+			<script src="../static/vendor/js/apps.js"></script>
+            
+            
             <script src="../static/vendor/js/ajaxfileUpload.js"></script>
 		</div>
 	</div>
