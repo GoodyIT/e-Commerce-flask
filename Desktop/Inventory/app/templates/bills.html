@@ -2,137 +2,135 @@
 
 {% block body %}
 
-<div class="row col-lg-12" style="color: #808080; padding: 20px;">
-    <div style="width: 350px; position: absolute; z-index: 99; top: 60px; left: 30px;">
-        <form action="{{ url_for('uploadLogo') }}" method="post" class="dropzone" id="frm-drop-zone-logo" enctype="multipart/form-data">
+    <div class="row">
+    
+            <!-- Horizontal form -->
+            <div class="card border-dark">
+                <div class="card-header bg-dark text-white header-elements-inline">
+                    <h5 class="card-title">Invoice</h5>
+                    <div class="header-elements">
+							<button type="button" id="export_to_pdf" class="btn bg-teal-400 btn-labeled btn-labeled-left mr-2"><b><i class="icon-share2"></i></b>Export To PDF</button>
+							<button type="button" id="export_to_excel" class="btn bg-teal-400 btn-labeled btn-labeled-left mr-2"><b><i class="icon-share2"></i></b>Export To Excel</button>
+							<button type="button" id="export_to_csv" class="btn bg-teal-400 btn-labeled btn-labeled-left mr-2"><b><i class="icon-share2"></i></b>Export To CSV</button>
+	                </div>
+                </div>
+                <div class="card-body">
+					<div class="row">
+						<div style="width: 350px; position: absolute; z-index: 99; top: 60px; left: 30px;">
+							<form action="{{ url_for('uploadLogo') }}" method="post" class="dropzone" id="frm-drop-zone-logo" enctype="multipart/form-data">
+						</div>
+					</div>
+                    <form action="" method="post">						
+                        {{ form.hidden_tag() }}
+						<input type="hidden" id="logo_file" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <fieldset>
+                                    <!--<legend class="font-weight-semibold"><i class="icon-reading mr-2"></i> Personal details</legend>-->
+                                    <div class="form-group row ml-3">
+                                        <label>Date:</label>
+                                        <input type="text" class="form-control" id="bills_datepick" name="currentDate" size="30">
+                                    </div>
+
+                                    <div class="form-group row ml-3">
+                                        <label>Payment Terms:</label>
+                                        <input type="text" class="form-control" id="bills_deliverypick" name="deliveryDate" size="30">
+                                    </div>
+                                    <legend class="font-weight-semibold"><i class="icon-reading mr-2"></i> Balance : <span id="bills_balance">$0.00</span></legend>    
+
+                                    <div class="form-group row mt-5 ml-3">
+                                        <div class="col-lg-12">
+											<table class ="table" id="bills_tbPurchase" style="border: none;">
+												<thead style="border: none;">
+													<tr style="color: white; border: none;">
+														<th style="background-color: #353940;">Item Details</th>
+														<th style="background-color: #353940;">League</th>
+														<th style="background-color: #353940;">Quantity</th>
+														<th style="background-color: #353940;">Rate</th>
+														<th style="background-color: #353940;">Tax</th>
+														<th style="background-color: #353940;">Amount</th>
+														<th style="width: 100px; border: none;"></th>
+													</tr>
+												</thead>
+												<tbody id="bills_purchase-tbody" style="border: none;">
+													<tr style="border: none;">
+														<td style="padding: 0;"><input type="text" id="bills_item_details" placeholder="Lego Set XR" style="width: 100%;"></td>
+														<td style="padding: 0;"><input type="text" id="bills_league" placeholder="Silver +" style="width: 100%;"></td>
+														<td style="padding: 0;"><input type="number" id="bills_quantity" placeholder="1" style="width: 100%;"></td>
+														<td style="padding: 0;"><input type="number" id="bills_rate" placeholder="1.00" style="width: 100%;"></td>
+														<td style="padding: 0;"><input type="number" id="bills_tax" placeholder="1%" style="width: 100%;"></td>
+														<td style="padding: 0;"><input type="number" id="bills_amount" placeholder="$7.25" style="width: 100%;"></td>
+														<td style="padding: 0; border: none;"></td>
+													</tr>
+												</tbody>
+											</table>
+											<button type="button" class="btn btn-primary btn-labeled btn-labeled-left rounded-round" id="bills_add_row"><b><i class="icon-plus-circle2"></i></b>Add</button>	
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+
+                            <div class="col-md-3">
+                                <fieldset>
+                                    <legend class="font-weight-semibold"><i class="icon-truck mr-2"></i> Total due</legend>
+                                    <div class="form-group row">
+                                        <div class="pt-2 mb-3 wmin-md-400 ml-auto">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Discount:</th>
+                                                            <td class="text-right"><input type="text" id="bills_item_discount" name="item_discount" placeholder="$0.00"></input></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Subtotal:</th>
+                                                            <td class="text-right"><h5 id="bills_tbTotal" style="font-weight: 400;">0.00</h5></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Discount:</th>
+                                                            <td class="text-right"><h5 id="bills_tbDiscount" style="font-weight: 400;">0.00</h5></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Total:</th>
+                                                            <td class="text-right text-primary"><h5 id="bills_tbFinal" class="font-weight-semibold">$0.00</h5></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 offset-md-3">
+                            <div class="form-group">
+                                <label>Notes:</label>
+                                <textarea rows="5" cols="5" class="form-control" id="bills_notes" name="item_notes" placeholder="Enter your notes here"></textarea>                                               
+                            </div>
+                            <div class="form-group">
+                                <label>Terms & Conditions:</label>
+                                <textarea rows="5" cols="5" class="form-control" id="bills_terms" name="terms_notes" placeholder=""></textarea>  
+                            </div>
+
+                            <div class="text-right form-group">
+                                <button type="submit" id="submit" class="btn btn-primary btn-labeled btn-labeled-left"><b><i class="icon-paperplane"></i></b>Submit Invoice</button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <!-- /horizotal form -->
+
+        </div>
+
     </div>
-    <form action="" method="post">
-        <input type="hidden" id="logo_file" />
-        <div class="col-lg-12">
-            <div class="col-lg-8">
-                
-            </div>
-            <div class="col-lg-4" style="padding-left: 0px;">
-                <div class="row" style="margin-top: 20px;">
-                    <label for="datepick" style="font-weight: 400;">Date</label>
-                    <input type="text" class="form-control" id="bills_datepick" name="currentDate" size="30">
-                </div>
-                <div class="row" style="margin-top: 20px;">
-                    <label for="deliveryDate" style="font-weight: 400;">Payment Terms</label>
-                    <input type="text" class="form-control" id="bills_deliverypick" name="deliveryDate" size="30">
-                </div>
-                <div class="row" style="margin-top: 20px; margin-bottom: 20px; font-weight: 500; padding-left: 20px; background-color: #f5f5f5;">
-                    <h4>Balance : <span id="bills_balance">$0.00</span></h4>
-                </div>
-            </div>
-        </div>
-        <hr>
-        <div class="row">
-            <div class="col-lg-12">
-                <table class ="table" id="bills_tbPurchase" style="border: none;">
-                    <thead style="border: none;">
-                        <tr style="color: white; border: none;">
-                            <th style="background-color: #353940;">Item Details</th>
-                            <th style="background-color: #353940;">League</th>
-                            <th style="background-color: #353940;">Quantity</th>
-                            <th style="background-color: #353940;">Rate</th>
-                            <th style="background-color: #353940;">Tax</th>
-                            <th style="background-color: #353940;">Amount</th>
-                            <th style="width: 100px; border: none;"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="bills_purchase-tbody" style="border: none;">
-                        <tr style="border: none;">
-                            <td style="padding: 0;"><input type="text" id="bills_item_details" placeholder="Lego Set XR" style="width: 100%;"></td>
-                            <td style="padding: 0;"><input type="text" id="bills_league" placeholder="Silver +" style="width: 100%;"></td>
-                            <td style="padding: 0;"><input type="number" id="bills_quantity" placeholder="1" style="width: 100%;"></td>
-                            <td style="padding: 0;"><input type="number" id="bills_rate" placeholder="1.00" style="width: 100%;"></td>
-                            <td style="padding: 0;"><input type="number" id="bills_tax" placeholder="1%" style="width: 100%;"></td>
-                            <td style="padding: 0;"><input type="number" id="bills_amount" placeholder="$7.25" style="width: 100%;"></td>
-                            <td style="padding: 0; border: none;"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button type="button" class="btn btn-primary" id="bills_add_row">&nbsp;+ Add more item&nbsp;</button>
-            </div>
-        </div> <!-- end row -->
-        <div class="row">
-            <div class="col-lg-8"></div>
-            <div class="col-lg-4">
-                <div class="row" style="margin-top: 20px;">
-                    <label for="deliveryDate" style="font-weight: 400;">Discount</label>
-                    <input type="text" class="form-control" id="bills_item_discount" name="item_discount" size="30" placeholder="$0.00" value="0"/>
-                </div>
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-lg-8"></div>
-            <div class="col-lg-4">
-                <div class="col-lg-6" style="padding: 0px;">
-                    <h5 style="font-weight: 400;">Sub Total</h5>
-                </div>
-                <div class="col-lg-6">  
-                    <h5 id="bills_tbTotal" style="font-weight: 400;">0.00</h5>
-                </div>
-            </div>
-        </div> <!-- end row -->
-        <div class="row">
-            <div class="col-lg-8"></div>
-            <div class="col-lg-4">
-                <div class="col-lg-6" style="padding: 0px;">
-                    <h5 style="font-weight: 400;">Discount</h5>
-                </div>
-                <div class="col-lg-6">
-                    <h5 id="bills_tbDiscount" style="font-weight: 400;">0.00</h5>
-                </div>
-            </div>
-        </div> <!-- end row -->
-        <div class="row">
-            <div class="col-lg-8"></div>
-            <div class="col-lg-4">
-                <div class="col-lg-6" style="border-top: solid 1px #353940;">
-                    <h5><b>Total</b></h5>
-                </div>
-                <div class="col-lg-6" style="border-top: solid 1px #353940;">
-                    <h5 id="bills_tbFinal">0.00</h5>
-                </div>
-            </div>
-        </div> <!-- end row -->
-        <div class="row" style="margin-top: 50px;">
-            <div class="col-lg-12">
-                <h5>Notes</h5>
-                <textarea id="bills_notes" class="form-control" 
-                name="item_notes" rows="5"></textarea>
-            </div>
-        </div>
-        <div class="row" style="margin-top: 25px;">
-            <div class="col-lg-12">
-                <h5>Terms & Conditions</h5>
-                <textarea class="form-control" id="bills_terms"
-                name="terms_notes" rows="5"></textarea>
-            </div>
-        </div>
-        <div class="row" style="margin-top:20px; padding-top: 30px; padding-bottom: 30px; background-color: #f5f5f5;">
-            <div class="col-lg-4"></div>
-            <div class="col-lg-2">
-                <input type="button" class="btn btn-primary pull-right" id="bills_export_to_pdf"
-                style="" value="Export To PDF">
-            </div>
-            <div class="col-lg-2">
-                <input type="button" class="btn btn-primary pull-right" id="bills_export_to_excel"
-                style="" value="Export To Excel">
-            </div>
-            <div class="col-lg-2">
-                <input type="button" class="btn btn-primary pull-right" id="bills_export_to_csv"
-                style="" value="Export To CSV">
-            </div>
-            <div class="col-lg-2">
-                <input type="button" class="btn btn-primary pull-right" id="submit"
-                style="" value="Submit Invoice">
-            </div>
-        </div>
-    </form>
-</div> <!-- end row -->
+
+
+
 
 {% endblock %}

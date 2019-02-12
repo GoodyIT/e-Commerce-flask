@@ -2,55 +2,58 @@
 
 {% block body %}
 
-<div class="row">
-    <div class="col-lg-12 col-md-12">
-        <div class="card">
-            <div class="card-body" style="height:800px">
-                <div class="d-flex m-b-10 no-block">
-                    <div class="row" style="height: 100px;">
-                        <div class="col-lg-10">
-                            <h2>Groups</h2>
-                        </div>
-                        <div class="col-lg-2" style="margin-top: 10px;">
-                              <a href="{{url_for('groups_add')}}" class="btn waves-effect waves-light btn-rounded btn-primary" style="float: right;">Add Group</a>
+    <div class="row">
+        <div class="col-xl-12">
+
+            <!-- Traffic sources -->
+            <div class="card border-dark">
+                <div class="card-header bg-dark text-white header-elements-inline">
+                    <h6 class="card-title">Groups</h6>
+                    <div class="header-elements">
+                        <div class="form-check form-check-right form-check-switchery form-check-switchery-sm">
+                            <a href="{{url_for('groups_add')}}" class="btn bg-teal-400 btn-labeled btn-labeled-left rounded-round" style="float: right;"><b><i class="icon-plus-circle2"></i></b>Add Group</a>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-2">
-                            <h4>Groups</h4>
-                        </div>
-                        <div class="col-lg-10"></div>
-                    </div>
-                    <div class="row report-block" style="background-color:#eeeeee">
-                        <div class="col-lg-2"><p>ID</p></div>
-                        <div class="col-lg-2"><p>ITEM NAME</p></div>
-                        <div class="col-lg-2"><p>CATEGORY TYPE</p></div>
-                        <div class="col-lg-4"></div>
-                        <div class="col-lg-1"><h8>TOTAL ITEMS</h8></div>
-                        <div class="col-lg-1"></div>
-                    </div>
-                    {% for item in groups %}
-                    <div class="row">
-                        <div class="col-lg-2">
-                            <p>{{item.id}}</p>
-                        </div>
-                        <div class="col-lg-2">
-                            <a href="{{url_for('groups_list', name=item.name)}}">{{item.name}}</a>
-                        </div>
-                        <div class="col-lg-2">
-                            <h5 class="grp-list">{{item.type}}</h5>
-                        </div>
-                        <div class="col-lg-4"></div>
-                        <div class="col-lg-1">
-                            <h5>{{item.total}}</h5>
-                        </div>
-                        <div class="col-lg-1"></div>
-                    </div> <!-- end row -->
-                    {% endfor %}
+
                 </div>
+
+                <div class="card-body py-0">
+
+                    <table class="table text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>ITEM NAME</th>
+                                <th>CATEGORY TYPE</th>
+                                <th>TOTAL ITEMS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in groups %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge badge-mark border-success mr-1"></span>
+                                        <a href="#" class="text-default font-weight-semibold">{{item.id}}</a>
+                                    </div>
+                                </td>
+                                <td><a href="{{url_for('groups_list', name=item.name)}}"><span class="text-success-600">{{item.name}}</span></a></td>
+                                <td><span class="badge bg-danger">{{item.type}}</span></td>
+                                <td><h6 class="font-weight-semibold mb-0">{{item.total}}</h6></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+
             </div>
+            <!-- /traffic sources -->
+
         </div>
+
     </div>
-</div>
+
+
 
 {% endblock %}

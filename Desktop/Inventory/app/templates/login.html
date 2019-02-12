@@ -1,25 +1,57 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<h2>Login</h2>
-<form action="" method="post">
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.username.label }}<br>
-        {{ form.username(size=32) }}<br>
-        {% for error in form.username.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.pw.label }}<br>
-        {{ form.pw(size=32) }}<br>
-        {% for error in form.pw.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    <p>{{ form.submit() }}</p>
-    <p><a href="{{ url_for('signup') }}">Click to Register!</a>
-    </p>
-</form>
+
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+
+        <div class="col-md-6">
+
+            <!-- Horizontal form -->
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title">Login</h5>
+                    <div class="header-elements">
+                        <div class="list-icons">
+                            <a class="list-icons-item" data-action="collapse"></a>
+                            <a class="list-icons-item" data-action="reload"></a>
+                            <a class="list-icons-item" data-action="remove"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <form action="" method="post">
+                        {{ form.hidden_tag() }}
+                        <p>
+                            {{ form.username.label }}<br>
+                            {{ form.username(size=32) }}<br>
+                            {% for error in form.username.errors %}
+                                <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </p>
+                        <p>
+                            {{ form.pw.label }}<br>
+                            {{ form.pw(size=32) }}<br>
+                            {% for error in form.pw.errors %}
+                                <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </p>
+                        <p>{{ form.submit() }}</p>
+                        <p><a href="{{ url_for('signup') }}">Click to Register!</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+            <!-- /horizotal form -->
+
+        </div>
+
+        <div class="col-md-6">
+        </div>
+    </div>
+
+
+
 {% endblock %}

@@ -2,32 +2,66 @@
 
 {% block body %}
 
-<div class="col-lg-12">
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <div class="row" style="margin-top: 30px">
-            <div class="col-lg-4">
-                <label for="vendor">Vendor Name</label>
-                <input type="text" class="form-control" id="vendor" name="vendor" placeholder="Amazon">
-                {% for error in form.vendor.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <!-- Horizontal form -->
+            <div class="card border-dark">
+                <div class="card-header bg-dark text-white header-elements-inline">
+                    <h5 class="card-title">Add Vendor</h5>
+                    <div class="header-elements">
+                        <div class="list-icons">
+                            <a class="list-icons-item" data-action="collapse"></a>
+                            <a class="list-icons-item" data-action="reload"></a>
+                            <a class="list-icons-item" data-action="remove"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="col-lg-12">
+                        <form action="" method="post">
+                            {{ form.hidden_tag() }}
+                            <div class="row" style="margin-top: 30px">
+                                <div class="col-lg-4">
+                                    <label for="vendor">Vendor Name</label>
+                                    <input type="text" class="form-control" id="vendor" name="vendor" placeholder="Amazon">
+                                    {% for error in form.vendor.errors %}
+                                        <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-lg-8">
+                                    <label for="url">URL</label>
+                                    <input type="text" class="form-control" id="url" name="url" placeholder="www.amazon.com">
+                                    {% for error in form.url.errors %}
+                                        <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 30px; margin-bottom: 30px;">
+                                <div class="col-lg-10"></div>
+                                <div class="col-lg-2">
+                                    <button type="submit" class="btn bg-teal-400 btn-labeled btn-labeled-left rounded-round"><b><i class="icon-plus-circle2"></i></b>Add Vendor</button>
+                                    <!--{{form.submit()}}-->
+                                </div>
+                            </div> <!-- END ROW -->
+                        </form> <!-- END FORM -->
+                    </div>
+
+
+                </div>
             </div>
-            <div class="col-lg-8">
-                <label for="url">URL</label>
-                <input type="text" class="form-control" id="url" name="url" placeholder="www.amazon.com">
-                {% for error in form.url.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </div>
+            <!-- /horizotal form -->
+
         </div>
-        <div class="row" style="margin-top: 30px; margin-bottom: 30px;">
-            <div class="col-lg-10"></div>
-            <div class="col-lg-2">
-                {{form.submit()}}
-            </div>
-        </div> <!-- END ROW -->
-    </form> <!-- END FORM -->
-</div>
+
+    </div>
+
+
+
+
+
 
 {% endblock %}

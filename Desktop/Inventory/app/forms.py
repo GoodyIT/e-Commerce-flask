@@ -3,6 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, TextAreaField, \
 IntegerField, DateField, SelectField, RadioField, FormField, HiddenField
 from wtforms.validators import DataRequired, ValidationError, EqualTo, Email
+from markupsafe import Markup
 
 def getGroups():
     groups = db.Groups.find()
@@ -20,8 +21,9 @@ def getSubgroups():
     size = groups.count() - 1
     choices = []
     while size >= 0:
-        for subgroup in groups[size]['sub_group']:
-            choices.append((subgroup, subgroup))
+        if 'sub_group' in groups[size]:
+            for subgroup in groups[size]['sub_group']:
+                choices.append((subgroup, subgroup))
         size -= 1
     return choices
 def getVendor():
@@ -66,6 +68,11 @@ class GroupForm(FlaskForm):
     brand = StringField('Manufacturer')
     submit = SubmitField('Add Group')
 
+class CategoryForm(FlaskForm):
+    ''' Category Add Form '''
+    name = StringField('Category Name')
+    submit = SubmitField('Add Group')
+
 class UpperForm(FlaskForm):
     ''' Group Form '''
     vendor = SelectField('Category', choices=[('Choice1', 'First'),('Choice2','Second'),('Choice3', 'Third')])
@@ -86,7 +93,8 @@ class PurchaseForm(FlaskForm):
     item_notes = StringField('Notes')
     terms_notes = StringField('Terms & Conditions')
     orders = StringField()
-    submit = SubmitField('Submit')
+    submit_value = Markup('Submit form <i class="icon-paperplane ml-2"></i>')
+    submit = SubmitField(submit_value)
 
 class LoginForm(FlaskForm):
     ''' Login Form '''

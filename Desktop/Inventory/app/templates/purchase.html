@@ -2,208 +2,180 @@
 
 {% block body %}
 
-<div class="row col-lg-12">
-    <h2>Purchase Order</h2>
-</div>
-<div class="row col-lg-12">
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <div class="vendor-block" style="margin-bottom: 10px; height: 100px">
-            <div class="col-lg-2" style="text-align: center;">
-                <h5 style="color: red;">Vendor Name</h5>
-            </div>
-            <div class="col-lg-5" style="padding:0;">
-                <!-- <select name="vendor" class="form-control form-control-lg" id="vendor">
-                    <option value={{form.vendor}}></option>
-                </select> -->
-                {{form.vendor(class_="form-control form-control-lg")}}
-            </div>
-            <div class="col-lg-5">
-            </div>
-        </div> <!-- end vendor-block -->
-        <div class="row">
-            <div class="col-lg-2" style="text-align: center;">
-                <h5 style="color: red;">Deliver To</h5>
-            </div>
-            <div class="col-lg-5">
-                <div class="row" style="margin-bottom: 15px; margin-top: 15px;">
-                    <div class="col-lg-12 radio-inline" style="margin:0; padding:0">
-                        {{form.delivery}}
-                    </div>
-                </div> <!-- end row -->
-                <p>Johnathan Stevens</p>
-                <p>Eloraus, LLC</p>
-                <p>5988 Chesbro Ave</p>
-                <p>San Jose, CA 95123</p>
-            </div>
-            <div class="col-lg-5"></div>
-        </div>
-        <hr>
-        <div class="row" style="margin-bottom: 30px">
-            <div class="col-lg-2">
-                <h5 style="color: red;">Purchase Order #</h5>
-            </div>
-            <div class="col-lg-5">
-                <input type="text" class="form-control" id="purchase" name="purchase" placeholder="PO-23942032342">
-                {% for error in form.purchase.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </div>
-            <div class="col-lg-5">
-            </div>
-        </div>
-        <div class="row" style="margin-bottom: 30px">
-            <div class="col-lg-2">
-                <h5 style="color: red;">Reference Order #</h5>
-            </div>
-            <div class="col-lg-5">
-                <input type="text" class="form-control" id="reference" name="reference" placeholder="aXl9023-x23ak22-32qaL3">
-                {% for error in form.reference.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </div>
-            <div class="col-lg-5">
-            </div>
-        </div>
-        <div class="row" style="margin-bottom: 30px">
-            <div class="col-lg-2">
-                <h5 style="color: red;">Current Date</h5>
-            </div>
-            <div class="col-lg-3">
-                <input type="text" class="form-control" id="datepick" name="current_date" size="30">
-                {% for error in form.current_date.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </div>
-            <div class="col-lg-2">
-                <h5 style="color: red;">Delivery Date</h5>
-            </div>
-            <div class="col-lg-3">
-                <input type="text" class="form-control" id="deliverypick" name="delivery_date" size="30">
-                {% for error in form.delivery_date.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </div>
-            <div class="col-lg-2">
-            </div>
-        </div>
-        <hr>
-        <div class="row">
-            <div class="col-lg-12">
-                <table class ="table table-bordered" style="padding:10px;" id="tbPurchase">
-                    <thead>
-                        <tr>
-                            <th>Item Details</th>
-                            <th>League</th>
-                            <th>Quantity</th>
-                            <th>Rate</th>
-                            <th>Tax</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody id="purchase-tbody">
-                        <tr>
-                            <td><input type="text" id="item_details" placeholder="Lego Set XR"></td>
-                            <td><input type="text" id="league" placeholder="Silver +"></td>
-                            <td><input type="number" id="quantity" placeholder="1"></td>
-                            <td><input type="number" id="rate" placeholder="1.00"></td>
-                            <td><input type="number" id="tax" placeholder="1%"></td>
-                            <td><input type="number" id="amount" placeholder="$7.25"></td>
-                            <td><button type="button" class="btn btn-primary add-row">Add</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <input type="text" id="orders" name="orders" hidden/>
-        </div> <!-- end row -->
-        <div class="row">
-            <div class="col-lg-4"></div>
-            <div class="col-lg-6">
-                <div class="col-lg-4">
-                    <h5>Sub Total</h5>
-                </div>
-                <div class="col-lg-6">
-                </div>
-                <div class="col-lg-2">
-                    <h5 id="tbTotal">0.00</h5>
-                </div>
-            </div>
-            <div class="col-lg-2"></div>
-        </div> <!-- end row -->
-        <div class="row">
-            <div class="col-lg-4"></div>
-            <div class="col-lg-6">
-                <div class="col-lg-4">
-                    <h5>Discount</h5>
-                </div>
-                <div class="col-lg-6">
-                    <input type="text" id="item_discount" name="discount" placeholder="$0.00"></input>
-                </div>
-                <div class="col-lg-2">
-                    <h5 id="tbDiscount">0.00</h5>
-                </div>
-            </div>
-            <div class="col-lg-2"></div>
-        </div> <!-- end row -->
-        <div class="row">
-            <div class="col-lg-4"></div>
-            <div class="col-lg-6">
-                <div class="col-lg-4">
-                    <h5><b>Total</b></h5>
-                </div>
-                <div class="col-lg-6">
-                </div>
-                <div class="col-lg-2">
-                    <h5 id="tbFinal">0.00</h5>
-                </div>
-            </div>
-            <div class="col-lg-2"></div>
-        </div> <!-- end row -->
-        <div class="row" style="margin-top: 50px;">
-            <div class="col-lg-4"></div>
-            <div class="col-lg-6">
-                <h5 style="">Notes</h5>
-                <input type="text" class="form-control" id="notes"
-                name="item_notes" style="height: 100px">
-            </div>
-            <div class="col-lg-2"></div>
-        </div>
-        <div class="row" style="margin-top: 25px;">
-            <div class="col-lg-4"></div>
-            <div class="col-lg-6">
-                <h5 style="">Terms & Conditions</h5>
-                <input type="text" class="form-control" id="terms"
-                name="terms_notes" style="height: 100px">
-            </div>
-            <div class="col-lg-2"></div>
-        </div>
-        <div class="row" style="margin-top:20px; padding-bottom: 10px;">
-            <div class="col-lg-4"></div>
+    <div class="row">
+        <div class="col-md-12">
 
-            <div class="col-lg-2">
-                <input type="button" class="btn btn-primary pull-right" id="export_to_pdf"
-                style="" value="Export To PDF">
-            </div>
-            <div class="col-lg-2">
-                <input type="button" class="btn btn-primary pull-right" id="export_to_excel"
-                style="" value="Export To Excel">
-            </div>
-            <div class="col-lg-2">
-                <input type="button" class="btn btn-primary pull-right" id="export_to_csv"
-                style="" value="Export To CSV">
-            </div>
-            <div class="col-lg-2"></div>
-        </div>
-        <div class="row" style="margin-top:20px; padding-bottom: 10px;">
-            <div class="col-lg-9"></div>
-                <div class="col-lg-1">
-                    <!-- <input type="button" class="btn btn-primary pull-right" id="submit"
-                    style="" value="Submit"> -->
-                    {{form.submit(class_="btn waves-effect waves-light btn-rounded btn-primary")}}
+            <!-- Horizontal form -->
+            <div class="card border-dark">
+                <div class="card-header bg-dark text-white header-elements-inline">
+                    <h5 class="card-title">Purchase Order</h5>
+                    <div class="header-elements">
+							<button type="button" id="export_to_pdf" class="btn bg-teal-400 btn-labeled btn-labeled-left mr-2"><b><i class="icon-share2"></i></b>Export To PDF</button>
+							<button type="button" id="export_to_excel" class="btn bg-teal-400 btn-labeled btn-labeled-left mr-2"><b><i class="icon-share2"></i></b>Export To Excel</button>
+							<button type="button" id="export_to_csv" class="btn bg-teal-400 btn-labeled btn-labeled-left mr-2"><b><i class="icon-share2"></i></b>Export To CSV</button>
+	                </div>
                 </div>
-            <div class="col-lg-2"></div>
-        </div>
-    </form>
-</div> <!-- end row -->
+                <div class="card-body">
+                    <form action="" method="post">
+                        {{ form.hidden_tag() }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <fieldset>
+                                    <!--<legend class="font-weight-semibold"><i class="icon-reading mr-2"></i> Personal details</legend>-->
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Vendor Name:</label>
+                                        <div class="col-lg-9">
+                                            {{form.vendor(class_="form-control form-control-lg")}}
+                                        </div>
+                                    </div>
 
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Deliver To:</label>
+                                        <div class="col-lg-9">
+                                            <div class="col-lg-12 radio-inline" style="margin:0; padding:0">
+                                                {{form.delivery}}
+                                            </div>
+                                            <ul class="list list-unstyled mb-0">
+                                                <li><h5 class="my-2">Johnathan Stevens</h5></li>
+                                                <li><span class="font-weight-semibold">Eloraus, LLC</span></li>
+                                                <li>5988 Chesbro Ave</li>
+                                                <li>>San Jose, CA 95123</li>
+                                                <li>United States</li>
+                                                <li>888-555-2311</li>
+                                                <li><a href="#">rebecca@normandaxis.ltd</a></li>
+                                            </ul>
+                                        </div>
+                                   </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Purchase Order #:</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control" id="purchase" name="purchase" placeholder="PO-23942032342">
+                                            {% for error in form.purchase.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Reference Order #:</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control" id="reference" name="reference" placeholder="aXl9023-x23ak22-32qaL3">
+                                            {% for error in form.reference.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Current Date:</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control" id="datepick" name="current_date" size="30">
+                                            {% for error in form.current_date.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Delivery Date:</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control" id="deliverypick" name="delivery_date" size="30">
+                                            {% for error in form.delivery_date.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-lg-12">
+                                            <table class ="table table-bordered" style="padding:10px;" id="tbPurchase">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Item Details</th>
+                                                        <th>League</th>
+                                                        <th>Quantity</th>
+                                                        <th>Rate</th>
+                                                        <th>Tax</th>
+                                                        <th>Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="purchase-tbody">
+                                                    <tr>
+                                                        <td><input type="text" id="item_details" placeholder="Lego Set XR"></td>
+                                                        <td><input type="text" id="league" placeholder="Silver +"></td>
+                                                        <td><input type="number" id="quantity" placeholder="1"></td>
+                                                        <td><input type="number" id="rate" placeholder="1.00"></td>
+                                                        <td><input type="number" id="tax" placeholder="1%"></td>
+                                                        <td><input type="number" id="amount" placeholder="$7.25"></td>
+                                                        <td><button type="button" class="btn btn-primary btn-labeled btn-labeled-left rounded-round"><b><i class="icon-plus-circle2"></i></b>Add</button></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <input type="text" id="orders" name="orders" hidden/>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+
+                            <div class="col-md-3">
+                                <fieldset>
+                                    <!--<legend class="font-weight-semibold"><i class="icon-truck mr-2"></i> Shipping details</legend>-->
+                                    <div class="form-group row">
+                                        <div class="pt-2 mb-3 wmin-md-400 ml-auto">
+                                            <h6 class="mb-3">Total due</h6>
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Subtotal:</th>
+                                                            <td class="text-right" id="tbTotal">$0.00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Discount:</th>
+                                                            <td class="text-right"><input type="text" id="item_discount" name="discount" placeholder="$0.00"></input><h5 id="tbDiscount">0.00</h5></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Total:</th>
+                                                            <td class="text-right text-primary"><h5 id="tbFinal" class="font-weight-semibold">$0.00</h5></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 offset-md-3">
+                            <div class="form-group">
+                                <label>Notes:</label>
+                                <textarea rows="5" cols="5" class="form-control" id="notes" name="item_notes" placeholder="Enter your notes here"></textarea>                                               
+                                {% for error in form.item_notes.errors %}
+                                    <span style="color: red;">[{{ error }}]</span>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group">
+                                <label>Terms & Conditions:</label>
+                                <textarea rows="5" cols="5" class="form-control" id="terms" name="terms_notes" placeholder=""></textarea>  
+                                {% for error in form.terms_notes.errors %}
+                                    <span style="color: red;">[{{ error }}]</span>
+                                {% endfor %}
+                            </div>
+
+                            <div class="text-right form-group">
+                                <button type="submit" class="btn btn-primary btn-labeled btn-labeled-left"><b><i class="icon-paperplane"></i></b> Submit</button>
+                                <!--{{form.submit(class_="btn waves-effect waves-light btn-rounded btn-primary")}}-->
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
 {% endblock %}

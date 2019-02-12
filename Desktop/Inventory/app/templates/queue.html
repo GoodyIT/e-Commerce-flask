@@ -3,51 +3,55 @@
 {% block body %}
 
 <div class="row">
-    <div class="col-lg-12 col-md-12" style="height:800px">
-          <h3 class="card-title m-b-0 align-self-center">Queue List</h3>
-            <div class="card-body">
-                <div class="d-flex m-b-10 no-block">
-                    <div class="ml-auto text-light-blue">
-					              <ul class="nav nav-tabs customtab default-customtab list-inline text-uppercase lp-5 font-medium font-12" style="float:right;" role="tablist">
-						            </ul>
-                    </div>
+    <div class="col-lg-12 col-md-12">
+        <div class="card border-dark" style="height:800px;">
+            <div class="card-header bg-dark text-white header-elements-inline">
+                <h6 class="card-title">Products List</h6>
+                <div class="header-elements">
+                    <span class="badge bg-success badge-pill">{{qlen}} active</span>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Player</th>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th class="text-center" style="width: 600px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     {% for x in queue %}
-                        <div class="site-block" style="margin-bottom: 10px">
-                            <div class="row">
-                                <div class="col-lg-1">
-                                    <h5><u>ID</u></h5>
-                                    <div id="order_id">{{x.order_id}}</div>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <span class="badge badge-mark border-success mr-1"></span>
+                                    <a href="#" class="text-default font-weight-semibold">{{x.order_id}}</a>
                                 </div>
-                                <div class="col-lg-1">
-                                    <h5><u>Player</u></h5>
-                                    {{x.player_id}}
+                            </td>
+                            <td><span class="text-muted">{{x.player_id}}</span></td>
+                            <td><span class="text-success-600">{{x.item_id}}</span></td>
+                            <td><h6 class="font-weight-semibold mb-0">{{x.quantity}}</h6></td>
+                            <td><span class="badge bg-danger">{{x.type}}</span></td>
+                            <td><h6 class="font-weight-semibold mb-0">{{x.price}}</h6></td>
+                            <td class="text-center">
+                                <div class="mr-6">
+                                    <button class="btn btn-primary que-app" style="width:100px;">Approve</button>
                                 </div>
-                                <div class="col-lg-1"></div>
-                                <div class="col-lg-1">
-                                    <h5><u>Item</u></h5>
-                                    {{x.item_id}}
+                                <div class="mr-6">
+                                    <button class="btn btn-primary que-dis" style="margin-top:5px;width:100px;">Disapprove</button>
                                 </div>
-                                <div class="col-lg-1">
-                                    <h5><u>Quantity</u></h5>
-                                    {{x.quantity}}
-                                </div>
-                                <div class="col-lg-1">
-                                    <h5><u>Type</u></h5>
-                                    {{x.type}}
-                                </div>
-                                <div class="col-lg-1">
-                                    <h5><u>Price</u></h5>
-                                    {{x.price}}
-                                </div>
-                                <div class="col-lg-1"></div>
-                                <div class="col-lg-2" style="margin-top: 40px; padding:0px;">
-                                    <button class="btn btn-primary que-app">Approve</button>
-                                    <button class="btn btn-primary que-dis">Disapprove</button>
-                                </div>
-                            </div>
-                        </div>
+                            </td>
+                        </tr>
                     {% endfor %}
-		        </div>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     </div>
 </div>
