@@ -17,7 +17,7 @@
                 </div>
                 <div class="card-body">
 					<div class="row">
-						<div style="width: 280px; position: absolute; z-index: 99; top: 100px; left: 850px;">
+						<div style="width: 280px; position: absolute; z-index: 99; top: 450px; left: 40px;">
 							<form action="{{ url_for('uploadLogo') }}" method="post" class="dropzone" id="frm-drop-zone-logo" enctype="multipart/form-data">
 						</div>
 					</div>
@@ -69,31 +69,6 @@
                                             </tbody>
                                         </table>                                        	
                                     </div>
-                                    <div class="form-group row ml-3">
-                                        <label>Total due:</label>
-                                    </div>
-                                    <div class="form-group row ml-3">
-                                        <table class="table">
-                                            <tbody>
-                                                <tr>
-                                                    <th>Discount:</th>
-                                                    <td class="text-right"><input type="text" id="bills_item_discount" name="item_discount" placeholder="$0.00"></input></td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Subtotal:</th>
-                                                    <td class="text-right"><h5 id="bills_tbTotal" style="font-weight: 400;">0.00</h5></td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Discount:</th>
-                                                    <td class="text-right"><h5 id="bills_tbDiscount" style="font-weight: 400;">0.00</h5></td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Total:</th>
-                                                    <td class="text-right text-primary"><h5 id="bills_tbFinal" class="font-weight-semibold">$0.00</h5></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
                                 </fieldset>
                             </div>
                             <div class="col-md-2">
@@ -101,21 +76,51 @@
 
                             <div class="col-md-3">
                                 <fieldset>
-                                    <!--<legend class="font-weight-semibold"><i class="icon-truck mr-2"></i>Upload Logo</legend>-->
-                                    <div class="form-group row" style="height: 350px;"></div>
+                                    <legend class="font-weight-semibold"><i class="icon-truck mr-2"></i> Total due</legend>
                                     <div class="form-group row">
-                                        <label>Notes:</label>
-                                        <textarea rows="5" cols="5" class="form-control" id="bills_notes" name="item_notes" placeholder="Enter your notes here"></textarea>                                               
-                                    </div>
-                                    <div class="form-group row">
-                                        <label>Terms & Conditions:</label>
-                                        <textarea rows="5" cols="5" class="form-control" id="bills_terms" name="terms_notes" placeholder=""></textarea>  
-                                    </div>
-                                    <div class="form-group row">
-                                        <button type="submit" id="submit" class="btn btn-primary btn-labeled btn-labeled-left"><b><i class="icon-paperplane"></i></b>Submit Invoice</button>
+                                        <div class="pt-2 mb-3 wmin-md-400 ml-auto">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Discount:</th>
+                                                            <td class="text-right"><input type="text" id="bills_item_discount" name="item_discount" placeholder="$0.00"></input></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Subtotal:</th>
+                                                            <td class="text-right"><h5 id="bills_tbTotal" style="font-weight: 400;">0.00</h5></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Discount:</th>
+                                                            <td class="text-right"><h5 id="bills_tbDiscount" style="font-weight: 400;">0.00</h5></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Total:</th>
+                                                            <td class="text-right text-primary"><h5 id="bills_tbFinal" class="font-weight-semibold">$0.00</h5></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 </fieldset>
                             </div>
+                        </div>
+
+                        <div class="col-md-6 offset-md-3">
+                            <div class="form-group">
+                                <label>Notes:</label>
+                                <textarea rows="5" cols="5" class="form-control" id="bills_notes" name="item_notes" placeholder="Enter your notes here"></textarea>                                               
+                            </div>
+                            <div class="form-group">
+                                <label>Terms & Conditions:</label>
+                                <textarea rows="5" cols="5" class="form-control" id="bills_terms" name="terms_notes" placeholder=""></textarea>  
+                            </div>
+
+                            <div class="text-right form-group">
+                                <button type="submit" id="submit" class="btn btn-primary btn-labeled btn-labeled-left"><b><i class="icon-paperplane"></i></b>Submit Invoice</button>
+                            </div>
+
                         </div>
                     </form>
                 </div>
