@@ -84,33 +84,6 @@ def getGroups():
         return {'none':'None'}
     return choices
 
-def getCategory():
-    ''' SelectField method for getting category list '''
-    categories = db.Category.find()
-    size = categories.count() - 1
-    choices = {}
-
-    while size >= 0:
-        choices[ categories[size]['id'] ] = categories[size]['name']
-        size -= 1
-
-    if len(choices) == 0:
-        return {'none':'None'}
-    return choices
-
-def getVendors():
-    ''' SelectField method for getting vendor list '''
-    vendors = db.Vendor.find()
-    size = vendors.count() - 1
-    choices = {}
-
-    while size >= 0:
-        choices[ vendors[size]['id'] ] = vendors[size]['name']
-        size -= 1
-
-    if len(choices) == 0:
-        return {'none':'None'}
-    return choices
 
 # load user
 @login.user_loader
@@ -888,12 +861,12 @@ def groups_list(name):
 def getSubgroups():
     if request.method == 'POST':
         item = request.json
-        if not item: return jsonify(subgroups=[('none', 'None')])
+        if not item: return jsonify(subgroups=[])
         
         print("++++++++++NEW REQUEST++++++++++++ getSubgroups: ", item)
         group = db.Groups.find_one({'id':item['id']})
         if not 'sub_group' in group:
-            group['sub_group'] = [('none', 'None')]
+            group['sub_group'] = []
         return jsonify(subgroups=group['sub_group'])
 
 @app.route('/updateProduct', methods=['POST'])
@@ -1025,6 +998,7 @@ def addItem():
     file_urls = []
     print("\n routes : addItem > $$$$$$$$$$$$$$$$$$")
     if(request.method == 'POST') and 'photos' in request.files:
+        print("\n routes : addItem > request.files +++++++++++++++++++++++++++++")
         #print(request.files)
         file_obj = request.files
 
@@ -1044,6 +1018,7 @@ def addItem():
         return jsonify(target_file=strjson)
         
     if form.validate_on_submit():
+        print("\n routes : addItem > validate_on_submit +++++++++++++++++++++++++++++")
         # add new vendor
         vendor = ""
         if form.vendor.data != "none":
@@ -1095,6 +1070,7 @@ def addItem():
         flash('New Item Added.')
         return redirect(url_for('products'))
 
+    print("\n routes : addItem >>> ----------------------------")
     return render_template('add-item.html', breadCrumb=BREAD_CRUMB['Products'][0], uname=current_user.get_id(), title='Add Item', form=form)
 
 @app.route('/importFile', methods=['GET','POST'])

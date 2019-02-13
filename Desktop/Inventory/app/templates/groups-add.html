@@ -2,10 +2,19 @@
 
 {% block body %}
 
+
 <div class="row">
-    <div class="col-lg-12 col-md-12">
-        <div class="card">
-            <div class="card-body">
+    <div class="col-xl-12">
+
+        <!-- Traffic sources -->
+        <div class="card border-dark">
+            <div class="card-header bg-dark text-white header-elements-inline">
+                <h6 class="card-title">Add Group</h6>
+                <div class="header-elements">
+                </div>
+            </div>
+
+            <div class="card-body py-0">
                 <div class="d-flex m-b-10 no-block">
                   <form action="" method="post">
                       {{ form.hidden_tag() }}
@@ -87,7 +96,8 @@
                       <div class="row" style="margin-top: 30px; margin-bottom: 30px;">
                           <div class="col-lg-10"></div>
                           <div class="col-lg-2">
-                              {{form.submit()}}
+                            <button type="submit" class="btn bg-teal-400 btn-labeled btn-labeled-left rounded-round"><b><i class="icon-plus-circle2"></i></b>Add Group</button>
+                            <!--{{form.submit()}}-->
                           </div>
                       </div> <!-- END ROW -->
                   </form> <!-- END FORM -->

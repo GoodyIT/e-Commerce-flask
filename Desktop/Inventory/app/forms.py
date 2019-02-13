@@ -19,12 +19,15 @@ def getGroups():
 def getSubgroups():
     groups = db.Groups.find()
     size = groups.count() - 1
+
     choices = []
     while size >= 0:
         if 'sub_group' in groups[size]:
             for subgroup in groups[size]['sub_group']:
                 choices.append((subgroup, subgroup))
         size -= 1
+    if len(choices) == 0:
+        return [('none', 'None')]
     return choices
 def getVendor():
     vendor = db.Vendor.find()
@@ -107,7 +110,7 @@ class ProductForm(FlaskForm):
     product = StringField('Product Name', validators=[DataRequired()])
     category = SelectField('Category', choices=getGroups())
     subgroup = SelectField('SubGroup', choices=getSubgroups())
-    #print(category)
+    #print("---> subgroup: ",subgroup)
     sku = StringField('SKU', validators=[DataRequired()])
     price = IntegerField('Price', validators=[DataRequired()])
     currency = SelectField('Currency', choices=[('USD', '$'),('EURO','€'),('POUND', '£')])
@@ -127,8 +130,9 @@ class ProductForm(FlaskForm):
     submit = SubmitField('Add Item', render_kw={"class": "btn btn-primary btn-block"})
 
     def update_category(self):
-       self.category.choices = getGroups()
        #self.category.default = getGroups()[0][id]
+       self.category.choices = getGroups()
+       self.subgroup.choices = getSubgroups()
 
 class RegisterForm(FlaskForm):
     ''' Registers new users with the app '''

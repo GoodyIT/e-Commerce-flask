@@ -57,7 +57,7 @@
                                         {% endfor %}
                                     </div>
                                     <div class="col-lg-4">
-                                        <label for="category">Group</label>         
+                                        <label for="Category">Group</label>         
                                         {{form.category(class="form-control form-control-lg")}}
                                         {% for error in form.category.errors %}
                                             <span style="color: red;">[{{ error }}]</span>
@@ -75,6 +75,13 @@
                                     <div class="col-lg-4" style="">
                                         <label for="currency">Currency</label>
                                         {{form.currency(class="form-control form-control-lg")}}
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label for="SubGroup">Sub Group</label>         
+                                        {{form.subgroup(class="form-control form-control-lg")}}
+                                        {% for error in form.subgroup.errors %}
+                                            <span style="color: red;">[{{ error }}]</span>
+                                        {% endfor %}
                                     </div>
                                 </div> <!-- END ROW -->
 
