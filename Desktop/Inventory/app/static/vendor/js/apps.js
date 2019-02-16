@@ -746,6 +746,9 @@ $(function() {
         maxFilesize: 2, // MB
     }
     jQuery("#frm-drop-zone").dropzone({
+        //previewTemplate: document.querySelector('#dz-avatar-edit').innerHTML }, //document.getElementById("dz-avatar-edit").innerHTML,
+        //previewsContainer: "#dz-avatar-edit",
+        addRemoveLinks: true,
         success : function(file, response) {
             //console.log(file);
             //console.log("------response: ",response);
