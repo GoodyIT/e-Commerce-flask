@@ -711,10 +711,11 @@ def shipping():
     current = {}
 
     while c < orders.count():
-        if orders[c]['item_id'] in current:
-            current[orders[c]['item_id']] += 1
-        else:
-            current[orders[c]['item_id']] = 1
+        if 'item_id' in orders[c]:
+            if orders[c]['item_id'] in current:
+                current[orders[c]['item_id']] += 1
+            else:
+                current[orders[c]['item_id']] = 1
         c += 1
     return render_template('shipping.html', breadCrumb=BREAD_CRUMB['Shipping'][0], title='Shipping', orders=current)
 
@@ -1576,11 +1577,12 @@ def orders():
         if plyr:
             pname = plyr['name']
         
-        iid = ordr['item_id']
         iname = ""
-        itm = db.Products.find_one({'id':iid})
-        if itm:            
-            iname = itm['product']
+        if 'item_id' in ordr:
+            iid = ordr['item_id']            
+            itm = db.Products.find_one({'id':iid})
+            if itm:            
+                iname = itm['product']
         #print("--- prdt: ",prdt,", cid: ",cid,", cname: ",cname,", vname: ",vname)
 
         tblOrdrs.append({ #Variable 'table' is just iterator, so it indicates the NULL after finished loop

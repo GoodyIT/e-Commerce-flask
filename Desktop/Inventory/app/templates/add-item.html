@@ -1,8 +1,37 @@
 {% extends 'base.html' %}
-
+ 
 {% block body %}
 
-    <div class="row">
+<style>
+ .image-container {
+  display: flex;
+  justify-content: center;
+}
+
+.dropzone {
+    text-align: center;
+}
+.dropzone .dz-preview, .dropzone-previews .dz-preview {
+    margin: .3rem;
+    min-width: 2rem;
+}
+.dropzone .dz-preview .dz-image {
+    display:block;
+    margin: auto;
+    width: 100px;
+    height: 100px;
+}
+.dropzone .dz-preview .dz-details {
+    opacity: 1;
+    padding: 0em;
+    max-width: 100px;
+}
+.dropzone .dz-preview .dz-details .dz-filename {
+    white-space: normal;
+}
+</style>
+ 
+     <div class="row">
         <div class="col-md-12">
 
             <!-- Horizontal form -->
@@ -24,6 +53,7 @@
                             <div class="avatar-upload">
                                 <div class="avatar-edit">
                                     <form action="{{ url_for('addItem') }}" method="post" class="dropzone" id="frm-drop-zone" enctype="multipart/form-data">
+                                   </form>
                                 </div>
                             </div>
 
