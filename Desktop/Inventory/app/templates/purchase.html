@@ -18,8 +18,8 @@
                 <div class="card-body">
                     <form action="" method="post">
                         {{ form.hidden_tag() }}
-                        <div class="row">
-                            <div class="col-md-6">
+                        <div class="row" style="display: flex;flex-wrap: wrap;">
+                            <div style="width: 50%; align-self: flex-start;">
                                 <fieldset>
                                     <!--<legend class="font-weight-semibold"><i class="icon-reading mr-2"></i> Personal details</legend>-->
                                     <div class="form-group row">
@@ -103,11 +103,11 @@
                                                     <tr>
                                                         <td><input type="text" id="item_details" placeholder="Lego Set XR"></td>
                                                         <td><input type="text" id="league" placeholder="Silver +"></td>
-                                                        <td><input type="number" id="quantity" placeholder="1"></td>
-                                                        <td><input type="number" id="rate" placeholder="1.00"></td>
-                                                        <td><input type="number" id="tax" placeholder="1%"></td>
-                                                        <td><input type="number" id="amount" placeholder="$7.25"></td>
-                                                        <td><button type="button" class="btn btn-primary btn-labeled btn-labeled-left rounded-round"><b><i class="icon-plus-circle2"></i></b>Add</button></td>
+                                                        <td><input type="number" id="quantity" placeholder="1" style="width: 50px;"></td>
+                                                        <td><input type="number" id="rate" placeholder="1.00" style="width: 50px;"></td>
+                                                        <td><input type="number" id="tax" placeholder="1%" style="width: 50px;"></td>
+                                                        <td><input type="number" id="amount" placeholder="$7.25" style="width: 70px;"></td>
+                                                        <td><button type="button" class="btn btn-primary btn-labeled btn-labeled-left rounded-round add-row"><b><i class="icon-plus-circle2"></i></b>Add</button></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -116,10 +116,8 @@
                                     <input type="text" id="orders" name="orders" hidden/>
                                 </fieldset>
                             </div>
-                            <div class="col-md-2">
-                            </div>
 
-                            <div class="col-md-3">
+                            <div style="width: 30%; margin-left: 10%;">
                                 <fieldset>
                                     <!--<legend class="font-weight-semibold"><i class="icon-truck mr-2"></i> Shipping details</legend>-->
                                     <div class="form-group row">
@@ -130,7 +128,7 @@
                                                     <tbody>
                                                         <tr>
                                                             <th>Subtotal:</th>
-                                                            <td class="text-right" id="tbTotal">$0.00</td>
+                                                            <td class="text-right" id="tbTotal">0.00</td>
                                                         </tr>
                                                         <tr>
                                                             <th>Discount:</th>
@@ -138,7 +136,7 @@
                                                         </tr>
                                                         <tr>
                                                             <th>Total:</th>
-                                                            <td class="text-right text-primary"><h5 id="tbFinal" class="font-weight-semibold">$0.00</h5></td>
+                                                            <td class="text-right text-primary"><h5 id="tbFinal" class="font-weight-semibold">0.00</h5></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

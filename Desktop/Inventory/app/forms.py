@@ -1,5 +1,6 @@
 from app import db
 from flask_wtf import FlaskForm
+from flask_login import current_user
 from wtforms import StringField, SubmitField, PasswordField, TextAreaField, \
 IntegerField, DateField, SelectField, RadioField, FormField, HiddenField
 from wtforms.validators import DataRequired, ValidationError, EqualTo, Email
@@ -16,6 +17,7 @@ def getGroups():
     if len(choices) == 0:
         return [('none', 'None')]
     return choices
+
 def getSubgroups():
     groups = db.Groups.find()
     size = groups.count() - 1
@@ -29,6 +31,7 @@ def getSubgroups():
     if len(choices) == 0:
         return [('none', 'None')]
     return choices
+
 def getVendor():
     vendor = db.Vendor.find()
     size = vendor.count() - 1
@@ -46,10 +49,12 @@ class BillingForm(FlaskForm):
     vendor = SelectField('Category', choices=getVendor())
     submit = None
 
+
 class VendorForm(FlaskForm):
     vendor = StringField('Vendor Name')
     url = StringField('URL')
     submit = SubmitField('Add Vendor')
+
 
 class GroupForm(FlaskForm):
     ''' Group Add Form '''
@@ -71,10 +76,12 @@ class GroupForm(FlaskForm):
     brand = StringField('Manufacturer')
     submit = SubmitField('Add Group')
 
+
 class CategoryForm(FlaskForm):
     ''' Category Add Form '''
     name = StringField('Category Name')
     submit = SubmitField('Add Group')
+
 
 class UpperForm(FlaskForm):
     ''' Group Form '''
@@ -84,6 +91,7 @@ class UpperForm(FlaskForm):
     reference = StringField('Username', validators=[DataRequired()])
     currentDate = DateField('Current Date', format='%m/%d/%y')
     deliveryDate = DateField('Delivery Date', format='%m/%d/%y')
+
 
 class PurchaseForm(FlaskForm):
     ''' Purchase Form '''
@@ -99,11 +107,13 @@ class PurchaseForm(FlaskForm):
     submit_value = Markup('Submit form <i class="icon-paperplane ml-2"></i>')
     submit = SubmitField(submit_value)
 
+
 class LoginForm(FlaskForm):
     ''' Login Form '''
     username = StringField('Username', validators=[DataRequired()])
     pw = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Sign In')
+
 
 class ProductForm(FlaskForm):
     ''' Product Items '''
@@ -133,6 +143,7 @@ class ProductForm(FlaskForm):
        #self.category.default = getGroups()[0][id]
        self.category.choices = getGroups()
        self.subgroup.choices = getSubgroups()
+
 
 class RegisterForm(FlaskForm):
     ''' Registers new users with the app '''

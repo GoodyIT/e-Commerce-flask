@@ -15,6 +15,7 @@ import random, pandas
 from datetime import datetime
 import csv
 import pandas as pd #pip install pandas==0.16.1
+import pdb
 
 from .zincapi_communication import post_shipping_request, post_cancellation_request
 
@@ -62,7 +63,7 @@ CURRENCIES = [('USD', '$'),('EURO','€'),('POUND', '£')]
 BREAD_CRUMB = {'Signup':['Sign Up','signup'], 'Login':['Login','login'],
 'Dashboard':['Dashboard','home'], 'Queue':['Queue','queue'],
 'Reports':['Reports','reports'], 'Products':['Products','products'],
-'Orders':['Orders','orders'], 'Shipping':['Shipping','Contacts']}
+'Orders':['Orders','orders'], 'Shipping':['Shipping','Contacts'], 'Profile': ['Profile']}
 
 def allowed_file(filename):
     ''' method for choosing form file path '''
@@ -131,7 +132,7 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 # home page
-@app.route('/')
+@app.route('/admin')
 @login_required
 def home():
     products = db.Products.find()
@@ -690,7 +691,7 @@ def accessories():
     )
 
 #store
-@app.route('/store')
+@app.route('/')
 def store():
     groups = db.Groups.aggregate(
         [
@@ -1115,8 +1116,8 @@ def importItem():
             csv_reader = csv.DictReader(csv_file)
             line_count = 0
             for row in csv_reader:                
-                if line_count == 0:
-                    print(f'-----> Column names are {", ".join([str(i) for i in row])}')
+                # if line_count == 0:
+                #     print(f'-----> Column names are {", ".join([str(i) for i in row])}')
                     #line_count += 1; continue
                 print(json.dumps(row,indent=4)) #print(f'\t{row["name"]} works in the {row["department"]} department, and was born in {row["birthday month"]}.')
                 #line_count += 1; continue
@@ -1153,7 +1154,7 @@ def importItem():
 
                 line_count += 1
 
-            print(f'Processed {line_count} lines.')        
+            # print(f'Processed {line_count} lines.')        
 
         return 'file uploaded successfully'
 
@@ -1614,6 +1615,38 @@ def queue():
     queue = db.Queue.find()
     return render_template('queue.html', breadCrumb=BREAD_CRUMB['Queue'][0],
     uname=current_user.get_id(), title='Queue', queue=queue, qlen=queue.count())
+
+# profile page
+# 2019-6-17 midas
+@app.route('/myprofile', methods=['GET','POST'])
+@login_required
+def myprofile():
+    user = db.Users.find_one({'id':current_user.username})
+    data = {
+        'id': user['id'],
+        'name': user['name'],
+        'email': user['email']
+    }
+
+    if request.method == 'POST':
+        if request.form["password"] == "":
+            newdata = {
+                'id': request.form["username"] if request.form["username"] else user['id'],
+                'name': request.form['name'] if request.form["name"] else user['name'],
+                'email': request.form['email'] if request.form["email"] else user['email']
+            }
+        else:
+            pw = request.form["password"]
+            newdata = {
+                'id': request.form["username"] if request.form["username"] else user['id'],
+                'name': request.form['name'] if request.form["name"] else user['name'],
+                'email': request.form['email'] if request.form["email"] else user['email'],
+                'pw' : User.setHash(pw)
+            }
+        db.Users.update_one(
+            {"_id": user['_id']},
+            {"$set": newdata})
+    return render_template('profile.html', breadCrumb=BREAD_CRUMB['Profile'][0], title='Profile', data=data)
 
 # signup page
 @app.route('/signup', methods=['GET', 'POST'])

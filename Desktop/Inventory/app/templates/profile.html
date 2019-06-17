@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+
+        <div class="col-md-6">
+
+            <!-- Horizontal form -->
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title">My Profile</h5>
+                    <div class="header-elements">
+                        <div class="list-icons">
+                            <a class="list-icons-item" data-action="collapse"></a>
+                            <a class="list-icons-item" data-action="reload"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <form action="" method="post">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" name="username" value="{{data.id}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" name="name" value="{{data.name}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" name="email" value="{{data.email}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" name="password">
+                        </div>
+                        <button type="submit" class="btn btn-submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+            <!-- /horizotal form -->
+
+        </div>
+
+        <div class="col-md-6">
+        </div>
+    </div>
+
+
+
+{% endblock %}

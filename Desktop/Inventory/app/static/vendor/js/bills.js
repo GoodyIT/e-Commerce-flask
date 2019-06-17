@@ -11,9 +11,15 @@ $(function() {
         var tax = $("#bills_tax").val();
         var amount = $("#bills_amount").val();
         var total = $("#bills_tbTotal").text();
+        var finaltotal = $("#bills_tbFinal").text();
 
-        // Update Table
-        var markup = "<tr class='add-row'>" +
+        var validate = true;
+        if (item_details == "" || quantity <=0 || amount <=0) {
+            validate = false;
+        }
+
+        if (validate) {
+            var markup = "<tr class='add-row'>" +
                     "<td>" + item_details + "</td>" +
                     "<td>" + league + "</td>" +
                     "<td>" + quantity + "</td>" +
@@ -21,40 +27,45 @@ $(function() {
                     "<td>" + tax + "</td>" +
                     "<td>" + amount + "</td>" +
                     "<td style='border: none;'><button type='button' class='btn btn-primary btnDelete'>Delete</button></td></tr>"
-        $("table tbody").append(markup);
+            $("table#bills_tbPurchase tbody").append(markup);
+            // $("table tbody").append(markup);
 
-        var rows = [];
-        $("tbody tr",$("#bills_tbPurchase"))
-          .filter(function( index ) {
-            return index > 0;
-          }).map(function(index) {
-            rows.push([
-                $("td:eq(0)",this).html(),
-                $("td:eq(1)",this).html(),
-                $("td:eq(2)",this).html(),
-                $("td:eq(3)",this).html(),
-                $("td:eq(4)",this).html(),
-                $("td:eq(5)",this).html()
-            ]);
-        });
+            var rows = [];
+            $("tbody tr",$("#bills_tbPurchase"))
+              .filter(function( index ) {
+                return index > 0;
+              }).map(function(index) {
+                rows.push([
+                    $("td:eq(0)",this).html(),
+                    $("td:eq(1)",this).html(),
+                    $("td:eq(2)",this).html(),
+                    $("td:eq(3)",this).html(),
+                    $("td:eq(4)",this).html(),
+                    $("td:eq(5)",this).html()
+                ]);
+            });
 
-        // Erase Values on Table
-        $("#bills_item_details").val("");
-        $("#bills_league").val("");
-        $("#bills_quantity").val("");
-        $("#bills_rate").val("");
-        $("#bills_tax").val("");
-        $("#bills_amount").val("");
+            // Erase Values on Table
+            $("#bills_item_details").val("");
+            $("#bills_league").val("");
+            $("#bills_quantity").val("");
+            $("#bills_rate").val("");
+            $("#bills_tax").val("");
+            $("#bills_amount").val("");
 
-        if (tax < 1) {tax=1}
-        if (rate < 1) {rate=1}
+            if (tax < 1) {tax=1}
+            if (rate < 1) {rate=1}
 
-        // Update Totals
-        var rate_cost = rate * quantity;
-        var total_cost = rate_cost * amount;
-        var tax_cost = total_cost * (tax*.01);
-        var final = (total_cost - tax_cost) + parseFloat(total);
-        $("#bills_tbTotal").html(final.toFixed(2));
+            // Update Totals
+            var rate_cost = rate * quantity;
+            var total_cost = rate_cost * amount;
+            var tax_cost = total_cost * (tax*.01);
+            var final = (total_cost - tax_cost) + parseFloat(total);
+            var finalresult = (total_cost - tax_cost) + parseFloat(finaltotal);
+            $("#bills_tbTotal").html(final.toFixed(2));
+            $("#bills_tbFinal").html(finalresult.toFixed(2));
+        }
+        
     });
 
     // Find and remove selected table rows
@@ -65,6 +76,7 @@ $(function() {
         var rtax = $(this).closest('tr').find("td:nth-child(5)").text();
         var ramount = $(this).closest('tr').find("td:nth-child(6)").text();
         var rtotal = $("#bills_tbTotal").text();
+        var rfinaltotal = $("#bills_tbFinal").text();
 
         if (rtax < 1) {rtax=1;}
         if (rrate < 1) {rrate=1;}
@@ -74,8 +86,9 @@ $(function() {
         var rtotal_cost = rrate_cost * ramount;
         var rtax_cost = rtotal_cost * (rtax*.01)
         var rfinal = parseFloat(rtotal) - (rtotal_cost - rtax_cost);
+        var rfinalresult = parseFloat(rfinaltotal) - (rtotal_cost - rtax_cost);
         $("#bills_tbTotal").html(rfinal.toFixed(2));
-
+        $("#bills_tbFinal").html(rfinalresult.toFixed(2));
 
         // Update Totals
         $(this).closest('tr').remove();
@@ -252,6 +265,7 @@ $(function() {
                 deliveryDate
             ]);
         });
+        
         // ----------------------------------- //
         let csvContent = "data:text/csv;charset=utf-8,";
 

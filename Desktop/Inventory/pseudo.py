@@ -152,7 +152,10 @@ def main():
 
 
 if __name__ == "__main__":
+    app.config['TEMPLATES_AUTO_RELOAD'] = True      
+    app.jinja_env.auto_reload = True
     main()
+    
     while True:
         choice = str(input("More Entries? Y or N: "))
         if choice.lower() == 'y':

@@ -10,14 +10,14 @@
                 <div class="card-header bg-dark text-white header-elements-inline">
                     <h5 class="card-title">Invoice</h5>
                     <div class="header-elements">
-							<button type="button" id="export_to_pdf" class="btn bg-teal-400 btn-labeled btn-labeled-left mr-2"><b><i class="icon-share2"></i></b>Export To PDF</button>
-							<button type="button" id="export_to_excel" class="btn bg-teal-400 btn-labeled btn-labeled-left mr-2"><b><i class="icon-share2"></i></b>Export To Excel</button>
-							<button type="button" id="export_to_csv" class="btn bg-teal-400 btn-labeled btn-labeled-left mr-2"><b><i class="icon-share2"></i></b>Export To CSV</button>
+							<button type="button" id="bills_export_to_pdf" class="btn bg-teal-400 btn-labeled btn-labeled-left mr-2"><b><i class="icon-share2"></i></b>Export To PDF</button>
+							<button type="button" id="bills_export_to_excel" class="btn bg-teal-400 btn-labeled btn-labeled-left mr-2"><b><i class="icon-share2"></i></b>Export To Excel</button>
+							<button type="button" id="bills_export_to_csv" class="btn bg-teal-400 btn-labeled btn-labeled-left mr-2"><b><i class="icon-share2"></i></b>Export To CSV</button>
 	                </div>
                 </div>
                 <div class="card-body">
 					<div class="row">
-						<div style="width: 280px; position: absolute; z-index: 99; top: 100px; left: 850px;">
+						<div style="width: 280px; position: absolute; z-index: 99; top: 100px; left: 65%">
 							<form action="{{ url_for('uploadLogo') }}" method="post" class="dropzone" id="frm-drop-zone-logo" enctype="multipart/form-data">
 						</div>
 					</div>
@@ -89,7 +89,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th>Total:</th>
-                                                    <td class="text-right text-primary"><h5 id="bills_tbFinal" class="font-weight-semibold">$0.00</h5></td>
+                                                    <td class="text-right text-primary"><h5 id="bills_tbFinal" class="font-weight-semibold">0.00</h5></td>
                                                 </tr>
                                             </tbody>
                                         </table>

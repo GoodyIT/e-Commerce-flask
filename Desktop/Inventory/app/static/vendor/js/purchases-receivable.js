@@ -24,10 +24,9 @@ $(function() {
                 if (res.report.length) {
                     res.report.forEach(item => {
                         $("#report_order_by_receivable_select_content").append(`
-                            <div class="col-lg-12">
-                                <div class="col-lg-1"><p>${item.order_id}</p></div>
+                                <div class="col-lg-3"><p>${item.order_id}</p></div>
                                 <div class="col-lg-1"><p>SKU</p></div>
-                                <div class="col-lg-3"></div>
+                                <div class="col-lg-1"></div>
                                 <div class="col-lg-1"><h8>0.1</h8></div>
                                 <div class="col-lg-1"></div>
                                 <div class="col-lg-1"><h8>${item.quantity}</h8></div>
@@ -35,7 +34,6 @@ $(function() {
                                 <div class="col-lg-1"><h8>${item.quantity*item.price}</h8></div>
                                 <div class="col-lg-1"></div>
                                 <div class="col-lg-1"><h8>${(0.1*item.quantity*item.price).toFixed(2)}</h8></div>
-                            </div>
                         `);
                     })
                 } else {
