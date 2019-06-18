@@ -39,19 +39,28 @@ $(function() {
     
     
     // Table buttons
-    $("#tbl-btn").on("click", function() {
-        var item = $(this).closest('tr').find("td:nth-child(1)").text();
-        $.ajax({
-            url: "/products",
-            type: "post",
-            dataType: "json",
-            contentType: "application/json",
-            data: JSON.stringify({'id':item}),
-        })
-        .done(function() {
-            location.reload();
-        });
-    });
+    // $("#tbl-btn").on("click", function() {
+    //     console.log(123);
+    //     var item = $(this).closest('tr').find("td:nth-child(1)").text();
+    //     // $.ajax({
+    //     //   method: "POST",
+    //     //   url: "/products",
+    //     //   data: { id: item }
+    //     // })
+    //     // .done(function( msg ) {
+    //     //     alert( "Data Saved: " + msg );
+    //     // });
+    //     $.ajax({
+    //         url: "/products",
+    //         type: "post",
+    //         dataType: "json",
+    //         contentType: "application/json",
+    //         data: JSON.stringify({'id':item}),
+    //     })
+    //     .done(function() {
+    //         location.reload();
+    //     });
+    // });
 
     // Table Add Row
     $(".add-row").on("click", function(){

@@ -147,10 +147,10 @@
                                               <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
                                                   <ul class="level0">
                                                       {% for group in groups['GAMES'] %}
-                                                      <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}&page=1"><span>{{group.name}}</span></a>
+                                                      <li class="level1 nav-6-1 parent"><a href="{{url_for('games', page = 1, gid = group.id)}}"><span>{{group.name}}</span></a>
                                                           <ul class="level2">
                                                             {% for subgroup in group.sub_group %}
-                                                              <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}&page=1"><span>{{subgroup}}</span></a></li>
+                                                              <li class="level2 nav-2-1-1"><a href="{{url_for('games', page = 1, gid = group.id, subgroup = subgroup)}}"><span>{{subgroup}}</span></a></li>
                                                             {% endfor %}
                                                           </ul>
                                                       </li>
@@ -174,10 +174,10 @@
                                                 <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
                                                     <ul class="level0">
                                                         {% for group in groups['OFFICE'] %}
-                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}&page=1"><span>{{group.name}}</span></a>
+                                                        <li class="level1 nav-6-1 parent"><a href="{{url_for('office', page = 1, gid = group.id)}}"><span>{{group.name}}</span></a>
                                                             <ul class="level2">
                                                                 {% for subgroup in group.sub_group %}
-                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}&page=1"><span>{{subgroup}}</span></a></li>
+                                                                <li class="level2 nav-2-1-1"><a href="{{url_for('office', page = 1, gid = group.id, subgroup = subgroup)}}"><span>{{subgroup}}</span></a></li>
                                                                 {% endfor %}
                                                             </ul>
                                                         </li>
@@ -202,10 +202,10 @@
                                                 <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
                                                     <ul class="level0">
                                                         {% for group in groups['ELECTRONICS'] %}
-                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}&page=1"><span>{{group.name}}</span></a>
+                                                        <li class="level1 nav-6-1 parent"><a href="{{url_for('electronics', page = 1, gid = group.id)}}"><span>{{group.name}}</span></a>
                                                             <ul class="level2">
                                                                 {% for subgroup in group.sub_group %}
-                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}&page=1"><span>{{subgroup}}</span></a></li>
+                                                                <li class="level2 nav-2-1-1"><a href="{{url_for('electronics', page = 1, gid = group.id, subgroup = subgroup)}}"><span>{{subgroup}}</span></a></li>
                                                                 {% endfor %}
                                                             </ul>
                                                         </li>
@@ -231,10 +231,10 @@
                                                 <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
                                                     <ul class="level0">
                                                         {% for group in groups['GEAR'] %}
-                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}&page=1"><span>{{group.name}}</span></a>
+                                                        <li class="level1 nav-6-1 parent"><a href="{{url_for('gear', page = 1, gid = group.id)}}"><span>{{group.name}}</span></a>
                                                             <ul class="level2">
                                                                 {% for subgroup in group.sub_group %}
-                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}&page=1"><span>{{subgroup}}</span></a></li>
+                                                                <li class="level2 nav-2-1-1"><a href="{{url_for('gear', page = 1, gid = group.id, subgroup = subgroup)}}"><span>{{subgroup}}</span></a></li>
                                                                 {% endfor %}
                                                             </ul>
                                                         </li>
@@ -260,10 +260,10 @@
                                                 <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
                                                     <ul class="level0">
                                                         {% for group in groups['COMPUTERS'] %}
-                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}&page=1"><span>{{group.name}}</span></a>
+                                                        <li class="level1 nav-6-1 parent"><a href="{{url_for('computers', page = 1, gid = group.id)}}"><span>{{group.name}}</span></a>
                                                             <ul class="level2">
                                                                 {% for subgroup in group.sub_group %}
-                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}&page=1"><span>{{subgroup}}</span></a></li>
+                                                                <li class="level2 nav-2-1-1"><a href="{{url_for('computers', page = 1, gid = group.id, subgroup = subgroup)}}"><span>{{subgroup}}</span></a></li>
                                                                 {% endfor %}
                                                             </ul>
                                                         </li>
@@ -290,10 +290,10 @@
                                                 <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
                                                     <ul class="level0">
                                                         {% for group in groups['TOYS'] %}
-                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}&page=1"><span>{{group.name}}</span></a>
+                                                        <li class="level1 nav-6-1 parent"><a href="{{url_for('toys', page = 1, gid = group.id)}}"><span>{{group.name}}</span></a>
                                                             <ul class="level2">
                                                                 {% for subgroup in group.sub_group %}
-                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}&page=1"><span>{{subgroup}}</span></a></li>
+                                                                <li class="level2 nav-2-1-1"><a href="{{url_for('toys', page = 1, gid = group.id, subgroup = subgroup)}}"><span>{{subgroup}}</span></a></li>
                                                                 {% endfor %}
                                                             </ul>
                                                         </li>
@@ -319,10 +319,10 @@
                                                 <div class="nav-block nav-block-left grid12-8 itemgrid itemgrid-4col">
                                                     <ul class="level0">
                                                         {% for group in groups['ACCESSORIES'] %}
-                                                        <li class="level1 nav-6-1 parent"><a href="games?gid={{group.id}}&page=1"><span>{{group.name}}</span></a>
+                                                        <li class="level1 nav-6-1 parent"><a href="{{url_for('accessories', page = 1, gid = group.id)}}"><span>{{group.name}}</span></a>
                                                             <ul class="level2">
                                                                 {% for subgroup in group.sub_group %}
-                                                                <li class="level2 nav-2-1-1"><a href="games?gid={{group.id}}&subgroup={{subgroup}}&page=1"><span>{{subgroup}}</span></a></li>
+                                                                <li class="level2 nav-2-1-1"><a href="{{url_for('accessories', page = 1, gid = group.id, subgroup = subgroup)}}"><span>{{subgroup}}</span></a></li>
                                                                 {% endfor %}
                                                             </ul>
                                                         </li>

@@ -34,7 +34,7 @@
                                     <td>{{item.currency}}</td>
                                     <td>{{item.quantity}}</td>
                                     <td>{{item.vendor}}</td>
-                                    <td class="text-center"><button type="button" class="btn" id='tbl-btn' style="background-color: transparent;"><i class="icon-trash"></i></button></td>
+                                    <td class="text-center"><a href="{{url_for('delete_product', item = item.id)}}" class="btn" id='tbl-btn' style="background-color: transparent;"><i class="icon-trash"></i></a></td>
                                 </tr>
                             {% endfor %}
                         </tbody>

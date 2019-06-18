@@ -32,18 +32,11 @@
                                     <td>{{item.quantity}}</td>
                                     <td>{{item.type}}</td>
                                     <td>{{item.price}}</td>
-                                    <td class="text-center"><button type="button" class="btn" id='tbl-btn' style="background-color: transparent;"><i class="icon-trash"></i></button></td>
+                                    <td class="text-center"><a href="{{url_for('delete_order', item=item.order_id)}}" type="button" class="btn" id='tbl-btn' style="background-color: transparent;"><i class="icon-trash"></i></a></td>
     				            </tr>
                             {% endfor %}
                         </tbody>
                 </table>
-                <div class="ml-auto text-light-blue" style="margin-top: 50px;">
-                    <ul class="nav nav-tabs customtab default-customtab list-inline text-uppercase lp-5 font-medium font-12" style="float:right;" role="tablist">
-                        <li>
-                            <a href="{{url_for('addItem')}}" class="btn bg-teal-400 btn-labeled btn-labeled-left rounded-round"><b><i class="icon-plus-circle2"></i></b>Add Product</a>
-                        </li>
-                    </ul>
-                </div>
             </div>
         </div>
     </div>

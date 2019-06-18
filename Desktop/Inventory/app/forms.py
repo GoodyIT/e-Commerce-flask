@@ -51,8 +51,8 @@ class BillingForm(FlaskForm):
 
 
 class VendorForm(FlaskForm):
-    vendor = StringField('Vendor Name')
-    url = StringField('URL')
+    vendor = StringField('Vendor Name', validators=[DataRequired()])
+    url = StringField('URL', validators=[DataRequired()])
     submit = SubmitField('Add Vendor')
 
 

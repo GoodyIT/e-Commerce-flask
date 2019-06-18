@@ -132,7 +132,7 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 # home page
-@app.route('/admin')
+@app.route('/admin/')
 @login_required
 def home():
     products = db.Products.find()
@@ -389,6 +389,7 @@ def games1():
     subGroup = request.args.get("subgroup")
     page     = request.args.get("page")
     return redirect(url_for('games', gid=groupId, subgroup=subGroup, page=page))
+
 @app.route('/store/games')
 def games():
     groupId   = request.args.get("gid")
@@ -477,6 +478,7 @@ def electrnoics1():
     subGroup = request.args.get("subgroup")
     page     = request.args.get("page")
     return redirect(url_for('electronics', gid=groupId, subgroup=subGroup, page=page))
+
 @app.route('/store/electronics')
 def electronics():
     groupId   = request.args.get("gid")
@@ -1012,7 +1014,7 @@ def uploadLogo():
                 imgfilepath = os.path.join(UPLOAD_FOLDER, filename)
                 file.save(imgfilepath)
                 # append image urls
-                file_urls.append('../uploads/logo/' + filename)
+                file_urls.append('../uploads/logo' + filename)
         strjson = file_urls[0]
         return jsonify(target_file=strjson)
     return ''
@@ -1040,7 +1042,7 @@ def addItem():
                 imgfilepath = os.path.join(UPLOAD_FOLDER, filename)
                 file.save(imgfilepath)
                 # append image urls
-                file_urls.append('../uploads/' + filename)
+                file_urls.append('../uploads' + filename)
         strjson = file_urls[0]
         print("------strjson: "+strjson)
         return jsonify(target_file=strjson)
@@ -1130,7 +1132,7 @@ def importItem():
                     'category' : row['Category'],
                     'price' : row['Price'],
                     'currency' : row['Currency'],
-                    'attributes' : json.loads(row['Attributes'].replace('/',',')),
+                    'attributes' : json.loads(row['Attributes'].replace('',',')),
                     'vendor' : row['Vendor'],
                     'url' : row['URL'],
                 }
@@ -1159,35 +1161,9 @@ def importItem():
         return 'file uploaded successfully'
 
 # products
-@app.route('/products', methods=['GET','POST'])
+@app.route('/products', methods=['GET'])
 @login_required
 def products():
-    if request.method == 'POST':
-        item = request.json
-        #order = db.Orders.find_one({'order_id':item['id']})
-        #post_cancellation_request(order['merchant_order_id'])
-        
-        db.Products.remove({'id':item['id']})
-
-        #Add History
-        new_hist_item = {
-            'id' : str(uid()),
-            'pid' : item['id'],
-            'type' : 'ITEM',
-            'date' : date.today().strftime('%Y/%m/%d'),
-            'reason' : "Item Deleted",
-            'adjustments' : item['id'],
-            'description' : "User ID: "+current_user.get_id(),
-        }
-        db.History.insert_one(new_hist_item)
-
-        response = app.response_class(
-            response=json.dumps(item),
-            status=200,
-            mimetype='application/json'
-        )
-        return response
-
     tblPrdt = []
     table = db.Products.find()
     for prdt in table:
@@ -1224,16 +1200,45 @@ def products():
 
     return render_template('products.html', breadCrumb=BREAD_CRUMB['Products'][0], uname=current_user.get_id(), title='Products', table=tblPrdt)
 
+@app.route('/products/delete/<string:item>')
+def delete_product(item):
+    
+    print("-----------------------"+item)
+    db.Products.remove({'id':item})
+
+    #Add History
+    new_hist_item = {
+        'id' : str(uid()),
+        'pid' : item,
+        'type' : 'ITEM',
+        'date' : date.today().strftime('%Y/%m/%d'),
+        'reason' : "Item Deleted",
+        'adjustments' : item,
+        'description' : "User ID: "+current_user.get_id(),
+    }
+    db.History.insert_one(new_hist_item)
+    return redirect(url_for('products'))
+
 # inventory - product orders
 @app.route('/reports/activity-mail')
 @login_required
 def activity_mail():
     return render_template('activity-mail.html', breadCrumb=BREAD_CRUMB['Reports'][0], uname=current_user.get_id(), title='Activity Mail')
 
-# inventory - product orders
-@app.route('/reports/activity-log')
+# inventory - activity-log
+@app.route('/reports/activity-log', methods=['GET','POST'])
 @login_required
 def activity_log():
+    if request.method == 'POST':
+        result = db.History.find({
+            "date": {
+                "$gt": request.json["from"],
+                "$lte": request.json["to"]
+            },
+        }, {
+            "_id": 0
+        })
+        return jsonify({"report": list(result)})
     return render_template('activity-log.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Activity Log')
 
@@ -1520,7 +1525,7 @@ def checkout():
         total["price"] += int(y[1])*product['price']
         db.Orders.insert_one({
             'order_id': str(uid()),
-            'player_id': str(uid()),
+            'player_id': current_user.get_id(),
             'product_id': product['id'],
             'product_name': product['product'],
             'group_id': product['category'],
@@ -1553,30 +1558,20 @@ def contacts():
     uname=current_user.get_id(), title='Contacts')
 
 # Orders
-@app.route('/orders', methods=['GET','POST'])
+@app.route('/orders', methods=['GET'])
 @login_required
 def orders():
-    if request.method == 'POST':
-        item = request.json
-        new_order = db.Queue.find_one({'order_id':item['id']})
-        db.Queue.remove({'order_id':item['id']})
-        db.Orders.insert_one(new_order)
-
-        response = app.response_class(
-            response=json.dumps(item),
-            status=200,
-            mimetype='application/json'
-        )
-        return response
 
     tblOrdrs = []
     table = db.Orders.find()
     for ordr in table:
         uid = ordr['player_id']
         pname = ""
-        plyr = db.Users.find_one({'uid':uid})
+        plyr = db.Users.find_one({'id':uid})
         if plyr:
             pname = plyr['name']
+        else :
+            pname = "Unknown guest"
         
         iname = ""
         if 'item_id' in ordr:
@@ -1589,13 +1584,22 @@ def orders():
         tblOrdrs.append({ #Variable 'table' is just iterator, so it indicates the NULL after finished loop
             'order_id': ordr['order_id'],
             'player': pname,
-            'item': iname,
+            'item': ordr['product_name'],
             'quantity': ordr['quantity'],
             'type': ordr['type'],
             'price': ordr['price']
         })
 
     return render_template('orders.html', breadCrumb=BREAD_CRUMB['Orders'][0], uname=current_user.get_id(), title='Queue', table=tblOrdrs)
+
+@app.route('/orders/delete/<string:item>')
+@login_required
+def delete_order():
+    new_order = db.Queue.find_one({'order_id':item})
+    db.Queue.remove({'order_id':item})
+    db.Orders.insert_one(new_order)
+
+    return redirect(url_for('orders'))
 
 # Queue
 @app.route('/queue', methods=['GET','POST'])
@@ -1652,7 +1656,7 @@ def myprofile():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('store'))
     form = RegisterForm()
     if form.validate_on_submit():
         new_user = {
@@ -1664,28 +1668,28 @@ def signup():
         }
         db.Users.insert_one(new_user)
         flash('Congratulations {}, you are now a registered user!'.format(form.name.data))
-        return redirect(url_for('home'))
+        return redirect(url_for('store'))
     return render_template('signup.html', breadCrumb=BREAD_CRUMB['Signup'][0], title='Register', form=form)
 
 # login page
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     print("++++++++++      login     +++++++++++")
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('store'))
     form = LoginForm()
     if form.validate_on_submit():
         user = db.Users.find_one({'id':form.username.data})
         if user != None and User.checkPassword(user['pw'], form.pw.data):
             verify = User(user['id'])
             login_user(verify)
-            return redirect(url_for('home'))
+            return redirect(url_for('store'))
         flash('Invalid Username or Password. Please try again.')
         return redirect(url_for('login'))
     return render_template('login.html', breadCrumb=BREAD_CRUMB['Login'][0], title='Login', form=form)
 
 # logout
-@app.route('/logout')
+@app.route('/logout/')
 def logout():
     logout_user()
     return redirect(url_for('login'))
