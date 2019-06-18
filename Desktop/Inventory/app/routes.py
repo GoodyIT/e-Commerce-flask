@@ -20,6 +20,8 @@ import pdb
 from .zincapi_communication import post_shipping_request, post_cancellation_request
 
 #app = Flask(__name__)
+app.url_map.strict_slashes = False
+
 def _removeNewLine(input):
     ''' Removes \n from string elements '''
     if input.endswith('\n'):
@@ -132,9 +134,15 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 # home page
-@app.route('/admin/')
+@app.route('/admin')
 @login_required
 def home():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     products = db.Products.find()
     return render_template(
         'index.html', 
@@ -148,6 +156,12 @@ def home():
 @app.route('/analytics', methods=['POST'])
 @login_required
 def get_analytics():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     requestData = json.loads(request.data)
     if (requestData['type'] == 'init'):
         analyticsByState = db.Orders.aggregate([
@@ -424,7 +438,8 @@ def games():
         activeGroupId=groupId, 
         activeSubGroup=subGroup, 
         pageCount=pageCount,
-        currentPage=page
+        currentPage=page,
+        is_authenticated=current_user.is_authenticated
     )
 
 #store - office
@@ -468,7 +483,8 @@ def office():
         activeGroupId=groupId, 
         activeSubGroup=subGroup, 
         pageCount=pageCount,
-        currentPage=page
+        currentPage=page,
+        is_authenticated=current_user.is_authenticated
     )
 
 #store - electronics
@@ -513,7 +529,8 @@ def electronics():
         activeGroupId=groupId, 
         activeSubGroup=subGroup, 
         pageCount=pageCount,
-        currentPage=page
+        currentPage=page,
+        is_authenticated=current_user.is_authenticated
     )
 
 #store - gear
@@ -557,7 +574,8 @@ def gear():
         activeGroupId=groupId, 
         activeSubGroup=subGroup, 
         pageCount=pageCount,
-        currentPage=page
+        currentPage=page,
+        is_authenticated=current_user.is_authenticated
     )
 
 #store - computers
@@ -601,7 +619,8 @@ def computers():
         activeGroupId=groupId, 
         activeSubGroup=subGroup, 
         pageCount=pageCount,
-        currentPage=page
+        currentPage=page,
+        is_authenticated=current_user.is_authenticated
     )
 
 #store - toys
@@ -645,7 +664,8 @@ def toys():
         activeGroupId=groupId, 
         activeSubGroup=subGroup, 
         pageCount=pageCount,
-        currentPage=page
+        currentPage=page,
+        is_authenticated=current_user.is_authenticated
     )
 
 #store - accessories
@@ -689,7 +709,8 @@ def accessories():
         activeGroupId=groupId, 
         activeSubGroup=subGroup, 
         pageCount=pageCount,
-        currentPage=page
+        currentPage=page,
+        is_authenticated=current_user.is_authenticated
     )
 
 #store
@@ -703,12 +724,18 @@ def store():
     groupsList = {}
     for x in groups:
         groupsList[x['_id']] = x['store']
-    return render_template('store.html', title='Store', groups=groupsList)
+    return render_template('store.html', title='Store', groups=groupsList, is_authenticated=current_user.is_authenticated)
 
 # shipping
 @app.route('/shipping')
 @login_required
 def shipping():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     orders = db.Orders.find()
     c = 0
     current = {}
@@ -725,6 +752,12 @@ def shipping():
 # Purchase
 @app.route('/purchase/items')
 def post_purchase():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     if request.method == 'POST':
         print("++++++++++NEW REQUEST++++++++++++")
         print(request.data)
@@ -736,6 +769,12 @@ def post_purchase():
 @app.route('/purchase', methods=['GET','POST'])
 @login_required
 def purchase():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     form = PurchaseForm()
     if form.validate_on_submit():
         orderCells = form.orders.data.split(',')
@@ -773,6 +812,12 @@ def purchase():
 @app.route('/bills')
 @login_required
 def bills():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     form = BillingForm()
     if form.validate_on_submit():
         return redirect(url_for('bills'))
@@ -783,6 +828,12 @@ def bills():
 @app.route('/groups/category', methods=['GET','POST'])
 @login_required
 def groups_category():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     form = CategoryForm()
     if form.validate_on_submit():
         new_item = {
@@ -798,6 +849,12 @@ def groups_category():
 @app.route('/groups/add', methods=['GET','POST'])
 @login_required
 def groups_add():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     form = GroupForm()
     if form.validate_on_submit():
         new_item = {
@@ -821,6 +878,12 @@ def groups_add():
 @app.route('/groups')
 @login_required
 def groups():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     groups = db.Groups.find()
     return render_template('groups.html', breadCrumb=BREAD_CRUMB['Products'][0], uname=current_user.get_id(), title='Groups', groups=groups)
 
@@ -828,6 +891,12 @@ def groups():
 @app.route('/groups/<name>', methods=['GET','POST'])
 @login_required
 def groups_list(name):
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     if request.method == 'POST':
         update_item = {
             'product' : request.form.get("pname"),
@@ -890,6 +959,12 @@ def groups_list(name):
 @app.route('/getSubgroups', methods=['POST'])
 @login_required
 def getSubgroups():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     if request.method == 'POST':
         item = request.json
         if not item: return jsonify(subgroups=[('none', 'None')])
@@ -903,6 +978,12 @@ def getSubgroups():
 @app.route('/updateProduct', methods=['POST'])
 @login_required
 def updateProduct():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     if request.method == 'POST':
         update_item = request.json
         db.Products.update_one({"id": update_item['pid']},{"$set":update_item['item']},upsert=True)
@@ -912,6 +993,12 @@ def updateProduct():
 @app.route('/getProduct', methods=['POST'])
 @login_required
 def getProduct():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     if request.method == 'POST':
         item = request.json
         print("++++++++++NEW REQUEST++++++++++++ getProduct: ", item)
@@ -925,6 +1012,12 @@ def getProduct():
 @app.route('/getOrders', methods=['POST'])
 @login_required
 def getOrders():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     if request.method == 'POST':
         item = request.json
         ordrs = db.Orders.find({'item_id':item['pid']})
@@ -941,6 +1034,12 @@ def getOrders():
 @app.route('/getHistory', methods=['POST'])
 @login_required
 def getHistory():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     if request.method == 'POST':
         item = request.json
         print("++++++++++ getHistory ++++++++++++ item: ", item)
@@ -956,6 +1055,12 @@ def getHistory():
 @app.route('/addHistory', methods=['POST'])
 @login_required
 def addHistory():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     if request.method == 'POST':
         item = request.json
         arrHist = []
@@ -983,6 +1088,12 @@ def addHistory():
 @app.route('/products/vendor', methods=['GET','POST'])
 @login_required
 def vendor():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     form = VendorForm()
     if form.validate_on_submit():
         vendor = {
@@ -999,6 +1110,12 @@ def vendor():
 @app.route('/uploadLogo', methods=['POST'])
 @login_required
 def uploadLogo():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     curDirPath = os.path.dirname(os.path.realpath(__file__))
     UPLOAD_FOLDER = os.path.join(curDirPath,"uploads/logo")
     file_urls = []
@@ -1018,10 +1135,17 @@ def uploadLogo():
         strjson = file_urls[0]
         return jsonify(target_file=strjson)
     return ''
+
 # products - add item
 @app.route('/products/add', methods=['GET','POST'])
 @login_required
 def addItem():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     curDirPath = os.path.dirname(os.path.realpath(__file__))
     UPLOAD_FOLDER = os.path.join(curDirPath,"uploads")
     form = ProductForm()
@@ -1104,6 +1228,12 @@ def addItem():
 @app.route('/importFile', methods=['GET','POST'])
 @login_required
 def importItem():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     if request.method == 'POST':
         ### Save uploaded file
         f = request.files['fileImport']
@@ -1164,6 +1294,12 @@ def importItem():
 @app.route('/products', methods=['GET'])
 @login_required
 def products():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     tblPrdt = []
     table = db.Products.find()
     for prdt in table:
@@ -1202,8 +1338,12 @@ def products():
 
 @app.route('/products/delete/<string:item>')
 def delete_product(item):
-    
-    print("-----------------------"+item)
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     db.Products.remove({'id':item})
 
     #Add History
@@ -1223,12 +1363,24 @@ def delete_product(item):
 @app.route('/reports/activity-mail')
 @login_required
 def activity_mail():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('activity-mail.html', breadCrumb=BREAD_CRUMB['Reports'][0], uname=current_user.get_id(), title='Activity Mail')
 
 # inventory - activity-log
 @app.route('/reports/activity-log', methods=['GET','POST'])
 @login_required
 def activity_log():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.History.find({
             "date": {
@@ -1246,6 +1398,12 @@ def activity_log():
 @app.route('/reports/purchases-orders', methods=['GET','POST'])
 @login_required
 def purchases_orders():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find({
             "date": {
@@ -1263,6 +1421,12 @@ def purchases_orders():
 @app.route('/reports/purchases-receivable', methods=['GET','POST'])
 @login_required
 def purchases_receivable():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     if request.method == 'POST':
         if request.json["receivable"] == 'Receivable':
             result = db.Orders.find({
@@ -1285,6 +1449,12 @@ def purchases_receivable():
 @app.route('/reports/purchases-vendors', methods=['GET','POST'])
 @login_required
 def purchases_vendors():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     if request.method == 'POST':
         products = db.Products.find({
             "vendor": request.json["vendor"]
@@ -1309,6 +1479,12 @@ def purchases_vendors():
 @app.route('/reports/purchases-items', methods=['GET','POST'])
 @login_required
 def purchases_items():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find({
             "product_id": request.json["product_id"]
@@ -1323,6 +1499,12 @@ def purchases_items():
 @app.route('/reports/purchases-bills')
 @login_required
 def purchases_bills():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('purchases-bills.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Purchases by Bills')
 
@@ -1330,6 +1512,12 @@ def purchases_bills():
 @app.route('/reports/purchases-balance')
 @login_required
 def purchases_balance():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('purchases-balance.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Vendor Balance')
 
@@ -1337,6 +1525,12 @@ def purchases_balance():
 @app.route('/reports/purchases-payments')
 @login_required
 def purchases_payments():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('purchases-payments.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Purchases by Payments')
 
@@ -1344,6 +1538,12 @@ def purchases_payments():
 @app.route('/reports/inventory-fifo')
 @login_required
 def inventory_fifo():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('inventory-fifo.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='FIFO')
 
@@ -1351,6 +1551,12 @@ def inventory_fifo():
 @app.route('/reports/inventory-valuation')
 @login_required
 def inventory_valuation():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('inventory-valuation.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Inventory Valuation')
 
@@ -1358,6 +1564,12 @@ def inventory_valuation():
 @app.route('/reports/inventory-details')
 @login_required
 def inventory_details():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('inventory-details.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Inventory Details')
 
@@ -1365,6 +1577,12 @@ def inventory_details():
 @app.route('/reports/inventory-sales')
 @login_required
 def inventory_sales():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('inventory-sales.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Product Sales')
 
@@ -1372,6 +1590,12 @@ def inventory_sales():
 @app.route('/reports/inventory-purchases')
 @login_required
 def inventory_purchases():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('inventory-purchases.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Active Purchases')
 
@@ -1379,6 +1603,12 @@ def inventory_purchases():
 @app.route('/reports/sales-item')
 @login_required
 def sales_item():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('sales-item.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Sales Items')
 
@@ -1386,6 +1616,12 @@ def sales_item():
 @app.route('/reports/salesman')
 @login_required
 def salesman():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('salesman.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Salesman')
 
@@ -1393,6 +1629,12 @@ def salesman():
 @app.route('/reports/sales-balance')
 @login_required
 def sales_balance():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('sales-balance.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Balance')
 
@@ -1400,6 +1642,12 @@ def sales_balance():
 @app.route('/reports/sales-packing')
 @login_required
 def sales_packing():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('sales-packing.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Sales Packing')
 
@@ -1407,6 +1655,12 @@ def sales_packing():
 @app.route('/reports/sales-payments')
 @login_required
 def sales_payments():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('sales-payments.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Sales Payments')
 
@@ -1414,6 +1668,12 @@ def sales_payments():
 @app.route('/reports/sales-customers')
 @login_required
 def sales_customers():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('sales-customers.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Sales Customer')
 
@@ -1421,6 +1681,12 @@ def sales_customers():
 @app.route('/reports/sales-orders')
 @login_required
 def sales_orders():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('sales-orders.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Sales Order')
 
@@ -1428,6 +1694,12 @@ def sales_orders():
 @app.route('/reports/sales-invoice')
 @login_required
 def sales_invoice():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('sales-invoice.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Sales Invoices')
 
@@ -1435,6 +1707,12 @@ def sales_invoice():
 @app.route('/integrations')
 @login_required
 def integrations():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     print("----------------------------- bread_crumb:", bread_crumb['Integrations'])
     return render_template('integrations.html', breadCrumb=BREAD_CRUMB['Integrations'][0],
     uname=current_user.get_id(), title='Integrations')
@@ -1443,6 +1721,12 @@ def integrations():
 @app.route('/reports')
 @login_required
 def reports():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('reports.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Report')
 
@@ -1450,6 +1734,12 @@ def reports():
 @app.route('/billing')
 @login_required
 def billing():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('billing.html', breadCrumb=BREAD_CRUMB['Orders'][0],
     uname=current_user.get_id(), title='Billing')
 
@@ -1547,6 +1837,12 @@ def checkout():
 @app.route('/files')
 @login_required
 def files():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('files.html', breadCrumb=BREAD_CRUMB['Orders'][0],
     uname=current_user.get_id(), title='Files')
 
@@ -1554,6 +1850,12 @@ def files():
 @app.route('/contacts')
 @login_required
 def contacts():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     return render_template('contacts.html', breadCrumb=BREAD_CRUMB['Shipping'][0],
     uname=current_user.get_id(), title='Contacts')
 
@@ -1561,7 +1863,12 @@ def contacts():
 @app.route('/orders', methods=['GET'])
 @login_required
 def orders():
-
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     tblOrdrs = []
     table = db.Orders.find()
     for ordr in table:
@@ -1595,6 +1902,12 @@ def orders():
 @app.route('/orders/delete/<string:item>')
 @login_required
 def delete_order():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     new_order = db.Queue.find_one({'order_id':item})
     db.Queue.remove({'order_id':item})
     db.Orders.insert_one(new_order)
@@ -1605,6 +1918,12 @@ def delete_order():
 @app.route('/queue', methods=['GET','POST'])
 @login_required
 def queue():
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
     # current = db.Queue.find()
     if request.method == 'POST':
         item = request.json
@@ -1656,7 +1975,12 @@ def myprofile():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if current_user.is_authenticated:
-        return redirect(url_for('store'))
+        user_id = current_user.get_id()
+        current = db.Users.find_one({"id": user_id})
+        if 'role' in current and current['role'] == "admin":
+            return redirect(url_for('admin'))
+        else :
+            return redirect(url_for('store'))
     form = RegisterForm()
     if form.validate_on_submit():
         new_user = {
@@ -1676,14 +2000,22 @@ def signup():
 def login():
     print("++++++++++      login     +++++++++++")
     if current_user.is_authenticated:
-        return redirect(url_for('store'))
+        user_id = current_user.get_id()
+        current = db.Users.find_one({"id": user_id})
+        if 'role' in current and current['role'] == "admin":
+            return redirect(url_for('admin'))
+        else :
+            return redirect(url_for('store'))
     form = LoginForm()
     if form.validate_on_submit():
         user = db.Users.find_one({'id':form.username.data})
         if user != None and User.checkPassword(user['pw'], form.pw.data):
             verify = User(user['id'])
             login_user(verify)
-            return redirect(url_for('store'))
+            if 'role' in user and user['role'] == "admin":
+                return redirect(url_for('admin'))
+            else :
+                return redirect(url_for('store'))
         flash('Invalid Username or Password. Please try again.')
         return redirect(url_for('login'))
     return render_template('login.html', breadCrumb=BREAD_CRUMB['Login'][0], title='Login', form=form)

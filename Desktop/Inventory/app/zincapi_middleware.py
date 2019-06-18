@@ -121,7 +121,7 @@ class ZincapiMiddleware(object):
 
 
         def my_start_response(status, headers, exc_info=None):
-            status = '200 OK'
+            # status = '200 OK'
             return start_response(status, headers, exc_info)
 
         return self.app(environ, my_start_response)

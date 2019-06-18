@@ -76,8 +76,14 @@
                         <!-- top links -->
                         <div class="toplinks col-lg-7 col-md-7 col-sm-8 col-xs-12 hidden-xs">
                             <div class="links">
-                                <div class="login top-links-wrapper "><a class="top-link" href="{{url_for('login')}}"><span
-                                        class="hidden-xs">Log In</span></a></div>
+                                <div class="login top-links-wrapper ">
+                                    {% if is_authenticated %}
+                                    <a class="top-link" href="{{url_for('logout')}}"><span class="hidden-xs">Log Out</span></a>
+                                    {% else %}
+                                    <a class="top-link" href="{{url_for('login')}}"><span class="hidden-xs">Log In</span></a>
+                                    {% endif %}
+                                    
+                                </div>
                                 <!-- top cart -->
                                 <div class="top-cart top-links-wrapper ">
                                     <div class="top-cart-contain">
@@ -85,7 +91,7 @@
                                             <div data-toggle="dropdown" data-hover="dropdown"
                                                  class="basket dropdown-toggle"><a class="top-link" href="#">
                                                 <div class="shoppingcart-inner"><span class="cart-title"></span> <span
-                                                        class="cart_count">2</span></div>
+                                                        class="cart_count"></span></div>
                                             </a></div>
                                             <div>
                                                 <div class="top-cart-content">
