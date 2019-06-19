@@ -98,7 +98,11 @@
 
 				<li class="nav-item dropdown dropdown-user">
 					<a href="#" class="navbar-nav-link d-flex align-items-center dropdown-toggle" data-toggle="dropdown">
-						<img src="../static/global_assets/images/placeholders/placeholder.jpg" class="rounded-circle mr-2" height="34" alt="">
+						{% if avatar %}
+						<img src={{avatar}} class="rounded-circle mr-2" height="34" alt="">
+						{% else %}
+						<img src="../static/global_assets/images/placeholders/placeholder.png" class="rounded-circle mr-2" height="34" alt="">
+						{% endif %}
 						<span>{{uname}}</span>
 					</a>
 

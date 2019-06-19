@@ -148,6 +148,7 @@ def home():
         'index.html', 
         breadCrumb=BREAD_CRUMB['Dashboard'][0],
         uname=current_user.get_id(), 
+        avatar=current['avatar'],
         title='Home Page', 
         total=products
         )
@@ -747,7 +748,8 @@ def shipping():
             else:
                 currents[orders[c]['product_id']] = 1
         c += 1
-    return render_template('shipping.html', breadCrumb=BREAD_CRUMB['Shipping'][0], title='Shipping', orders=currents)
+    return render_template('shipping.html', breadCrumb=BREAD_CRUMB['Shipping'][0], title='Shipping', orders=currents
+        ,avatar=current['avatar'])
 
 # Purchase
 @app.route('/purchase/items')
@@ -763,7 +765,7 @@ def post_purchase():
         print(request.data)
         return redirect(url_for('post_purchase'))
     return render_template('purchase.html', breadCrumb=BREAD_CRUMB['Orders'][0],
-    uname=current_user.get_id(), title='Purchase Order')
+    uname=current_user.get_id(), title='Purchase Order',avatar=current['avatar'])
 
 # Purchase
 @app.route('/purchase', methods=['GET','POST'])
@@ -806,7 +808,7 @@ def purchase():
 
         return redirect(url_for('purchase'))
     return render_template('purchase.html', breadCrumb=BREAD_CRUMB['Orders'][0],
-    uname=current_user.get_id(), title='Purchase Order', form=form)
+    uname=current_user.get_id(), title='Purchase Order', form=form,avatar=current['avatar'])
 
 # Purchase
 @app.route('/bills')
@@ -822,7 +824,7 @@ def bills():
     if form.validate_on_submit():
         return redirect(url_for('bills'))
     return render_template('bills.html', breadCrumb=BREAD_CRUMB['Orders'][0],
-    uname=current_user.get_id(), title='Billing', form=form)
+    uname=current_user.get_id(), title='Billing', form=form,avatar=current['avatar'])
 
 # groups - categorize
 @app.route('/groups/category', methods=['GET','POST'])
@@ -843,7 +845,7 @@ def groups_category():
         db.Category.insert_one(new_item)
         flash('New Category Added.')
         return redirect(url_for('addItem'))
-    return render_template('groups-category.html', title='Groups Category', form=form)
+    return render_template('groups-category.html', title='Groups Category', form=form,avatar=current['avatar'])
 
 # groups add
 @app.route('/groups/add', methods=['GET','POST'])
@@ -872,7 +874,7 @@ def groups_add():
         db.Groups.insert_one(new_item)
         flash('New Group Added.')
         return redirect(url_for('groups'))
-    return render_template('groups-add.html', breadCrumb=BREAD_CRUMB['Products'][0], uname=current_user.get_id(), title='Groups', form=form)
+    return render_template('groups-add.html', breadCrumb=BREAD_CRUMB['Products'][0], uname=current_user.get_id(), title='Groups', form=form,avatar=current['avatar'])
 
 # groups
 @app.route('/groups')
@@ -885,7 +887,7 @@ def groups():
     else :
         return redirect(url_for('logout'))
     groups = db.Groups.find()
-    return render_template('groups.html', breadCrumb=BREAD_CRUMB['Products'][0], uname=current_user.get_id(), title='Groups', groups=groups)
+    return render_template('groups.html', breadCrumb=BREAD_CRUMB['Products'][0], uname=current_user.get_id(), title='Groups', groups=groups,avatar=current['avatar'])
 
 # groups list
 @app.route('/groups/<name>', methods=['GET','POST'])
@@ -954,7 +956,7 @@ def groups_list(name):
         
     return render_template('groups-list.html', breadCrumb=BREAD_CRUMB['Products'][0],
                             uname=current_user.get_id(), title='Groups List', items=items, cates=cates,
-                            vendors=vendors, currs=CURRENCIES, orders=ordrs, history=hists)
+                            vendors=vendors, currs=CURRENCIES, orders=ordrs, history=hists,avatar=current['avatar'])
 
 @app.route('/getSubgroups', methods=['POST'])
 @login_required
@@ -1006,7 +1008,7 @@ def getProduct():
 
         return jsonify(id=prdt['id'], product=prdt['product'], sku=prdt['sku'], #'images' : prdt['images'],
                         category=prdt['category'], price=prdt['price'], currency=prdt['currency'],
-                        attributes=prdt['attributes'], vendor=prdt['vendor'], url=prdt['url'])
+                        attributes=prdt['attributes'], vendor=prdt['vendor'], url=prdt['url'],avatar=current['avatar'])
 
 # get orders
 @app.route('/getOrders', methods=['POST'])
@@ -1026,7 +1028,7 @@ def getOrders():
         for order in ordrs:
             arrOrder.append({"oid":order['order_id'], "playerid":order['player_id'],
             "itemid":order['item_id'], "qty":order['quantity'], "type":order['type'],
-            "price":order['price']})
+            "price":order['price']},avatar=current['avatar'])
 
         return jsonify(orders=arrOrder)
 
@@ -1105,7 +1107,7 @@ def vendor():
         flash('New Vendor Added.')
         return redirect(url_for('vendor'))
     return render_template('vendor.html', breadCrumb=BREAD_CRUMB['Products'][0],
-    uname=current_user.get_id(), title='Vendor', form=form)
+    uname=current_user.get_id(), title='Vendor', form=form,avatar=current['avatar'])
 
 @app.route('/uploadLogo', methods=['POST'])
 @login_required
@@ -1223,7 +1225,7 @@ def addItem():
         flash('New Item Added.')
         return redirect(url_for('products'))
 
-    return render_template('add-item.html', breadCrumb=BREAD_CRUMB['Products'][0], uname=current_user.get_id(), title='Add Item', form=form)
+    return render_template('add-item.html', breadCrumb=BREAD_CRUMB['Products'][0], uname=current_user.get_id(), title='Add Item', form=form,avatar=current['avatar'])
 
 @app.route('/importFile', methods=['GET','POST'])
 @login_required
@@ -1334,7 +1336,7 @@ def products():
         print("--- prdt: ",prdt)
     '''
 
-    return render_template('products.html', breadCrumb=BREAD_CRUMB['Products'][0], uname=current_user.get_id(), title='Products', table=tblPrdt)
+    return render_template('products.html', breadCrumb=BREAD_CRUMB['Products'][0], uname=current_user.get_id(), title='Products', table=tblPrdt,avatar=current['avatar'])
 
 @app.route('/products/delete/<string:item>')
 def delete_product(item):
@@ -1372,7 +1374,7 @@ def activity_mail():
         pass
     else :
         return redirect(url_for('logout'))
-    return render_template('activity-mail.html', breadCrumb=BREAD_CRUMB['Reports'][0], uname=current_user.get_id(), title='Activity Mail')
+    return render_template('activity-mail.html', breadCrumb=BREAD_CRUMB['Reports'][0], uname=current_user.get_id(), title='Activity Mail',avatar=current['avatar'])
 
 # inventory - activity-log
 @app.route('/reports/activity-log', methods=['GET','POST'])
@@ -1395,7 +1397,7 @@ def activity_log():
         })
         return jsonify({"report": list(result)})
     return render_template('activity-log.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Activity Log')
+    uname=current_user.get_id(), title='Activity Log',avatar=current['avatar'])
 
 # inventory - product orders
 @app.route('/reports/purchases-orders', methods=['GET','POST'])
@@ -1418,7 +1420,7 @@ def purchases_orders():
         })
         return jsonify({"report": list(result)})
     return render_template('purchases-orders.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Purchases Orders')
+    uname=current_user.get_id(), title='Purchases Orders',avatar=current['avatar'])
 
 # inventory - product receivable
 @app.route('/reports/purchases-receivable', methods=['GET','POST'])
@@ -1446,7 +1448,7 @@ def purchases_receivable():
         return jsonify({"report": list(result)})
     
     return render_template('purchases-receivable.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Purchases Details')
+    uname=current_user.get_id(), title='Purchases Details',avatar=current['avatar'])
 
 # inventory - product sales
 @app.route('/reports/purchases-vendors', methods=['GET','POST'])
@@ -1476,7 +1478,7 @@ def purchases_vendors():
         return jsonify({"report": list(result)})
     vendors = db.Vendor.find()
     return render_template('purchases-vendors.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Purchases By Vendors', vendors=vendors)
+    uname=current_user.get_id(), title='Purchases By Vendors', vendors=vendors,avatar=current['avatar'])
 
 # inventory - product sales
 @app.route('/reports/purchases-items', methods=['GET','POST'])
@@ -1497,7 +1499,7 @@ def purchases_items():
         return jsonify({"report": list(result)})
     products = db.Products.find()
     return render_template('purchases-items.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Purchases by Items', products=products)
+    uname=current_user.get_id(), title='Purchases by Items', products=products,avatar=current['avatar'])
 # inventory - purchase bills
 @app.route('/reports/purchases-bills')
 @login_required
@@ -1509,7 +1511,7 @@ def purchases_bills():
     else :
         return redirect(url_for('logout'))
     return render_template('purchases-bills.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Purchases by Bills')
+    uname=current_user.get_id(), title='Purchases by Bills',avatar=current['avatar'])
 
 # inventory - purchase balance
 @app.route('/reports/purchases-balance')
@@ -1522,7 +1524,7 @@ def purchases_balance():
     else :
         return redirect(url_for('logout'))
     return render_template('purchases-balance.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Vendor Balance')
+    uname=current_user.get_id(), title='Vendor Balance',avatar=current['avatar'])
 
 # inventory - product sales
 @app.route('/reports/purchases-payments')
@@ -1535,7 +1537,7 @@ def purchases_payments():
     else :
         return redirect(url_for('logout'))
     return render_template('purchases-payments.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Purchases by Payments')
+    uname=current_user.get_id(), title='Purchases by Payments',avatar=current['avatar'])
 
 # inventory - product sales
 @app.route('/reports/inventory-fifo')
@@ -1548,7 +1550,7 @@ def inventory_fifo():
     else :
         return redirect(url_for('logout'))
     return render_template('inventory-fifo.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='FIFO')
+    uname=current_user.get_id(), title='FIFO',avatar=current['avatar'])
 
 # inventory - product sales
 @app.route('/reports/inventory-valuation')
@@ -1561,7 +1563,7 @@ def inventory_valuation():
     else :
         return redirect(url_for('logout'))
     return render_template('inventory-valuation.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Inventory Valuation')
+    uname=current_user.get_id(), title='Inventory Valuation',avatar=current['avatar'])
 
 # inventory - product sales
 @app.route('/reports/inventory-details')
@@ -1574,7 +1576,7 @@ def inventory_details():
     else :
         return redirect(url_for('logout'))
     return render_template('inventory-details.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Inventory Details')
+    uname=current_user.get_id(), title='Inventory Details',avatar=current['avatar'])
 
 # inventory - product sales
 @app.route('/reports/inventory-sales')
@@ -1587,7 +1589,7 @@ def inventory_sales():
     else :
         return redirect(url_for('logout'))
     return render_template('inventory-sales.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Product Sales')
+    uname=current_user.get_id(), title='Product Sales',avatar=current['avatar'])
 
 # inventory - order history
 @app.route('/reports/inventory-purchases')
@@ -1600,7 +1602,7 @@ def inventory_purchases():
     else :
         return redirect(url_for('logout'))
     return render_template('inventory-purchases.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Active Purchases')
+    uname=current_user.get_id(), title='Active Purchases',avatar=current['avatar'])
 
 # sales -
 @app.route('/reports/sales-item')
@@ -1613,7 +1615,7 @@ def sales_item():
     else :
         return redirect(url_for('logout'))
     return render_template('sales-item.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Sales Items')
+    uname=current_user.get_id(), title='Sales Items',avatar=current['avatar'])
 
 # inventory - product sales
 @app.route('/reports/salesman')
@@ -1626,7 +1628,7 @@ def salesman():
     else :
         return redirect(url_for('logout'))
     return render_template('salesman.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Salesman')
+    uname=current_user.get_id(), title='Salesman',avatar=current['avatar'])
 
 # inventory - product sales
 @app.route('/reports/sales-balance')
@@ -1639,7 +1641,7 @@ def sales_balance():
     else :
         return redirect(url_for('logout'))
     return render_template('sales-balance.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Balance')
+    uname=current_user.get_id(), title='Balance',avatar=current['avatar'])
 
 # sales - packing history
 @app.route('/reports/sales-packing')
@@ -1652,7 +1654,7 @@ def sales_packing():
     else :
         return redirect(url_for('logout'))
     return render_template('sales-packing.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Sales Packing')
+    uname=current_user.get_id(), title='Sales Packing',avatar=current['avatar'])
 
 # sales - payment history
 @app.route('/reports/sales-payments')
@@ -1665,7 +1667,7 @@ def sales_payments():
     else :
         return redirect(url_for('logout'))
     return render_template('sales-payments.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Sales Payments')
+    uname=current_user.get_id(), title='Sales Payments',avatar=current['avatar'])
 
 # sales - invoice history
 @app.route('/reports/sales-customers')
@@ -1678,7 +1680,7 @@ def sales_customers():
     else :
         return redirect(url_for('logout'))
     return render_template('sales-customers.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Sales Customer')
+    uname=current_user.get_id(), title='Sales Customer',avatar=current['avatar'])
 
 # sales - sales orders
 @app.route('/reports/sales-orders')
@@ -1691,7 +1693,7 @@ def sales_orders():
     else :
         return redirect(url_for('logout'))
     return render_template('sales-orders.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Sales Order')
+    uname=current_user.get_id(), title='Sales Order',avatar=current['avatar'])
 
 # sales - sales product
 @app.route('/reports/sales-invoice')
@@ -1704,7 +1706,7 @@ def sales_invoice():
     else :
         return redirect(url_for('logout'))
     return render_template('sales-invoice.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Sales Invoices')
+    uname=current_user.get_id(), title='Sales Invoices',avatar=current['avatar'])
 
 # integrations
 @app.route('/integrations')
@@ -1718,7 +1720,7 @@ def integrations():
         return redirect(url_for('logout'))
     print("----------------------------- bread_crumb:", bread_crumb['Integrations'])
     return render_template('integrations.html', breadCrumb=BREAD_CRUMB['Integrations'][0],
-    uname=current_user.get_id(), title='Integrations')
+    uname=current_user.get_id(), title='Integrations',avatar=current['avatar'])
 
 # reports
 @app.route('/reports')
@@ -1731,7 +1733,7 @@ def reports():
     else :
         return redirect(url_for('logout'))
     return render_template('reports.html', breadCrumb=BREAD_CRUMB['Reports'][0],
-    uname=current_user.get_id(), title='Report')
+    uname=current_user.get_id(), title='Report',avatar=current['avatar'])
 
 # billing
 @app.route('/billing')
@@ -1744,7 +1746,7 @@ def billing():
     else :
         return redirect(url_for('logout'))
     return render_template('billing.html', breadCrumb=BREAD_CRUMB['Orders'][0],
-    uname=current_user.get_id(), title='Billing')
+    uname=current_user.get_id(), title='Billing',avatar=current['avatar'])
 
 # checkout
 @app.route('/checkout', methods=['GET','POST'])
@@ -1865,7 +1867,7 @@ def contacts():
     else :
         return redirect(url_for('logout'))
     return render_template('contacts.html', breadCrumb=BREAD_CRUMB['Shipping'][0],
-    uname=current_user.get_id(), title='Contacts')
+    uname=current_user.get_id(), title='Contacts',avatar=current['avatar'])
 
 # Orders
 @app.route('/orders', methods=['GET'])
@@ -1905,7 +1907,7 @@ def orders():
             'price': ordr['price']
         })
 
-    return render_template('orders.html', breadCrumb=BREAD_CRUMB['Orders'][0], uname=current_user.get_id(), title='Queue', table=tblOrdrs)
+    return render_template('orders.html', breadCrumb=BREAD_CRUMB['Orders'][0], uname=current_user.get_id(), title='Queue', table=tblOrdrs,avatar=current['avatar'])
 
 @app.route('/orders/delete/<string:item>')
 @login_required
@@ -1936,7 +1938,7 @@ def queue():
     
     queue = db.Queue.find()
     return render_template('queue.html', breadCrumb=BREAD_CRUMB['Queue'][0],
-    uname=current_user.get_id(), title='Queue', queue=queue, qlen=queue.count())
+    uname=current_user.get_id(), title='Queue', queue=queue, qlen=queue.count(),avatar=current['avatar'])
 
 @app.route('/queue/approve/<string:item>')
 @login_required
@@ -1981,7 +1983,8 @@ def myprofile():
             newdata = {
                 'id': request.form["username"] if request.form["username"] else user['id'],
                 'name': request.form['name'] if request.form["name"] else user['name'],
-                'email': request.form['email'] if request.form["email"] else user['email']
+                'email': request.form['email'] if request.form["email"] else user['email'],
+                'avatar': request.form['hdfiles']
             }
         else:
             pw = request.form["password"]
@@ -1989,12 +1992,13 @@ def myprofile():
                 'id': request.form["username"] if request.form["username"] else user['id'],
                 'name': request.form['name'] if request.form["name"] else user['name'],
                 'email': request.form['email'] if request.form["email"] else user['email'],
-                'pw' : User.setHash(pw)
+                'pw' : User.setHash(pw),
+                'avatar': request.form['hdfiles']
             }
         db.Users.update_one(
             {"_id": user['_id']},
             {"$set": newdata})
-    return render_template('profile.html', breadCrumb=BREAD_CRUMB['Profile'][0], title='Profile', data=data)
+    return render_template('profile.html', breadCrumb=BREAD_CRUMB['Profile'][0], title='Profile', data=data,avatar=current['avatar'])
 
 # signup page
 @app.route('/signup', methods=['GET', 'POST'])
@@ -2018,7 +2022,7 @@ def signup():
         db.Users.insert_one(new_user)
         flash('Congratulations {}, you are now a registered user!'.format(form.name.data))
         return redirect(url_for('store'))
-    return render_template('signup.html', breadCrumb=BREAD_CRUMB['Signup'][0], title='Register', form=form)
+    return render_template('signup.html', breadCrumb=BREAD_CRUMB['Signup'][0], title='Register', form=form,avatar=current['avatar'])
 
 # login page
 @app.route('/login/', methods=['GET', 'POST'])
