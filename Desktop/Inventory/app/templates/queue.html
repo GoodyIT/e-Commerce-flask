@@ -34,16 +34,16 @@
                                 </div>
                             </td>
                             <td><span class="text-muted">{{x.player_id}}</span></td>
-                            <td><span class="text-success-600">{{x.item_id}}</span></td>
+                            <td><span class="text-success-600">{{x.product_name}}</span></td>
                             <td><h6 class="font-weight-semibold mb-0">{{x.quantity}}</h6></td>
                             <td><span class="badge bg-danger">{{x.type}}</span></td>
                             <td><h6 class="font-weight-semibold mb-0">{{x.price}}</h6></td>
                             <td class="text-center">
                                 <div class="mr-6">
-                                    <button class="btn btn-primary que-app" style="width:100px;">Approve</button>
+                                    <a href="{{url_for('approve', item=x.order_id)}}" class="btn btn-primary" style="width:100px;">Approve</a>
                                 </div>
                                 <div class="mr-6">
-                                    <button class="btn btn-primary que-dis" style="margin-top:5px;width:100px;">Disapprove</button>
+                                    <a href="{{url_for('disapprove', item=x.order_id)}}" class="btn btn-primary" style="margin-top:5px;width:100px;">Disapprove</a>
                                 </div>
                             </td>
                         </tr>

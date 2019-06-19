@@ -738,16 +738,16 @@ def shipping():
         return redirect(url_for('logout'))
     orders = db.Orders.find()
     c = 0
-    current = {}
+    currents = {}
 
     while c < orders.count():
-        if 'item_id' in orders[c]:
-            if orders[c]['item_id'] in current:
-                current[orders[c]['item_id']] += 1
+        if 'product_id' in orders[c]:
+            if orders[c]['product_id'] in currents:
+                currents[orders[c]['product_id']] += 1
             else:
-                current[orders[c]['item_id']] = 1
+                currents[orders[c]['product_id']] = 1
         c += 1
-    return render_template('shipping.html', breadCrumb=BREAD_CRUMB['Shipping'][0], title='Shipping', orders=current)
+    return render_template('shipping.html', breadCrumb=BREAD_CRUMB['Shipping'][0], title='Shipping', orders=currents)
 
 # Purchase
 @app.route('/purchase/items')
@@ -1166,7 +1166,7 @@ def addItem():
                 imgfilepath = os.path.join(UPLOAD_FOLDER, filename)
                 file.save(imgfilepath)
                 # append image urls
-                file_urls.append('../uploads' + filename)
+                file_urls.append('../uploads/' + filename)
         strjson = file_urls[0]
         print("------strjson: "+strjson)
         return jsonify(target_file=strjson)
@@ -1344,8 +1344,11 @@ def delete_product(item):
         pass
     else :
         return redirect(url_for('logout'))
+    pro = db.Products.find_one({'id': item})
+    
+    groupdata = db.Groups.find_one({'id': pro['category']})
+    db.Groups.update_one(groupdata,{"$set":{'total': groupdata['total']-1}})
     db.Products.remove({'id':item})
-
     #Add History
     new_hist_item = {
         'id' : str(uid()),
@@ -1813,8 +1816,9 @@ def checkout():
         })
         total["count"] += int(y[1])
         total["price"] += int(y[1])*product['price']
-        db.Orders.insert_one({
-            'order_id': str(uid()),
+        new_order_id = str(uid())
+        new_order = {
+            'order_id': new_order_id,
             'player_id': current_user.get_id(),
             'product_id': product['id'],
             'product_name': product['product'],
@@ -1830,8 +1834,12 @@ def checkout():
             'country': 'US',
             'ship_id': None,
             'invoice_id': None,
-            'date': datetime.now()
-        })
+            'date': datetime.now(),
+            'status': 'Not approved'
+        }
+        db.Orders.insert_one(new_order)
+        
+        db.Queue.insert_one(new_order)
     return render_template('checkout.html', title='Checkout', ordersByProduct=ordersByProduct, total=total)
 # exports
 @app.route('/files')
@@ -1901,7 +1909,7 @@ def orders():
 
 @app.route('/orders/delete/<string:item>')
 @login_required
-def delete_order():
+def delete_order(item):
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
     if 'role' in current and current['role'] == "admin":
@@ -1909,9 +1917,9 @@ def delete_order():
     else :
         return redirect(url_for('logout'))
     new_order = db.Queue.find_one({'order_id':item})
-    db.Queue.remove({'order_id':item})
-    db.Orders.insert_one(new_order)
-
+    if new_order != None:
+        db.Queue.remove({'order_id': item})
+    db.Orders.remove({'order_id': item})
     return redirect(url_for('orders'))
 
 # Queue
@@ -1925,19 +1933,36 @@ def queue():
     else :
         return redirect(url_for('logout'))
     # current = db.Queue.find()
-    if request.method == 'POST':
-        item = request.json
-        db.Queue.remove({'order_id':item['id']})
-        response = app.response_class(
-            response=json.dumps(item),
-            status=200,
-            mimetype='application/json'
-        )
-        return response
-
+    
     queue = db.Queue.find()
     return render_template('queue.html', breadCrumb=BREAD_CRUMB['Queue'][0],
     uname=current_user.get_id(), title='Queue', queue=queue, qlen=queue.count())
+
+@app.route('/queue/approve/<string:item>')
+@login_required
+def approve(item):
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
+    db.Queue.remove({'order_id':item})
+    db.Orders.update({'order_id': item},{"$set": {'status' : 'Await shipping'}})
+    return redirect(url_for('queue'))
+
+@app.route('/queue/disapprove/<string:item>')
+@login_required
+def disapprove(item):
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    if 'role' in current and current['role'] == "admin":
+        pass
+    else :
+        return redirect(url_for('logout'))
+    db.Queue.remove({'order_id':item})
+    db.Orders.remove({'order_id': item})
+    return redirect(url_for('queue'))
 
 # profile page
 # 2019-6-17 midas
@@ -2003,7 +2028,7 @@ def login():
         user_id = current_user.get_id()
         current = db.Users.find_one({"id": user_id})
         if 'role' in current and current['role'] == "admin":
-            return redirect(url_for('admin'))
+            return redirect(url_for('home'))
         else :
             return redirect(url_for('store'))
     form = LoginForm()
@@ -2013,7 +2038,7 @@ def login():
             verify = User(user['id'])
             login_user(verify)
             if 'role' in user and user['role'] == "admin":
-                return redirect(url_for('admin'))
+                return redirect(url_for('home'))
             else :
                 return redirect(url_for('store'))
         flash('Invalid Username or Password. Please try again.')

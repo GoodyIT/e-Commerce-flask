@@ -17,6 +17,7 @@ jQuery(document).ready(function() {
         if (!alreadyPurchased) {
             carts.push({id: id, name: name, image: image, price: price, count: 1});
         }
+        
         refreshCartContent();
     });
 
@@ -28,6 +29,7 @@ jQuery(document).ready(function() {
     function refreshCartContent() {
         var content = '';
         var totalPrice = 0;
+        var totalCount = 0;
         var cartData = [];
         carts.forEach((item, index) => {
             content += 
@@ -48,8 +50,10 @@ jQuery(document).ready(function() {
                     </div>
                 </li>`;
             totalPrice += item.count * item.price;
+            totalCount += item.count;
             cartData.push(item.id + ',' + item.count);
         });
+        $('.cart_count').text(totalCount);
         $("#cart-data").val(cartData.join(';'));
         $("#cart-total-price").html('$' + totalPrice);
         $("#cart-sidebar").html(content);
