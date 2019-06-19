@@ -39,7 +39,7 @@
                                 </td>
                                 <td><a href="{{url_for('groups_list', name=item.name)}}"><span class="text-success-600">{{item.name}}</span></a></td>
                                 <td><span class="badge bg-danger">{{item.type}}</span></td>
-                                <td><h6 class="font-weight-semibold mb-0">{{item.total}}</h6></td>
+                                <td><h6 class="font-weight-semibold mb-0">{{item.total|round|int}}</h6></td>
                             </tr>
                         {% endfor %}
                         </tbody>
