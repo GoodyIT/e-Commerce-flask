@@ -14,10 +14,25 @@ BOT_NAME = 'AmazonPriceWatch'
 SPIDER_MODULES = ['AmazonPriceWatch.spiders']
 NEWSPIDER_MODULE = 'AmazonPriceWatch.spiders'
 
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy_html_storage.HtmlStorageMiddleware': 10,
+}
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:52.0) ' \
-    'Gecko/20100101 Firefox/52.0'
+#USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:52.0) ' \
+    #'Gecko/20100101 Firefox/52.0'
+
+#USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'
+
+#USER_AGENT = 'Mozilla/5.0 (Linux; Android 7.0; \
+#SM-A520F Build/NRD90M; wv) AppleWebKit/537.36 \
+#(KHTML, like Gecko) Version/4.0 \
+#Chrome/65.0.3325.109 Mobile Safari/537.36'
+
+USER_AGENT = 'Mozilla/5.0 (Macintosh; \
+Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) \
+Chrome/67.0.3396.79 Safari/537.36'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -29,7 +44,7 @@ CONCURRENT_REQUESTS = 1
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 10
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16

@@ -1365,7 +1365,7 @@ def delete_product(item):
     return redirect(url_for('products'))
 
 # inventory - product orders
-@app.route('/reports/activity-mail')
+@app.route('/reports/activity-mail', methods=['GET','POST'])
 @login_required
 def activity_mail():
     user_id = current_user.get_id()
@@ -1374,6 +1374,11 @@ def activity_mail():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find(
+            { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
+            { "_id": 0 })
+        return jsonify({"report": list(result)})
     return render_template('activity-mail.html', breadCrumb=BREAD_CRUMB['Reports'][0], uname=current_user.get_id(), title='Activity Mail',avatar=current['avatar'])
 
 # inventory - activity-log
@@ -1500,8 +1505,9 @@ def purchases_items():
     products = db.Products.find()
     return render_template('purchases-items.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Purchases by Items', products=products,avatar=current['avatar'])
+
 # inventory - purchase bills
-@app.route('/reports/purchases-bills')
+@app.route('/reports/purchases-bills', methods=['GET','POST'])
 @login_required
 def purchases_bills():
     user_id = current_user.get_id()
@@ -1510,11 +1516,16 @@ def purchases_bills():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find(
+            { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
+            { "_id": 0 })
+        return jsonify({"report": list(result)})
     return render_template('purchases-bills.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Purchases by Bills',avatar=current['avatar'])
 
 # inventory - purchase balance
-@app.route('/reports/purchases-balance')
+@app.route('/reports/purchases-balance', methods=['GET','POST'])
 @login_required
 def purchases_balance():
     user_id = current_user.get_id()
@@ -1523,11 +1534,16 @@ def purchases_balance():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find(
+            { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
+            { "_id": 0 })
+        return jsonify({"report": list(result)})
     return render_template('purchases-balance.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Vendor Balance',avatar=current['avatar'])
 
 # inventory - product sales
-@app.route('/reports/purchases-payments')
+@app.route('/reports/purchases-payments', methods=['GET','POST'])
 @login_required
 def purchases_payments():
     user_id = current_user.get_id()
@@ -1536,11 +1552,16 @@ def purchases_payments():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find(
+            { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
+            { "_id": 0 })
+        return jsonify({"report": list(result)})
     return render_template('purchases-payments.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Purchases by Payments',avatar=current['avatar'])
 
 # inventory - product sales
-@app.route('/reports/inventory-fifo')
+@app.route('/reports/inventory-fifo', methods=['GET','POST'])
 @login_required
 def inventory_fifo():
     user_id = current_user.get_id()
@@ -1549,11 +1570,16 @@ def inventory_fifo():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find(
+            { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
+            { "_id": 0 })
+        return jsonify({"report": list(result)})
     return render_template('inventory-fifo.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='FIFO',avatar=current['avatar'])
 
 # inventory - product sales
-@app.route('/reports/inventory-valuation')
+@app.route('/reports/inventory-valuation', methods=['GET','POST'])
 @login_required
 def inventory_valuation():
     user_id = current_user.get_id()
@@ -1562,11 +1588,16 @@ def inventory_valuation():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find(
+            { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
+            { "_id": 0 })
+        return jsonify({"report": list(result)})
     return render_template('inventory-valuation.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Inventory Valuation',avatar=current['avatar'])
 
 # inventory - product sales
-@app.route('/reports/inventory-details')
+@app.route('/reports/inventory-details', methods=['GET','POST'])
 @login_required
 def inventory_details():
     user_id = current_user.get_id()
@@ -1575,11 +1606,16 @@ def inventory_details():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find(
+            { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
+            { "_id": 0 })
+        return jsonify({"report": list(result)})
     return render_template('inventory-details.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Inventory Details',avatar=current['avatar'])
 
 # inventory - product sales
-@app.route('/reports/inventory-sales')
+@app.route('/reports/inventory-sales', methods=['GET','POST'])
 @login_required
 def inventory_sales():
     user_id = current_user.get_id()
@@ -1588,6 +1624,11 @@ def inventory_sales():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find({}, {
+            "_id": 0
+        })
+        return jsonify({"report": list(result)})
     return render_template('inventory-sales.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Product Sales',avatar=current['avatar'])
 
@@ -1610,7 +1651,7 @@ def inventory_purchases():
     uname=current_user.get_id(), title='Active Purchases',avatar=current['avatar'])
 
 # sales -
-@app.route('/reports/sales-item')
+@app.route('/reports/sales-item', methods=['GET','POST'])
 @login_required
 def sales_item():
     user_id = current_user.get_id()
@@ -1619,11 +1660,16 @@ def sales_item():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find(
+            { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
+            { "_id": 0 })
+        return jsonify({"report": list(result)})
     return render_template('sales-item.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Sales Items',avatar=current['avatar'])
 
 # inventory - product sales
-@app.route('/reports/salesman')
+@app.route('/reports/salesman', methods=['GET','POST'])
 @login_required
 def salesman():
     user_id = current_user.get_id()
@@ -1632,11 +1678,16 @@ def salesman():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find(
+            { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
+            { "_id": 0 })
+        return jsonify({"report": list(result)})
     return render_template('salesman.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Salesman',avatar=current['avatar'])
 
 # inventory - product sales
-@app.route('/reports/sales-balance')
+@app.route('/reports/sales-balance', methods=['GET','POST'])
 @login_required
 def sales_balance():
     user_id = current_user.get_id()
@@ -1645,11 +1696,16 @@ def sales_balance():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find(
+            { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
+            { "_id": 0 })
+        return jsonify({"report": list(result)})
     return render_template('sales-balance.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Balance',avatar=current['avatar'])
 
 # sales - packing history
-@app.route('/reports/sales-packing')
+@app.route('/reports/sales-packing', methods=['GET','POST'])
 @login_required
 def sales_packing():
     user_id = current_user.get_id()
@@ -1658,11 +1714,16 @@ def sales_packing():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find(
+            { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
+            { "_id": 0 })
+        return jsonify({"report": list(result)})
     return render_template('sales-packing.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Sales Packing',avatar=current['avatar'])
 
 # sales - payment history
-@app.route('/reports/sales-payments')
+@app.route('/reports/sales-payments', methods=['GET','POST'])
 @login_required
 def sales_payments():
     user_id = current_user.get_id()
@@ -1671,11 +1732,16 @@ def sales_payments():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find(
+            { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
+            { "_id": 0 })
+        return jsonify({"report": list(result)})
     return render_template('sales-payments.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Sales Payments',avatar=current['avatar'])
 
 # sales - invoice history
-@app.route('/reports/sales-customers')
+@app.route('/reports/sales-customers', methods=['GET','POST'])
 @login_required
 def sales_customers():
     user_id = current_user.get_id()
@@ -1684,11 +1750,16 @@ def sales_customers():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find(
+            { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
+            { "_id": 0 })
+        return jsonify({"report": list(result)})
     return render_template('sales-customers.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Sales Customer',avatar=current['avatar'])
 
 # sales - sales orders
-@app.route('/reports/sales-orders')
+@app.route('/reports/sales-orders', methods=['GET','POST'])
 @login_required
 def sales_orders():
     user_id = current_user.get_id()
@@ -1697,11 +1768,16 @@ def sales_orders():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find(
+            { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
+            { "_id": 0 })
+        return jsonify({"report": list(result)})
     return render_template('sales-orders.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Sales Order',avatar=current['avatar'])
 
 # sales - sales product
-@app.route('/reports/sales-invoice')
+@app.route('/reports/sales-invoice', methods=['GET','POST'])
 @login_required
 def sales_invoice():
     user_id = current_user.get_id()
@@ -1710,6 +1786,11 @@ def sales_invoice():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find(
+            { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
+            { "_id": 0 })
+        return jsonify({"report": list(result)})
     return render_template('sales-invoice.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Sales Invoices',avatar=current['avatar'])
 

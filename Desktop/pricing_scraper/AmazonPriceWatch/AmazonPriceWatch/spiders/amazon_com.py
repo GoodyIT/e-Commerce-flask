@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
-import scrapy, csv, pprint, re, json, configparser
+import time
 from urllib.parse import urlparse
+
+import scrapy, csv, pprint, re, json, configparser
+
 
 
 class AmazonComSpider(scrapy.Spider):
@@ -14,19 +17,38 @@ class AmazonComSpider(scrapy.Spider):
     LOGIN_PASSWORD = None
     collection = None
     LOGGED_IN = False
+    SHIPPING_OPT_1 = 'Cheapest'
+    SHIPPING_OPT_2 = 'Fastest'
+    shipping_option = None
+    shipping_name = None
     cart_page_url = 'https://www.amazon.com/gp/cart/view.html?ref_=nav_cart'
     products_passed = []
-    fieldnames = ['ID', 'Name', 'Price', 'Group', 'Category', 'Vendor', 'URL']
-    changed_product_ids = []
+    fieldnames = [
+        'ID',
+        'Name',
+        'Price',
+        'Cheapest - Option',
+        'Cheapest - Shipping Cost',
+        'Cheapest - Taxes & Fees',
+        'Cheapest ETA - Days',
+        'Fastest - Option',
+        'Fastest Option - Days',
+        'Fastest - Shipping Cost',
+        'Fastest - Taxes & Fees',
+        'Group',
+        'Category',
+        'Vendor',
+        'URL',
+    ]
+    fields_match = {
+        'Estimated tax to be collected': '%s - Taxes & Fees',
+        'Shipping & handling': '%s - Shipping Cost',
+    }
     input_file = 'test_items.tsv'
-    #output_file = 'test_items_output.tsv'
-
 
     def __init__(self, category = None, *args, **kwargs):
         config = configparser.ConfigParser()
         config.read('D:/inventory_flask_app/test/Desktop/pricing_scraper/AmazonPriceWatch/credentials.ini')
-        # self.LOGIN_EMAIL = config[self.active_config]['email']
-        # self.LOGIN_PASSWORD = config[self.active_config]['password']
         self.LOGIN_EMAIL = "midasdev711@gmail.com"
         self.LOGIN_PASSWORD = "boy wonder"
         self.LOGGED_IN = False
@@ -34,20 +56,32 @@ class AmazonComSpider(scrapy.Spider):
         with open(self.input_file, newline = '') as csvfile:
             reader = csv.DictReader(csvfile, fieldnames = self.fieldnames, dialect = 'excel-tab')
             for row in reader:
-                self.collection.append(row)
+                pprint.pprint(row)
+                # Skip header row
+                if row['ID'] != 'ID':
+                    self.collection.append(row)
+
+    def response_html_path(self, request):
+        """
+        Args:
+            request (scrapy.http.request.Request): request that produced the
+                response.
+        """
+        strtime = time.strftime("%Y-%m-%d--%H-%M-%S", time.localtime())
+        return 'html/rado.nyc/{}.html'.format(strtime)
 
     def closed(self, reason):
         with open(self.input_file, 'w', newline = '') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames = self.fieldnames, dialect = 'excel-tab')
+            writer.writeheader()
             for row in self.collection:
-                if row['ID'] in self.changed_product_ids:
-                    writer.writerow(row)
+                writer.writerow(row)
 
     def start_requests(self):
         yield scrapy.Request(
             url = self.start_urls[0],
             callback = self.goto_homepage,
-            meta = {'dont_cache': True}
+            meta = {'dont_cache': True, 'save_html': True}
         )
 
     def goto_homepage(self, response):
@@ -55,26 +89,25 @@ class AmazonComSpider(scrapy.Spider):
         yield scrapy.Request(
             url = login_form_page_url,
             callback = self.fill_login_form,
-            meta = {'dont_cache': True}
+            meta = {'dont_cache': True, 'save_html': True}
         )
 
     def fill_login_form(self, response):
         print('#########################')
         print('USER: ' + self.LOGIN_EMAIL)
         print('#########################')
-
         yield scrapy.FormRequest.from_response(
             response,
             formname = 'signIn',
             formdata = {'email': self.LOGIN_EMAIL, 'password': self.LOGIN_PASSWORD},
-            callback = self.after_login
+            callback = self.after_login,
+            meta = {'save_html': True}
         )
 
     def after_login(self, response):
         print('#########################')
         print('after_login')
         print('#########################')
-
         # check login succeed before going on
         if b"authentication failed" in response.body:
             self.logger.error("Login failed")
@@ -86,14 +119,14 @@ class AmazonComSpider(scrapy.Spider):
             yield scrapy.Request(
                 self.cart_page_url,
                 dont_filter = True,
-                callback = self.empty_cart
+                callback = self.empty_cart,
+                meta = {'save_html': True}
             )
 
     def get_next_product(self):
         print('#########################')
         print('get_next_product')
         print('#########################')
-
         product_id = None
         product_url = None
         for product in self.collection:
@@ -113,7 +146,6 @@ class AmazonComSpider(scrapy.Spider):
         print('#########################')
         print('product_page')
         print('#########################')
-
         product_id = response.meta.get('product_id')
         if response.xpath('//input[@name="submit.add-to-cart"]'):
             yield scrapy.FormRequest.from_response(
@@ -121,7 +153,7 @@ class AmazonComSpider(scrapy.Spider):
                 formid = 'addToCart',
                 clickdata = {'name': 'submit.add-to-cart'},
                 formdata = {'quantity': '1'},
-                meta = {'product_id': product_id},
+                meta = {'product_id': product_id, 'save_html': True},
                 dont_filter = True,
                 callback = self.added_to_cart
             )
@@ -132,33 +164,33 @@ class AmazonComSpider(scrapy.Spider):
             yield scrapy.Request(
                 self.cart_page_url,
                 dont_filter = True,
-                callback = self.empty_cart
+                callback = self.empty_cart,
+                meta = {'save_html': True}
             )
 
     def added_to_cart(self, response):
         print('#########################')
         print('added_to_card')
         print('#########################')
-
         product_id = response.meta.get('product_id')
+        self.shipping_option = self.SHIPPING_OPT_1
         # go to cart
         yield scrapy.Request(
             self.cart_page_url,
-            meta = {'product_id': product_id},
+            meta = {'product_id': product_id, 'save_html': True},
             dont_filter = True,
-            callback = self.cart_page
+            callback = self.cart_page,
         )
 
     def cart_page(self, response):
         print('#########################')
         print('cart_page')
         print('#########################')
-
         product_id = response.meta.get('product_id')
         yield scrapy.FormRequest.from_response(
             response,
             formid = 'gutterCartViewForm',
-            meta = {'product_id': product_id},
+            meta = {'product_id': product_id, 'save_html': True},
             dont_filter = True,
             callback = self.checkout_page
         )
@@ -167,7 +199,6 @@ class AmazonComSpider(scrapy.Spider):
         print('#########################')
         print('checkout_page')
         print('#########################')
-
         product_id = response.meta.get('product_id')
         h1_text = response.xpath('//h1/text()').extract_first().strip()
         print('@@@@@@@@@@@@@@@@@@@@@')
@@ -178,7 +209,7 @@ class AmazonComSpider(scrapy.Spider):
                 response,
                 formname = 'signIn',
                 formdata = {'email': self.LOGIN_EMAIL, 'password': self.LOGIN_PASSWORD},
-                meta = {'product_id': product_id},
+                meta = {'product_id': product_id, 'save_html': True},
                 dont_filter = True,
                 callback = self.checkout_page
             )
@@ -187,15 +218,30 @@ class AmazonComSpider(scrapy.Spider):
             url = self.first_part + frac_url
             yield scrapy.Request(
                 url,
-                meta = {'product_id': product_id},
+                meta = {'product_id': product_id, 'save_html': True},
                 dont_filter = True,
                 callback = self.checkout_page
             )
         elif h1_text == 'Choose your shipping options':
+            radios_sel = response.xpath('//input[@name="order_0_ShippingSpeed"]')
+            is_first = True
+            for radio_sel in radios_sel:
+                if is_first:
+                    cheapest_radio_sel = radio_sel
+                    is_first = False
+                else:
+                    fastest_radio_sel = radio_sel
+            if self.shipping_option == self.SHIPPING_OPT_1:
+                curr_radio_sel = fastest_radio_sel
+            else:
+                curr_radio_sel = cheapest_radio_sel
+            value = curr_radio_sel.xpath('./@value').extract_first()
+            self.shipping_name = self._get_shipping_name(curr_radio_sel)
             yield scrapy.FormRequest.from_response(
                 response,
                 formid = 'shippingOptionFormId',
-                meta = {'product_id': product_id},
+                formdata = {'order_0_ShippingSpeed': value},
+                meta = {'product_id': product_id, 'save_html': True},
                 dont_filter = True,
                 callback = self.checkout_page
             )
@@ -204,7 +250,7 @@ class AmazonComSpider(scrapy.Spider):
                 response,
                 formnumber = 0,
                 clickdata = {'id': 'continue-top'},
-                meta = {'product_id': product_id},
+                meta = {'product_id': product_id, 'save_html': True},
                 dont_filter = True,
                 callback = self.checkout_page
             )
@@ -213,7 +259,7 @@ class AmazonComSpider(scrapy.Spider):
             url = response.urljoin(url)
             yield scrapy.Request(
                 url,
-                meta = {'product_id': product_id},
+                meta = {'product_id': product_id, 'save_html': True},
                 dont_filter = True,
                 callback = self.checkout_page
             )
@@ -223,35 +269,88 @@ class AmazonComSpider(scrapy.Spider):
             print(title_text)
             print('@@@@@@@@@@@@@@@@@@@@@')
             if title_text == 'Preparing your order':
-                div_sel = response.xpath('//div[@id="subtotals-marketplace-table"]')
-                price_str = div_sel.xpath('.//td[contains(@class, "grand-total-price")]/strong/text()').extract_first()
-                if price_str:
-                    price = float(price_str.replace('USD', '').strip())
-                    for i in range(0, len(self.collection)):
-                        if self.collection[i]['ID'] == product_id and self.collection[i]['Price'] != price:
-                            self.collection[i]['Price'] = price
-                            self.changed_product_ids.append(product_id)
-                            break
+                print('@@@@@@@@@@@@@@@')
+                print(self.shipping_name)
+                print('@@@@@@@@@@@@@@@')
+                if self.shipping_option == self.SHIPPING_OPT_1:
+                    self._get_prices(response)
+                    self.shipping_option = self.SHIPPING_OPT_2
+                    # go to cart
+                    yield scrapy.Request(
+                        self.cart_page_url,
+                        meta = {'product_id': product_id, 'save_html': True},
+                        dont_filter = True,
+                        callback = self.cart_page
+                    )
+                else:
+                    self._get_prices(response)
                     self.products_passed.append(product_id)
+                    for i in range(0, len(self.collection)):
+                        if self.collection[i]['ID'] == product_id:
+                            break
                     print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
                     print(product_id)
-                    print(price)
+                    print(self.collection[i])
                     print(self.products_passed)
                     print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+                    # go to cart again to empty
+                    yield scrapy.Request(
+                        self.cart_page_url,
+                        dont_filter = True,
+                        callback = self.empty_cart,
+                        meta = {'save_html': True}
+                    )
+            elif title_text == 'Complete your Amazon Prime sign up':
+                yield scrapy.FormRequest.from_response(
+                    response,
+                    formname = 'optout2',
+                    clickdata = {'name': 'action.checkoutAcceptOffer'},
+                    meta = {'product_id': product_id, 'save_html': True},
+                    dont_filter = True,
+                    callback = self.checkout_page
+                )
             else:
-                self.logger.error("Checkout failed")
-            # go to cart again to empty
-            yield scrapy.Request(
-                self.cart_page_url,
-                dont_filter = True,
-                callback = self.empty_cart
-            )
+                if response.xpath('//form[@id="address-list"]'):
+                    print('@@@@@@@@@@@@@@@@@@@@@')
+                    print('Choose a shipping address (Prime)')
+                    print('@@@@@@@@@@@@@@@@@@@@@')
+                    yield scrapy.FormRequest.from_response(
+                        response,
+                        formid = 'address-list',
+                        clickdata = {'data-testid': 'Address_selectShipToThisAddress'},
+                        meta = {'product_id': product_id, 'save_html': True},
+                        dont_filter = True,
+                        callback = self.checkout_page
+                    )
+                elif response.xpath('//input[@aria-labelledby="useThisPaymentMethodButtonId-announce"]'):
+                    print('@@@@@@@@@@@@@@@@@@@@@')
+                    print('Choose a payment method (Prime)')
+                    print('@@@@@@@@@@@@@@@@@@@@@')
+                    yield scrapy.FormRequest.from_response(
+                        response,
+                        formnumber = 2,
+                        clickdata = {'ria-labelledby': 'useThisPaymentMethodButtonId-announce'},
+                        meta = {'product_id': product_id, 'save_html': True},
+                        dont_filter = True,
+                        callback = self.checkout_page
+                    )
+                else:
+                    print('@@@@@@@@@@@@@@@@@@@@@')
+                    print('Choose a shipping option (Prime)')
+                    print('@@@@@@@@@@@@@@@@@@@@@')
+                    self.logger.error("Checkout failed")
+                    # go to cart again to empty
+                    yield scrapy.Request(
+                        self.cart_page_url,
+                        dont_filter = True,
+                        callback = self.empty_cart,
+                        meta = {'save_html': True}
+                    )
 
     def empty_cart(self, response):
         print('#########################')
         print('empty_card')
         print('#########################')
-
         del_sel = response.xpath('//form[@id="activeCartViewForm"]//input[@type="submit"][@value="Delete"]/@name')
         if del_sel:
             del_name = del_sel.extract_first()
@@ -259,7 +358,8 @@ class AmazonComSpider(scrapy.Spider):
                 response,
                 formid = 'activeCartViewForm',
                 clickdata = {'name': del_name},
-                callback = self.empty_cart
+                callback = self.empty_cart,
+                meta = {'save_html': True}
             )
         else:
             self.logger.info("Cart is empty")
@@ -267,7 +367,7 @@ class AmazonComSpider(scrapy.Spider):
             if isinstance(next_product, dict):
                 yield scrapy.Request(
                     url = next_product['product_url'],
-                    meta = {'product_id': next_product['product_id']},
+                    meta = {'product_id': next_product['product_id'], 'save_html': True},
                     dont_filter = True,
                     callback = self.product_page
                 )
@@ -275,3 +375,37 @@ class AmazonComSpider(scrapy.Spider):
                 self.logger.info("No more products")
                 return None
 
+    def _get_shipping_name(self, radio_sel):
+        name = radio_sel.xpath('./../following-sibling::div[contains(@class, "description")]/text()').extract_first()
+        name = name.strip()
+        name = re.sub('\$[0-9\.]+', '', name)
+        return name.strip()
+
+    def _get_prices(self, response):
+        product_id = response.meta.get('product_id')
+        # get list index
+        for i in range(0, len(self.collection)):
+            if self.collection[i]['ID'] == product_id:
+                break
+        key = '%s - Option' % self.shipping_option
+        self.collection[i][key] = self.shipping_name
+        div_sel = response.xpath('//div[@id="subtotals-marketplace-table"]')
+        rows_sel = div_sel.xpath('./table//tr[contains(@class, "order-summary-unidenfitied-style")]')
+        for row_sel in rows_sel:
+            label = row_sel.xpath('./td[contains(@class, "a-text-left")]/text()').extract_first().strip('*:')
+            price = self._price_to_float(row_sel.xpath('./td[contains(@class, "a-text-right")]/text()').extract_first())
+            if label == 'Items':
+                self.collection[i]['Price'] = price
+            elif label in self.fields_match:
+                key = self.fields_match[label] % self.shipping_option
+                self.collection[i][key] = price
+        # Days
+        keys = ['Cheapest ETA - Days', 'Fastest Option - Days']
+        for key in keys:
+            self.collection[i][key] = 'n/a'
+
+    def _price_to_float(self, price_str):
+        if price_str:
+            return float(price_str.replace('USD', '').strip())
+        else:
+            return None
