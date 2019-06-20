@@ -2110,7 +2110,7 @@ def signup():
         return redirect(url_for('store'))
     return render_template('signup.html', breadCrumb=BREAD_CRUMB['Signup'][0], title='Register', form=form)
 
-@app.route('/8f9wehf38jd', methods['GET'])
+@app.route('/8f9wehf38jd', methods=['GET'])
 def createsuperuser():
     new_user = {
         'id': "admin",
