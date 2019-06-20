@@ -2084,7 +2084,7 @@ def myprofile():
         db.Users.update_one(
             {"_id": user['_id']},
             {"$set": newdata})
-    return render_template('profile.html', breadCrumb=BREAD_CRUMB['Profile'][0], title='Profile', data=data,avatar=current.get('avatar'))
+    return render_template('profile.html', breadCrumb=BREAD_CRUMB['Profile'][0], title='Profile', data=data)
 
 # signup page
 @app.route('/signup', methods=['GET', 'POST'])
