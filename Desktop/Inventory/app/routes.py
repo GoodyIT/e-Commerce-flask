@@ -163,7 +163,7 @@ def get_analytics():
         pass
     else :
         return redirect(url_for('logout'))
-    requestData = json.loads(request.data)
+    requestData = json.loads(request.data.decode('utf-8'))
     if (requestData['type'] == 'init'):
         analyticsByState = db.Orders.aggregate([
             {
@@ -1592,7 +1592,7 @@ def inventory_sales():
     uname=current_user.get_id(), title='Product Sales',avatar=current['avatar'])
 
 # inventory - order history
-@app.route('/reports/inventory-purchases')
+@app.route('/reports/inventory-purchases', methods=['GET','POST'])
 @login_required
 def inventory_purchases():
     user_id = current_user.get_id()
@@ -1601,6 +1601,11 @@ def inventory_purchases():
         pass
     else :
         return redirect(url_for('logout'))
+    if request.method == 'POST':
+        result = db.Orders.find(
+            { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
+            { "_id": 0 })
+        return jsonify({"report": list(result)})
     return render_template('inventory-purchases.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Active Purchases',avatar=current['avatar'])
 

@@ -9,7 +9,7 @@ class AmazonComSpider(scrapy.Spider):
     start_urls = ['https://amazon.com/']
     first_part = 'https://www.amazon.com'
 
-    active_config = 'RADO.STO'
+    active_config = 'midas'
     LOGIN_EMAIL = None
     LOGIN_PASSWORD = None
     collection = None
@@ -25,8 +25,10 @@ class AmazonComSpider(scrapy.Spider):
     def __init__(self, category = None, *args, **kwargs):
         config = configparser.ConfigParser()
         config.read('D:/inventory_flask_app/test/Desktop/pricing_scraper/AmazonPriceWatch/credentials.ini')
-        self.LOGIN_EMAIL = config[self.active_config]['email']
-        self.LOGIN_PASSWORD = config[self.active_config]['password']
+        # self.LOGIN_EMAIL = config[self.active_config]['email']
+        # self.LOGIN_PASSWORD = config[self.active_config]['password']
+        self.LOGIN_EMAIL = "midasdev711@gmail.com"
+        self.LOGIN_PASSWORD = "boy wonder"
         self.LOGGED_IN = False
         self.collection = []
         with open(self.input_file, newline = '') as csvfile:
