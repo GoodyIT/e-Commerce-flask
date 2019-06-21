@@ -396,6 +396,31 @@ def get_analytics():
             "analyticsByCountry": list(analyticsByCountry)
         })
     return jsonify({})
+
+@app.route('/product_detail/<string:item>', methods=['GET'])
+def product_detail(item):
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
+    product = db.Products.find_one({"id": item})
+    vendor = db.Vendors.find_one({"id": product.get("vendor")})
+    category = db.Groups.find_one({"id": product.get("category")})
+    return render_template(
+        'product_detail.html', 
+        title='Product Detail', 
+        groups=groupsList, 
+        product=product 
+        # activeGroupId=groupId, 
+        # activeSubGroup=subGroup, 
+        # pageCount=pageCount,
+        # currentPage=page,
+        # is_authenticated=current_user.is_authenticated
+    )
     
 #store - games
 @app.route('/games')

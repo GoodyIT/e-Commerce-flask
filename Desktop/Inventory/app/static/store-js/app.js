@@ -13,6 +13,7 @@ jQuery(document).ready(function() {
         localStorage.removeItem('carts');
         carts = [];
         refreshCartContent();
+        hulla.send("Succesfully cleared cart", "success");
     });
 
     $('.btn-cart').click(function () {

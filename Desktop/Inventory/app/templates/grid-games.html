@@ -6,7 +6,7 @@
 
   <!-- Breadcrumbs -->
   <div class="breadcrumbs">
-    <div class="container"> <a href="{{url_for('store')}}">Home</a> <span class="separator"><i class="iconfont pe-7s-angle-right"></i></span><a href="{{url_for('games')}}"> <span>Games</span></a> </div>
+    <div class="container"> <a href="{{url_for('store')}}">Home</a> <span class="separator"><i class="iconfont pe-7s-angle-right"></i></span><a href="{{url_for('games', page=1)}}"> <span>Games</span></a> </div>
   </div>
   <!-- Breadcrumbs End -->
 
@@ -17,7 +17,7 @@
           <dt>Category :</dt>
           <a href="games?page=1"><dd class="category-all {{'active' if activeGroupId == 'ALL'}}">All </dd></a>
           {% for group in groups['GAMES'] %}
-            <a href="games?gid={{group.id}}&page=1"><dd class="item {{'active' if activeGroupId == group.id}}"> {{group.name}}</dd></a>
+            <a href="games?gid={{group.id}}&page=1" class="uppercase"><dd class="item {{'active' if activeGroupId == group.id}}"> {{group.name}}</dd></a>
           {% endfor %}
           <dd class=""> <a data-id="1" class="more J_filterToggle" href="#"><i class="iconfont pe-7s-angle-down"></i></a></dd>
         </dl>
@@ -80,7 +80,7 @@
                           {% endif %}
                         </a>
                       </div>
-                    <div class="item-title"> <a title="{{item.product}}" href="product_detail.html">{{item.product}}</a> </div>
+                    <div class="item-title"> <a title="{{item.product}}" href="{{url_for('product_detail', item=item.id)}}">{{item.product}}</a> </div>
                     <div class="quick-view"> <a title="Quick View" href="#" class="link-quickview"><i class="icons pe-7s-search"></i> </a> </div>
                   </div>
                   <div class="item-info">
