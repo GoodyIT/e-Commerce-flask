@@ -5,7 +5,7 @@
 <div class="row" style="padding: 20px 0; background-color: #eeeeee;">
   <div class="col-lg-9">
     <div style="background-color: #f2f2f2; padding: 5px 20px 15px 20px; border: 1px solid lightgrey; border-radius: 3px;">
-      <form action="">
+      <form action="" onsubmit="return false;">
         <div class="row">
           <div class="col-lg-6">
             <h3>Billing Address</h3>
@@ -131,7 +131,7 @@
           <label style="padding-left: 15px; padding-right: 15px;">
             <input type="checkbox" checked="checked" name="sameadr"> Shipping address same as billing
           </label>
-          <input style="padding-left: 15px; padding-right: 15px;" type="submit" value="Continue to checkout" class="checkout-btn">
+          <input style="padding-left: 15px; padding-right: 15px;" type="button" value="Continue to checkout" class="checkout-btn">
         </div>
       </form>
     </div>
@@ -139,13 +139,16 @@
   <div class="col-lg-3">
     <div style="background-color: #f2f2f2; padding: 5px 20px 15px 20px; border: 1px solid lightgrey; border-radius: 3px;">
       <h4>Cart <span style="float: right; color: grey;" style="color:black"><i class="fa fa-shopping-cart"></i> <b>{{total.count}}</b></span></h4>
+      <div id="product-list">
       {% for order in ordersByProduct %}
-        <p><a href="#" style="color: #333;">{{order._id.product_name}}</a> <span style="float: right; color: grey;">${{order.price}} x {{order.quantity}}</span></p>
+        <p id="{{order._id.product_id}}" class="{{order.quantity}}"><a href="#" style="color: #333;" id="{{order.price}}" class="{{order.quantity}}">{{order._id.product_name}}</a> <span style="float: right; color: grey;">${{order.price}} x {{order.quantity}}</span></p>
       {% endfor %}
+      </div>
       <hr style="border: 1px solid grey;" />
       <p>Total <span style="float: right; color: grey;" style="color:black"><b>${{total.price}}</b></span></p>
     </div>
   </div>
 </div>
+<script src="../static/store-js/checkout.js"></script>
 
 {% endblock %}

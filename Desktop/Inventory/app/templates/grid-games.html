@@ -6,7 +6,7 @@
 
   <!-- Breadcrumbs -->
   <div class="breadcrumbs">
-    <div class="container"> <a href="#">Home</a> <span class="separator"><i class="iconfont pe-7s-angle-right"></i></span> <span>Games</span> </div>
+    <div class="container"> <a href="{{url_for('store')}}">Home</a> <span class="separator"><i class="iconfont pe-7s-angle-right"></i></span><a href="{{url_for('games')}}"> <span>Games</span></a> </div>
   </div>
   <!-- Breadcrumbs End -->
 
@@ -78,9 +78,6 @@
                           {% else %}
                             <img class="img-responsive" style="width: 264px; height: 321px; object-fit: contain;" src="{{item.images}}" alt="{{item.product}}"> 
                           {% endif %}
-                          <span class="product-img-back">
-                            <img class="img-responsive" src="../static/products-images/product-img1.jpg" alt="{{item.product}}">
-                          </span> 
                         </a>
                       </div>
                     <div class="item-title"> <a title="{{item.product}}" href="product_detail.html">{{item.product}}</a> </div>

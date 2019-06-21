@@ -737,18 +737,18 @@ def shipping():
         pass
     else :
         return redirect(url_for('logout'))
-    orders = db.Orders.find()
+    orders = db.Orders.find({"status": "Await shipping"}, {"_id": 0})
     c = 0
     currents = {}
 
-    while c < orders.count():
-        if 'product_id' in orders[c]:
-            if orders[c]['product_id'] in currents:
-                currents[orders[c]['product_id']] += 1
-            else:
-                currents[orders[c]['product_id']] = 1
-        c += 1
-    return render_template('shipping.html', breadCrumb=BREAD_CRUMB['Shipping'][0], title='Shipping', orders=currents
+    # while c < orders.count():
+    #     if 'product_id' in orders[c]:
+    #         if orders[c]['product_id'] in currents:
+    #             currents[orders[c]['product_id']] += 1
+    #         else:
+    #             currents[orders[c]['product_id']] = 1
+    #     c += 1
+    return render_template('shipping.html', breadCrumb=BREAD_CRUMB['Shipping'][0], title='Shipping', orders=orders
         ,avatar=current.get('avatar'))
 
 # Purchase
@@ -1834,49 +1834,39 @@ def billing():
     return render_template('billing.html', breadCrumb=BREAD_CRUMB['Orders'][0],
     uname=current_user.get_id(), title='Billing',avatar=current.get('avatar'))
 
+@app.route('/makeorder', methods=['POST'])
+def makeorder():
+    print(request.json)
+    for x in request.json['products']:
+        product = db.Products.find_one({"id": x['product_id']})
+        new_order = {
+            'order_id': str(uid()),
+            'player_id': request.json['player_id'],
+            'product_id': product['id'],
+            'product_name': product['product'],
+            'group_id': product['category'],
+            'subgroup': product['subgroup'],
+            'quantity': x['quantity'],
+            'type': 'store',
+            'price': product['price'],
+            'street': request.json['street'],
+            'city' : request.json['city'],
+            'state' : request.json['state'],
+            'zip' : request.json['zip'],
+            'country': 'US',
+            'ship_id': None,
+            'invoice_id': None,
+            'date': datetime.now(),
+            'status': 'Not approved'
+        }
+        db.Orders.insert_one(new_order)
+        
+        db.Queue.insert_one(new_order)
+    return json.dumps({"success": "success"})
+
 # checkout
 @app.route('/checkout', methods=['GET','POST'])
-@login_required
 def checkout():
-    if request.method == 'GET':
-        ordersByProduct = db.Orders.aggregate([
-            { "$match": { "invoice_id": None } },
-            {
-                "$group": 
-                {
-                    "_id": { 
-                        "product_id": "$product_id",
-                        "product_name": "$product_name"
-                    },
-                    "price": {
-                        "$sum": { 
-                            "$multiply": [ "$price", "$quantity" ]
-                        } 
-                    },
-                    "quantity": { 
-                        "$sum": "$quantity"
-                    },
-                    "count": { "$sum": 1 },
-                }
-            },
-            { "$sort": { "_id": 1} }
-        ])
-        total = db.Orders.aggregate([
-            { "$match": { "invoice_id": None } },
-            {
-                "$group": {
-                    "_id": None,
-                    "price": {
-                        "$sum": {
-                            "$multiply": [ "$price", "$quantity" ]
-                        }
-                    },
-                    "count": { "$sum": 1 },
-                }
-            }
-        ])
-        ordersByProductList = list(ordersByProduct)
-        return render_template('checkout.html', title='Checkout', ordersByProduct=ordersByProductList, total=(list(total))[0])
     
     ######################################
     ### Adding Cart
@@ -1887,6 +1877,7 @@ def checkout():
         return render_template('checkout.html', title='Checkout', ordersByProduct=[], total={"count": 0, "price": 0})    
     
     # when carts has some products
+    print("-------go to checkout page-------------")
     cartStrArray = cartData.split(';')
     ordersByProduct = []
     total = {"count": 0, "price": 0}
@@ -1904,30 +1895,6 @@ def checkout():
         })
         total["count"] += int(y[1])
         total["price"] += int(y[1])*product['price']
-        new_order_id = str(uid())
-        new_order = {
-            'order_id': new_order_id,
-            'player_id': current_user.get_id(),
-            'product_id': product['id'],
-            'product_name': product['product'],
-            'group_id': product['category'],
-            'subgroup': product['subgroup'],
-            'quantity': int(y[1]),
-            'type': 'store',
-            'price': product['price'],
-            'street': _street(),
-            'city' : _getCity(),
-            'state' : _getState(),
-            'zip' : _getZip(),
-            'country': 'US',
-            'ship_id': None,
-            'invoice_id': None,
-            'date': datetime.now(),
-            'status': 'Not approved'
-        }
-        db.Orders.insert_one(new_order)
-        
-        db.Queue.insert_one(new_order)
     return render_template('checkout.html', title='Checkout', ordersByProduct=ordersByProduct, total=total)
 # exports
 @app.route('/files')
@@ -1986,7 +1953,7 @@ def orders():
 
         tblOrdrs.append({ #Variable 'table' is just iterator, so it indicates the NULL after finished loop
             'order_id': ordr['order_id'],
-            'player': pname,
+            'player': ordr['player_id'],
             'item': ordr['product_name'],
             'quantity': ordr['quantity'],
             'type': ordr['type'],
