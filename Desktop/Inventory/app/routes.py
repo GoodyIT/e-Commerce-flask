@@ -437,6 +437,7 @@ def games():
     page      = request.args.get("page")
     sortBy    = request.args.get("sort")
     accending = request.args.get("accending")
+    mode = request.args.get('mode')
     if request.args.get("accending") == None:
         accending = "-1"
     if request.args.get("sort") == None:
@@ -445,6 +446,8 @@ def games():
         groupId='ALL'
     if subGroup is None:
         subGroup = 'ALL'
+    if mode is None:
+        mode = 'relevance'
     groups = db.Groups.aggregate(
         [
             { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
@@ -471,6 +474,8 @@ def games():
         activeSubGroup=subGroup, 
         pageCount=pageCount,
         currentPage=page,
+        accending=accending,
+        mode=mode,
         is_authenticated=current_user.is_authenticated
     )
 
@@ -2063,13 +2068,15 @@ def myprofile():
         'email': user['email']
     }
 
+    avatar = user.get('avatar')
+
     if request.method == 'POST':
         if request.form["password"] == "":
             newdata = {
                 'id': request.form["username"] if request.form["username"] else user['id'],
                 'name': request.form['name'] if request.form["name"] else user['name'],
                 'email': request.form['email'] if request.form["email"] else user['email'],
-                'avatar': request.form['hdfiles']
+                'avatar': request.form['hdfiles'] if request.form["hdfiles"] else user.get('avatar')
             }
         else:
             pw = request.form["password"]
@@ -2078,12 +2085,19 @@ def myprofile():
                 'name': request.form['name'] if request.form["name"] else user['name'],
                 'email': request.form['email'] if request.form["email"] else user['email'],
                 'pw' : User.setHash(pw),
-                'avatar': request.form['hdfiles']
+                'avatar': request.form['hdfiles'] if request.form["hdfiles"] else user.get('avatar')
             }
         db.Users.update_one(
             {"_id": user['_id']},
             {"$set": newdata})
-    return render_template('profile.html', breadCrumb=BREAD_CRUMB['Profile'][0], title='Profile', data=data)
+        data = {
+            'id': newdata['id'],
+            'name': newdata['name'],
+            'email': newdata['email']
+        }
+
+        avatar = newdata.get('avatar')
+    return render_template('profile.html', breadCrumb=BREAD_CRUMB['Profile'][0], title='Profile', data=data, avatar=avatar)
 
 # signup page
 @app.route('/signup', methods=['GET', 'POST'])

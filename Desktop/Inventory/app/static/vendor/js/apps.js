@@ -1,6 +1,7 @@
 
-$(function() {
+$(document).ready(function() {
 
+    var hulla = new hullabaloo();
     $('#shipping-items').paginate({itemsPerPage: 4});
     $('#shipping-awaiting-items').paginate({itemsPerPage: 4});
     $('#shipping-shipped-items').paginate({itemsPerPage: 4});
@@ -76,6 +77,7 @@ $(function() {
         var validate = true;
         if (item_details == "" || quantity <=0 || amount <=0) {
             validate = false;
+            hulla.send("Insert data into the form", "warning");
         }
 
         if (validate) {

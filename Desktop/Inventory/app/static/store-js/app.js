@@ -7,6 +7,8 @@ jQuery(document).ready(function() {
         carts = JSON.parse(toLoad);
         refreshCartContent();
     }
+
+    
     
     var hulla = new hullabaloo();
     $('.cart-clear').click(function(){

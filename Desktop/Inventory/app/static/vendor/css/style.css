@@ -193,7 +193,7 @@ Preloader
       display: inline-block;
       vertical-align: top;
       width: calc(100% - 20px);
-      height: 150px;
+      /*height: 150px;*/
       font-size: 14px;
       margin-top: 0;
       border: 1px solid #e1e1e1;

@@ -1,7 +1,7 @@
 $(function() {
     $( "#bills_datepick" ).datepicker();
     $( "#bills_deliverypick" ).datepicker();
-    
+    var hulla = new hullabaloo();
     $("#bills_add_row").on("click", function(){
         // Get Values in Table
         var item_details = $("#bills_item_details").val();
@@ -16,6 +16,7 @@ $(function() {
         var validate = true;
         if (item_details == "" || quantity <=0 || amount <=0) {
             validate = false;
+            hulla.send("Insert data into the form", "warning");
         }
 
         if (validate) {
