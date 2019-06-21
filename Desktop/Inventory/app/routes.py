@@ -435,6 +435,12 @@ def games():
     groupId   = request.args.get("gid")
     subGroup  = request.args.get("subgroup")
     page      = request.args.get("page")
+    sortBy    = request.args.get("sort")
+    accending = request.args.get("accending")
+    if request.args.get("accending") == None:
+        accending = "-1"
+    if request.args.get("sort") == None:
+        sortBy = "date"
     if groupId is None:
         groupId='ALL'
     if subGroup is None:
@@ -448,12 +454,12 @@ def games():
     for x in groups:
         groupsList[x['_id']] = x['store']
     if groupId == 'ALL' and subGroup == 'ALL':
-        products = db.Products.find({"category_type": "GAMES"}).skip((int(page)-1)*8).limit(8)
+        products = db.Products.find({"category_type": "GAMES"}).sort(sortBy,int(accending,10)).skip((int(page)-1)*8).limit(8)
     else: 
         if groupId != 'ALL' and subGroup == 'ALL':
-            products = db.Products.find({"category": groupId}).skip((int(page)-1)*8).limit(8)
+            products = db.Products.find({"category": groupId}).sort(sortBy,int(accending,10)).skip((int(page)-1)*8).limit(8)
         else:
-            products = db.Products.find({"category": groupId, "subgroup": subGroup}).skip((int(page)-1)*8).limit(8)
+            products = db.Products.find({"category": groupId, "subgroup": subGroup}).sort(sortBy,int(accending,10)).skip((int(page)-1)*8).limit(8)
     productArray = list(products)
     pageCount = math.ceil(products.count()/8)
     return render_template(
@@ -1228,6 +1234,7 @@ def addItem():
             'attributes' : attrs,
             'vendor' : vendor,
             'url' : form.url.data,
+            'date' : datetime.now()
         }
         db.Products.insert_one(new_item)
 

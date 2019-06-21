@@ -53,8 +53,9 @@
         <div class="order-list-box clearfix">
           <ul class="order-list">
             <li class="active first"> <a href="#">Relevance</a> </li>
-            <li class=""> <a href="#">New</a> </li>
-            <li class=""> <a href="#">Price <i class="iconfont fa fa-long-arrow-up"></i></a> </li>
+            <li class=""> <a href="games?gid={{activeGroupId}}&page=1&sort=date">New</a> </li>
+            <li class=""> Price <a href="games?gid={{activeGroupId}}&page=1&sort=price&accending=1"> <i class="iconfont fa fa-long-arrow-up"></i></a>
+            <a href="games?gid={{activeGroupId}}&page=1&sort=price&accending=-1"> <i class="iconfont fa fa-long-arrow-down"></i></a> </li>
           </ul>
           <div class="type-list">
             <div class="type-list-inner"> <span class="tips">Only view products <i class="iconfont fa fa-long-arrow-up"></i></span> <span class="checkbox ">
@@ -72,7 +73,7 @@
                 <div class="item-inner">
                   <div class="item-img">
                     <div class="mgk-pro-hover"> <span class="sale-new-label top-right"><span class="labelsale">Sale</span></span>
-                        <a href="#" title="{{item.product}}" class="product-image"> 
+                        <a href="{{url_for('product_detail', item=item.id)}}" title="{{item.product}}" class="product-image"> 
                           {% if item.images == '' %}
                             <img class="img-responsive" src="../static/products-images/product-img1.jpg" alt="{{item.product}}"> 
                           {% else %}

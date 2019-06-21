@@ -14,49 +14,26 @@
   <section class="main-container bar bar--xs">
     <div class="container">
       <div class="row">
-        <div class="goods-list-box">
-          <ul class="products-grid">
-            <li class="item col-lg-6 col-md-6 col-sm-12 col-xs-12">
-              <div class="item-inner">
-                <div class="item-img">
-                  <div class="mgk-pro-hover"> <span class="sale-new-label top-right"><span class="labelsale">Sale</span></span>
-                      <a href="#" title="{{product.product}}" class="product-image"> 
-                        {% if product.images == '' %}
-                          <img class="img-responsive" src="../static/products-images/product-img1.jpg" alt="{{product.product}}"> 
-                        {% else %}
-                          <img class="img-responsive" style="object-fit: contain;" src="{{product.images}}" alt="{{product.product}}"> 
-                        {% endif %}
-                      </a>
-                    </div>
-                  <div class="item-title"> 
-                    <h3>{{product.product}}</h3> 
-                    <p>SKU: {{product.sku}}</p>
-                  </div>
-                  <div class="quick-view"> <a title="Quick View" href="#" class="link-quickview"><i class="icons pe-7s-search"></i> </a> </div>
-                </div>
-                <div class="item-info">
-                  <div class="info-inner">
-                    <div class="actions">
-                      <div class="item-price">
-                        <div class="price-box">
-                          <p class="old-price"> <span class="price-label">Regular Price:</span> <span class="price"> $167.00 </span> </p>
-                          <p class="special-price"> <span class="price-label">Special Price</span> <span class="price"> ${{product.price}} </span> </p>
-                        </div>
-                      </div>
-                      <div class="actions-cart">
-                        <a data-id="{{product.id}}" data-name="{{product.product}}" data-image="{{product.images}}" data-price="{{product.price}}" title="Add to Cart" class="button btn-cart"></a>
-                      </div>
-                      <ul class="add-to-links">
-                        <li class="pull-right-no pull-compare"><span class="separator">|</span> <a href="#" title="Compare" class="link-compare"><i class="fa fa-retweet"></i>Compare</a></li>
-                        <li class="pull-left-no pull-wishlist"><a href="#" title="Wishlist" class="link-wishlist"><i class="fa fa-heart-o"></i>Wishlist</a></li>
-                      </ul>
-                    </div>
-                    
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
+        <div class="col-lg-4" style="background: white; height: 500px; padding: 20px;">
+          {% if product.images == '' %}
+            <img class="img-responsive" src="../static/products-images/product-img1.jpg" style="width: 100%;" alt="{{product.product}}"> 
+          {% else %}
+            <img class="img-responsive" style="width: 100%; object-fit: contain;" src="{{product.images}}" alt="{{product.product}}"> 
+          {% endif %}
+        </div>
+        <div class="col-lg-6" style="background: white; height: 500px; padding: 20px;">
+          <h2>{{product.product}}</h2> 
+          <p>SKU: {{product.sku}}</p>
+          <div class="price-box">
+            <p class="old-price"> <span class="price-label">Regular Price:</span> <span class="price" style="font-size: 23px;"> $167.00 </span> </p>
+            <p class="special-price"> <span class="price-label">Special Price</span> <span class="price" style="font-size: 45px; color: #e07;"> ${{product.price}} </span> </p>
+          </div>
+          <div class="actions-cart" style="margin-top: 30px;">
+            <a data-id="{{product.id}}" data-name="{{product.product}}" data-image="{{product.images}}" data-price="{{product.price}}" title="Add to Cart" class="button btn-cart" style="padding: 10px; font-size: 30px; margin-top: 30px; cursor: pointer;"><span >Add to cart</span></a>
+          </div>
+        </div>
+        <div class="col-lg-2" style="background: white; height: 500px; padding: 20px;">
+          
         </div>
       </div>
     </div>
