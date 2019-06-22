@@ -191,20 +191,20 @@
             <!-- Content area -->
             <div class="content">
 
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                        {% for message in messages %}
-                            <b>{{message}}</b>
-                        {% endfor %}
-                    {% endif %}
-                {%  endwith %}
 
                 <div class="row">
                     <div class="col-md-3">
                     </div>
 
                     <div class="col-md-6">
-
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <b>{{message}}</b>
+                                {% endfor %}
+                            {% endif %}
+                        {%  endwith %}
+                        
                         <!-- Horizontal form -->
                         <div class="card">
                             <div class="card-header header-elements-inline">
@@ -215,6 +215,7 @@
                                         <a class="list-icons-item" data-action="reload"></a>
                                     </div>
                                 </div>
+                                
                             </div>
 
                             <div class="card-body">

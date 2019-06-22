@@ -298,16 +298,29 @@
 
 			<!-- Content area -->
 			<div class="content">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+							
+						</div>
+						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+							{% with messages = get_flashed_messages() %}
+								{% if messages %}
+									{% for message in messages %}
+										<b>{{message}}</b>
+									{% endfor %}
+								{% endif %}
+							{%  endwith %}
 
-				{% with messages = get_flashed_messages() %}
-					{% if messages %}
-						{% for message in messages %}
-							<b>{{message}}</b>
-						{% endfor %}
-					{% endif %}
-				{%  endwith %}
-
-                {% block body %}{% endblock %}
+			                
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+							
+						</div>
+					</div>
+				</div>
+				{% block body %}{% endblock %}
+				
 
 
 
