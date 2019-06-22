@@ -1123,6 +1123,8 @@ $("#gl_btnUpdate").on("click", function(){
         })
         .done(function(result) {        
             //console.log("------ result: ",result);
+            console.log("**************updated");
+            document.location.reload();
             if (result) {
                 var htmlTxt = "";
                 /*

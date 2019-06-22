@@ -12,7 +12,6 @@
                         <div class="list-icons">
                             <a class="list-icons-item" data-action="collapse"></a>
                             <a class="list-icons-item" data-action="reload"></a>
-                            <a class="list-icons-item" data-action="remove"></a>
                         </div>
                     </div>
                 </div>
@@ -37,7 +36,7 @@
                                     {% for x in items %}
                                         <a href="javascript:getProduct('{{x.id}}')" class="list-group-item list-group-item-action">
                                             <div>
-                                                <img src="../static/global_assets/images/placeholders/placeholder.jpg" width="36" height="36" class="rounded-circle mr-3" alt="">
+                                                <img src="{{x.images}}" width="36" height="36" class="rounded-circle mr-3" alt="">
                                                 {{x.product}}
                                             </div>
                                         </a>
@@ -53,7 +52,7 @@
 
                             <div class="card" style="height:100%;">
                                 <div class="card-header bg-transparent header-elements-inline">
-                                    <img src="../static/global_assets/images/placeholders/placeholder.jpg" width="36" height="36" class="rounded-circle" alt="">
+                                    <img src="{{item.images}}" width="36" height="36" class="rounded-circle" alt="">
                                     <span class="text-uppercase font-size-sm font-weight-semibold" id="ptitle">{{item.product}}</span>
                                     <div class="header-elements">
                                     </div>
@@ -104,7 +103,7 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="font-weight-semibold">Item Group Name</td>
-                                                                    <td><span id="lbgroupname">Number1</span></td>
+                                                                    <td><span id="lbgroupname">{{item.category_type}}</span></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="font-weight-semibold">Item Type</td>
@@ -116,11 +115,11 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="font-weight-semibold">SKU</td>
-                                                                    <td><span id="lbsku">3r234242aeff</span></td>
+                                                                    <td><span id="lbsku">{{item.sku}}</span></td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td class="font-weight-semibold">Unit</td>
-                                                                    <td><span id="lbunit">234</span></td>
+                                                                    <td class="font-weight-semibold">Price</td>
+                                                                    <td><span id="lbunit">{{item.price}}</span></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="font-weight-semibold">Created Source</td>
@@ -294,7 +293,7 @@
                                                         </div> <!-- END ROW -->
 
                                                         <div class="row" style="margin-top:20px;">
-                                                            <div class="col-lg-12 ml-5">
+                                                            <div class="col-lg-12">
                                                                 <div id="dvAttr">
                                                                     {% if 'attributes' in item %}
                                                                         {% set cnt=0 %}                                    

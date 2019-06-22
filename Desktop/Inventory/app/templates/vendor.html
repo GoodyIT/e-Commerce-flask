@@ -14,7 +14,6 @@
                         <div class="list-icons">
                             <a class="list-icons-item" data-action="collapse"></a>
                             <a class="list-icons-item" data-action="reload"></a>
-                            <a class="list-icons-item" data-action="remove"></a>
                         </div>
                     </div>
                 </div>
@@ -49,6 +48,34 @@
                             </div> <!-- END ROW -->
                         </form> <!-- END FORM -->
                     </div>
+                    <div class="col-lg-12">
+                        <table class="table text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>VENDOR NAME</th>
+                                    <th>URL</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in vendors %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge badge-mark border-success mr-1"></span>
+                                            <a href="#" class="text-default font-weight-semibold">{{item.id}}</a>
+                                        </div>
+                                    </td>
+                                    <td><a href="{{url_for('groups_list', name=item.name)}}"><span class="text-success-600">{{item.vendor}}</span></a></td>
+                                    <td><span class="badge bg-danger">{{item.url}}</span></td>
+                                    <td class="text-center"><a href="{{url_for('delete_vendor', item = item.id)}}" class="btn" id='tbl-btn' style="background-color: transparent;"><i class="icon-trash"></i></a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
 
 
                 </div>
@@ -56,6 +83,7 @@
             <!-- /horizotal form -->
 
         </div>
+        
 
     </div>
 

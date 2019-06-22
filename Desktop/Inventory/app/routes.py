@@ -935,8 +935,10 @@ def groups_list(name):
         cates = getGroups()
         product_id = items[0]['id']
 
-        #bug - temp solution
-        vendors = {'none':'None'}
+        vendorData = db.Vendor.find({})
+        vendors = {}
+        for vendor in vendorData:
+            vendors[vendor['id']] = vendor["vendor"]
 
         ordrs = db.Orders.find({'item_id':product_id})
         #ordrs = db.Orders.find()
@@ -949,7 +951,8 @@ def groups_list(name):
         return redirect(url_for('groups'))
     if request.method == 'GET':
         CURRENCIES=[('USD', '$'),('EURO','€'),('POUND', '£')]
-        
+    print("----")
+    print(vendors)
     return render_template('groups-list.html', breadCrumb=BREAD_CRUMB['Products'][0],
                             uname=current_user.get_id(), title='Groups List', items=items, cates=cates,
                             vendors=vendors, currs=CURRENCIES, orders=ordrs, history=hists,avatar=current.get('avatar'))
@@ -1002,13 +1005,13 @@ def getOrders():
     current = db.Users.find_one({"id": user_id})
     if request.method == 'POST':
         item = request.json
-        ordrs = db.Orders.find({'item_id':item['pid']})
+        ordrs = db.Orders.find({'product_id':item['pid']})
 
         arrOrder = []
         for order in ordrs:
             arrOrder.append({"oid":order['order_id'], "playerid":order['player_id'],
-            "itemid":order['item_id'], "qty":order['quantity'], "type":order['type'],
-            "price":order['price']},avatar=current.get('avatar'))
+            "itemid":order['product_id'], "qty":order['quantity'], "type":order['type'],
+            "price":order['price']})
 
         return jsonify(orders=arrOrder)
 
@@ -1064,6 +1067,7 @@ def addHistory():
 def vendor():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
+    vendors = db.Vendor.find({},{"_id": 0})
     form = VendorForm()
     if form.validate_on_submit():
         vendor = {
@@ -1075,7 +1079,7 @@ def vendor():
         flash('New Vendor Added.')
         return redirect(url_for('vendor'))
     return render_template('vendor.html', breadCrumb=BREAD_CRUMB['Products'][0],
-    uname=current_user.get_id(), title='Vendor', form=form,avatar=current.get('avatar'))
+    uname=current_user.get_id(), title='Vendor', form=form, vendors=vendors, avatar=current.get('avatar'))
 
 @app.route('/uploadLogo', methods=['POST'])
 @login_required
@@ -1312,6 +1316,33 @@ def delete_product(item):
     }
     db.History.insert_one(new_hist_item)
     return redirect(url_for('products'))
+
+@app.route('/products/vendor/delete/<string:item>')
+def delete_vendor(item):
+    user_id = current_user.get_id()
+    current = db.Users.find_one({"id": user_id})
+    
+    
+    db.Vendor.remove({'id':item})
+    products = db.Products.find({'vendor':item})
+
+    for pro in products:
+        groupdata = db.Groups.find_one({'id': pro['category']})
+        db.Groups.update_one(groupdata,{"$set":{'total': groupdata['total']-1}})
+        db.Products.remove({'id':pro['id']})
+
+    #Add History
+    new_hist_item = {
+        'id' : str(uid()),
+        'pid' : item,
+        'type' : 'Vendor',
+        'date' : date.today().strftime('%Y/%m/%d'),
+        'reason' : "Vendor Deleted",
+        'adjustments' : item,
+        'description' : "User ID: "+current_user.get_id(),
+    }
+    db.History.insert_one(new_hist_item)
+    return redirect(url_for('vendor'))
 
 # inventory - product orders
 @app.route('/reports/activity-mail', methods=['GET','POST'])
