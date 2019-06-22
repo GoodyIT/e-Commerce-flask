@@ -1751,10 +1751,18 @@ def checkout():
     ######################################
     ### Adding Cart
     ######################################
+    groups = db.Groups.aggregate(
+        [
+            { "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }
+        ]
+    )
+    groupsList = {}
+    for x in groups:
+        groupsList[x['_id']] = x['store']
     cartData = request.form.get('cart-data')
     # when carts is empty
     if cartData == '': 
-        return render_template('checkout.html', title='Checkout', ordersByProduct=[], total={"count": 0, "price": 0})    
+        return render_template('checkout.html', title='Checkout', groups=groupsList, ordersByProduct=[], total={"count": 0, "price": 0})    
     
     # when carts has some products
     print("-------go to checkout page-------------")
@@ -1775,7 +1783,7 @@ def checkout():
         })
         total["count"] += int(y[1])
         total["price"] += int(y[1])*product['price']
-    return render_template('checkout.html', title='Checkout', ordersByProduct=ordersByProduct, total=total)
+    return render_template('checkout.html', title='Checkout',groups=groupsList, ordersByProduct=ordersByProduct, total=total)
 # exports
 @app.route('/files')
 @login_required
