@@ -306,9 +306,11 @@
 						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 							{% with messages = get_flashed_messages() %}
 								{% if messages %}
+									<div class="alert alert-warning">
 									{% for message in messages %}
 										<b>{{message}}</b>
 									{% endfor %}
+									</div>
 								{% endif %}
 							{%  endwith %}
 
