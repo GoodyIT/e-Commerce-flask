@@ -88,14 +88,6 @@
                         <!-- top links -->
                         <div class="toplinks col-lg-7 col-md-7 col-sm-8 col-xs-12 hidden-xs">
                             <div class="links">
-                                <div class="login top-links-wrapper ">
-                                    {% if is_authenticated %}
-                                    <a class="top-link" href="{{url_for('logout')}}"><span class="hidden-xs">Log Out</span></a>
-                                    {% else %}
-                                    <a class="top-link" href="{{url_for('login')}}"><span class="hidden-xs">Log In</span></a>
-                                    {% endif %}
-                                    
-                                </div>
                                 <!-- top cart -->
                                 <div class="top-cart top-links-wrapper ">
                                     <div class="top-cart-contain">

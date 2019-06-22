@@ -139,10 +139,6 @@ def internal_error(error):
 def home():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     products = db.Products.find()
     return render_template(
         'index.html', 
@@ -159,10 +155,6 @@ def home():
 def get_analytics():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     requestData = json.loads(request.data.decode('utf-8'))
     if (requestData['type'] == 'init'):
         analyticsByState = db.Orders.aggregate([
@@ -769,10 +761,6 @@ def store():
 def shipping():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     orders = db.Orders.find({"status": "Await shipping"}, {"_id": 0})
     c = 0
     currents = {}
@@ -792,10 +780,6 @@ def shipping():
 def post_purchase():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         print("++++++++++NEW REQUEST++++++++++++")
         print(request.data)
@@ -809,10 +793,6 @@ def post_purchase():
 def purchase():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     form = PurchaseForm()
     if form.validate_on_submit():
         orderCells = form.orders.data.split(',')
@@ -852,10 +832,6 @@ def purchase():
 def bills():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     form = BillingForm()
     if form.validate_on_submit():
         return redirect(url_for('bills'))
@@ -868,10 +844,6 @@ def bills():
 def groups_category():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     form = CategoryForm()
     if form.validate_on_submit():
         new_item = {
@@ -889,10 +861,6 @@ def groups_category():
 def groups_add():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     form = GroupForm()
     if form.validate_on_submit():
         new_item = {
@@ -918,10 +886,6 @@ def groups_add():
 def groups():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     groups = db.Groups.find()
     return render_template('groups.html', breadCrumb=BREAD_CRUMB['Products'][0], uname=current_user.get_id(), title='Groups', groups=groups,avatar=current.get('avatar'))
 
@@ -931,10 +895,6 @@ def groups():
 def groups_list(name):
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         update_item = {
             'product' : request.form.get("pname"),
@@ -999,10 +959,6 @@ def groups_list(name):
 def getSubgroups():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         item = request.json
         if not item: return jsonify(subgroups=[('none', 'None')])
@@ -1018,10 +974,6 @@ def getSubgroups():
 def updateProduct():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         update_item = request.json
         db.Products.update_one({"id": update_item['pid']},{"$set":update_item['item']},upsert=True)
@@ -1033,10 +985,6 @@ def updateProduct():
 def getProduct():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         item = request.json
         print("++++++++++NEW REQUEST++++++++++++ getProduct: ", item)
@@ -1052,10 +1000,6 @@ def getProduct():
 def getOrders():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         item = request.json
         ordrs = db.Orders.find({'item_id':item['pid']})
@@ -1074,10 +1018,6 @@ def getOrders():
 def getHistory():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         item = request.json
         print("++++++++++ getHistory ++++++++++++ item: ", item)
@@ -1095,10 +1035,6 @@ def getHistory():
 def addHistory():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         item = request.json
         arrHist = []
@@ -1128,10 +1064,6 @@ def addHistory():
 def vendor():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     form = VendorForm()
     if form.validate_on_submit():
         vendor = {
@@ -1150,10 +1082,6 @@ def vendor():
 def uploadLogo():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     curDirPath = os.path.dirname(os.path.realpath(__file__))
     UPLOAD_FOLDER = os.path.join(curDirPath,"uploads/logo")
     file_urls = []
@@ -1180,10 +1108,6 @@ def uploadLogo():
 def addItem():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     curDirPath = os.path.dirname(os.path.realpath(__file__))
     UPLOAD_FOLDER = os.path.join(curDirPath,"uploads")
     form = ProductForm()
@@ -1269,10 +1193,6 @@ def addItem():
 def importItem():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         ### Save uploaded file
         f = request.files['fileImport']
@@ -1335,10 +1255,6 @@ def importItem():
 def products():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     tblPrdt = []
     table = db.Products.find()
     for prdt in table:
@@ -1379,10 +1295,6 @@ def products():
 def delete_product(item):
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     pro = db.Products.find_one({'id': item})
     
     groupdata = db.Groups.find_one({'id': pro['category']})
@@ -1407,10 +1319,6 @@ def delete_product(item):
 def activity_mail():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find(
             { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
@@ -1424,10 +1332,6 @@ def activity_mail():
 def activity_log():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.History.find({
             "date": {
@@ -1447,10 +1351,6 @@ def activity_log():
 def purchases_orders():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find({
             "date": {
@@ -1470,10 +1370,6 @@ def purchases_orders():
 def purchases_receivable():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         if request.json["receivable"] == 'Receivable':
             result = db.Orders.find({
@@ -1498,10 +1394,6 @@ def purchases_receivable():
 def purchases_vendors():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         products = db.Products.find({
             "vendor": request.json["vendor"]
@@ -1528,10 +1420,6 @@ def purchases_vendors():
 def purchases_items():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find({
             "product_id": request.json["product_id"]
@@ -1549,10 +1437,6 @@ def purchases_items():
 def purchases_bills():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find(
             { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
@@ -1567,10 +1451,6 @@ def purchases_bills():
 def purchases_balance():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find(
             { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
@@ -1585,10 +1465,6 @@ def purchases_balance():
 def purchases_payments():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find(
             { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
@@ -1603,10 +1479,6 @@ def purchases_payments():
 def inventory_fifo():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find(
             { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
@@ -1621,10 +1493,6 @@ def inventory_fifo():
 def inventory_valuation():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find(
             { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
@@ -1639,10 +1507,6 @@ def inventory_valuation():
 def inventory_details():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find(
             { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
@@ -1657,10 +1521,6 @@ def inventory_details():
 def inventory_sales():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find({}, {
             "_id": 0
@@ -1675,10 +1535,6 @@ def inventory_sales():
 def inventory_purchases():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find(
             { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
@@ -1693,10 +1549,6 @@ def inventory_purchases():
 def sales_item():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find(
             { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
@@ -1711,10 +1563,6 @@ def sales_item():
 def salesman():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find(
             { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
@@ -1729,10 +1577,6 @@ def salesman():
 def sales_balance():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find(
             { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
@@ -1747,10 +1591,6 @@ def sales_balance():
 def sales_packing():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find(
             { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
@@ -1765,10 +1605,6 @@ def sales_packing():
 def sales_payments():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find(
             { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
@@ -1783,10 +1619,6 @@ def sales_payments():
 def sales_customers():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find(
             { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
@@ -1801,10 +1633,6 @@ def sales_customers():
 def sales_orders():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find(
             { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
@@ -1819,10 +1647,6 @@ def sales_orders():
 def sales_invoice():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     if request.method == 'POST':
         result = db.Orders.find(
             { "status": { "$in": [ "Await shipping", "Not approved" ] } }, 
@@ -1837,10 +1661,6 @@ def sales_invoice():
 def integrations():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     print("----------------------------- bread_crumb:", bread_crumb['Integrations'])
     return render_template('integrations.html', breadCrumb=BREAD_CRUMB['Integrations'][0],
     uname=current_user.get_id(), title='Integrations',avatar=current.get('avatar'))
@@ -1851,10 +1671,6 @@ def integrations():
 def reports():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     return render_template('reports.html', breadCrumb=BREAD_CRUMB['Reports'][0],
     uname=current_user.get_id(), title='Report',avatar=current.get('avatar'))
 
@@ -1864,10 +1680,6 @@ def reports():
 def billing():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     return render_template('billing.html', breadCrumb=BREAD_CRUMB['Orders'][0],
     uname=current_user.get_id(), title='Billing',avatar=current.get('avatar'))
 
@@ -1939,10 +1751,6 @@ def checkout():
 def files():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     return render_template('files.html', breadCrumb=BREAD_CRUMB['Orders'][0],
     uname=current_user.get_id(), title='Files')
 
@@ -1952,10 +1760,6 @@ def files():
 def contacts():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     return render_template('contacts.html', breadCrumb=BREAD_CRUMB['Shipping'][0],
     uname=current_user.get_id(), title='Contacts',avatar=current.get('avatar'))
 
@@ -1965,10 +1769,6 @@ def contacts():
 def orders():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     tblOrdrs = []
     table = db.Orders.find()
     for ordr in table:
@@ -2004,10 +1804,6 @@ def orders():
 def delete_order(item):
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     new_order = db.Queue.find_one({'order_id':item})
     if new_order != None:
         db.Queue.remove({'order_id': item})
@@ -2020,10 +1816,6 @@ def delete_order(item):
 def queue():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     # current = db.Queue.find()
     
     queue = db.Queue.find()
@@ -2035,10 +1827,6 @@ def queue():
 def approve(item):
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     db.Queue.remove({'order_id':item})
     db.Orders.update({'order_id': item},{"$set": {'status' : 'Await shipping'}})
     return redirect(url_for('queue'))
@@ -2048,10 +1836,6 @@ def approve(item):
 def disapprove(item):
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    if 'role' in current and current['role'] == "admin":
-        pass
-    else :
-        return redirect(url_for('logout'))
     db.Queue.remove({'order_id':item})
     db.Orders.remove({'order_id': item})
     return redirect(url_for('queue'))
@@ -2105,10 +1889,7 @@ def signup():
     if current_user.is_authenticated:
         user_id = current_user.get_id()
         current = db.Users.find_one({"id": user_id})
-        if 'role' in current and current['role'] == "admin":
-            return redirect(url_for('admin'))
-        else :
-            return redirect(url_for('store'))
+        return redirect(url_for('home'))
     form = RegisterForm()
     if form.validate_on_submit():
         new_user = {
@@ -2120,7 +1901,7 @@ def signup():
         }
         db.Users.insert_one(new_user)
         flash('Congratulations {}, you are now a registered user!'.format(form.name.data))
-        return redirect(url_for('store'))
+        return redirect(url_for('home'))
     return render_template('signup.html', breadCrumb=BREAD_CRUMB['Signup'][0], title='Register', form=form)
 
 @app.route('/8f9wehf38jd', methods=['GET'])
@@ -2143,20 +1924,14 @@ def login():
     if current_user.is_authenticated:
         user_id = current_user.get_id()
         current = db.Users.find_one({"id": user_id})
-        if 'role' in current and current['role'] == "admin":
-            return redirect(url_for('home'))
-        else :
-            return redirect(url_for('store'))
+        return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
         user = db.Users.find_one({'id':form.username.data})
         if user != None and User.checkPassword(user['pw'], form.pw.data):
             verify = User(user['id'])
             login_user(verify)
-            if 'role' in user and user['role'] == "admin":
-                return redirect(url_for('home'))
-            else :
-                return redirect(url_for('store'))
+            return redirect(url_for('home'))
         flash('Invalid Username or Password. Please try again.')
         return redirect(url_for('login'))
     return render_template('login.html', breadCrumb=BREAD_CRUMB['Login'][0], title='Login', form=form)
