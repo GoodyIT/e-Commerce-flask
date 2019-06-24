@@ -1742,6 +1742,16 @@ def makeorder():
         db.Orders.insert_one(new_order)
         
         db.Queue.insert_one(new_order)
+        new_hist_item = {
+            'id' : str(uid()),
+            'pid' : x['product_id'],
+            'type' : 'ITEM',
+            'date' : date.today().strftime('%Y/%m/%d'),
+            'reason' : "Bought " + x['quantity'] + " " + product['product'],
+            'adjustments' : new_item['id'],
+            'description' : "User ID: "+ current_user.get_id()
+        }
+        db.History.insert_one(new_hist_item)
     return json.dumps({"success": "success"})
 
 # checkout
@@ -1920,7 +1930,13 @@ def myprofile():
         }
 
         avatar = newdata.get('avatar')
-    return render_template('profile.html', breadCrumb=BREAD_CRUMB['Profile'][0], title='Profile', data=data, avatar=avatar)
+
+    historys = db.History.find({ "description": "User ID: "+current_user.get_id() }, {"_id":0}).sort('date',-1)
+    historyData = []
+    for history in historys:
+        historyData.append(history)
+
+    return render_template('profile.html', breadCrumb=BREAD_CRUMB['Profile'][0], historys = historyData, title='Profile',uname=current_user.get_id(), data=data, avatar=avatar)
 
 # signup page
 @app.route('/signup', methods=['GET', 'POST'])

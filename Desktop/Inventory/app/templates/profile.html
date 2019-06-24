@@ -75,7 +75,15 @@
                             <input type="password" class="form-control" name="password">
                         </div>
                         <button type="submit" class="btn btn-submit">Update profile</button>
+                        <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#demo">View logs</button>
                     </form>
+                    <br/>
+                    <div id="demo" class="collapse">
+                    {% for history in historys %}
+
+                        <p>{{history.date}} : {{history.reason}}</p>
+                    {% endfor %}
+                    </div>
                 </div>
             </div>
             <!-- /horizotal form -->
