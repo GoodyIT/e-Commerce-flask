@@ -1,0 +1,78 @@
+{% extends 'api/store-base.html' %}
+
+{% block body %}
+		<!--Breadcrumb Area Start-->
+		<div class="breadcrumb-area">
+		    <div class="container">
+		        <div class="row">
+		            <div class="col-lg-12">
+		                <div class="breadcrumb-content text-center">
+                            <h1 class="breadmome-name">Payment Methods</h1>
+		                    <ul>
+		                        <li><a href="index.html" style="padding:0">Home</a></li>
+														<li><p class="divider">/</p></li>
+		                        <li class="active">Payment Methods</li>
+		                    </ul>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+		<div class="payment-area bg-card">
+		    <div class="container">
+						<div class="col-lg-8">
+				        <div class="row" style="margin: 2.5rem 0 2.5rem 0">
+				            <div class="col-md-12">
+				                <div class="payment-debit">
+				                    <div class="payment-desc">
+																<h4 class="inline">Pay with Credit/Debit Card</h4>
+																<i class="fa fa-credit-card"></i>
+																<p>The available credit card options are listed above. Please note that Eloraus does not collect your credit/debit card number or personal information when you make a payment. For questions regarding your transactions on our site, please consult your card-issuing bank for information.</p>
+				                    </div>
+				                </div>
+				            </div>
+				        </div>
+								<div class="row" style="margin: 2.5rem 0 2.5rem 0">
+										<div class="col-md-12">
+												<div class="payment-paypal">
+														<div class="payment-desc">
+																<h4 class="inline">Pay with Paypal</h4>
+																<i class="fa fa-paypal"></i>
+																<p>When you place an order with Paypal you will be redirected to the PayPal payment page, where you can confirm your payment by logging in with your PayPal username and password. You may still check out even without a PayPal account. To do so, please click on "Pay with Debit/Credit Card" and you’ll be redirected to a secure page where you can enter your credit card information or complete your payment safely via PayPal.</p>
+														</div>
+												</div>
+										</div>
+								</div>
+								<div class="row" style="margin: 2.5rem 0 2.5rem 0">
+										<div class="col-md-12">
+												<div class="payment-stripe">
+														<div class="payment-desc">
+																<h4 class="inline">Pay with Stripe</h4>
+																<i class="fa fa-cc-stripe"></i>
+																<p>When you place an order with Stripe you will be redirected to the Stripe payment page, where you can confirm your order by logging into their interface using your login and password.</p>
+														</div>
+												</div>
+										</div>
+								</div>
+						</div>
+						<div class="col-lg-4 gateway">
+								<div class="row">
+								</div>
+								<div class="row">
+										<div class="payment-img">
+												<img style="filter: grayscale(80%);" src="../static/images/fullpay.png"></img>
+										</div>
+								</div>
+								<div class="row" style="height:12.5rem"></div>
+								<div class="row">
+										<div class="payment-box">
+												<i class="fa fa-question-circle fa-3x"></i>
+												<a href="{{url_for('faq')}}"><h3 style="color:black">Questions & Answers</h3></a>
+										</div>
+								</div>
+						</div>
+		    </div>
+		</div>
+		<!--FAQ Area End-->
+
+{% endblock %}

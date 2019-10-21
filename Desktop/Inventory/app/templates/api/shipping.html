@@ -1,0 +1,90 @@
+{% extends 'api/base.html' %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="card border-dark">
+            <div class="card-header bg-dark text-white header-elements-inline">
+                <h4 class="card-title">Shipping</h4>
+                <div class="header-elements">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-4 col-md-12">
+                        <div class="card border-secondary">
+                            <div class="card-header bg-secondary text-white header-elements-inline">
+                                <h5 class="card-title">Awaiting Shipping</h5>
+                                <div class="header-elements">
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row" id="shipping-items" style="height: 800px">
+                                    {% for order in orders%}
+                                    <div class="pagination-ship col-lg-12">
+                                        <div class="ship-card">
+                                            <p>Order ID: {{order.order_id}}</p>
+                                            <p>Customer: {{order.player_id}}</p>
+                                            <p>Product ID: {{order.product_id}}</p>
+                                            <p>Product Name: {{order.product_name}}</p>
+                                            <p>Quantity: {{order.quantity}}</p>
+                                            <p>Address: {{order.street}}, {{order.city}} </p>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+
+                                <div id="shipping-items-pagination" style="display:none;">
+                                    <a id="shipping-items-previous" class="paginate-prev" href="#">&laquo; Previous</a>
+                                    <a id="shipping-items-next" class="paginate-next" href="#">Next &raquo;</a>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class="card border-secondary">
+                            <div class="card-header bg-secondary text-white header-elements-inline">
+                                <h5 class="card-title">Shipped Packages</h5>
+                                <div class="header-elements">
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row" style="height: 800px">
+                                    <div class="ship-card"><h4>No Record Found</h4></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class="card border-secondary">
+                            <div class="card-header bg-secondary text-white header-elements-inline">
+                                <h5 class="card-title">Delivered Packages</h5>
+                                <div class="header-elements">
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row" style="height: 800px">
+                                    <div class="ship-card"><h4>No Record Found</h4></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="shipping-delivered-items-pagination" style="display:none;">
+        <a id="shipping-delivered-items-previous" class="paginate-prev" href="#">&laquo; Previous</a>
+        <a id="shipping-delivered-items-next" class="paginate-next" href="#">Next &raquo;</a>
+    </div>
+
+</div>
+
+{% endblock %}

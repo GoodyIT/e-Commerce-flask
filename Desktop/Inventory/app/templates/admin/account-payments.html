@@ -1,0 +1,182 @@
+{% extends 'admin/store-base.html' %}
+
+{% block body %}
+		<div class="breadcrumbs">
+				<div class="container">
+						<a href="#">Accounts</a>
+						<span class="separator"><i class="iconfont pe-7s-angle-right"></i></span>
+						<a href="#"> <span>Dashboard</span></a>
+				</div>
+		</div>
+		<div class="container" style="height: 1000px">
+				<div class="account-card">
+						<div class="row" style="height: 25px"></div>
+						<div class="row">
+								<div class="account-nav">
+										<h4>My Account</h4>
+										<a href="{{url_for('admin.accounts')}}">Dashboard</a><br>
+										<h4>Orders</h4>
+										<a href="{{url_for('admin.account_orders')}}">Order History</a><br>
+										<a href="{{url_for('admin.account_returns')}}">Return Status/History</a><br>
+										<h4>Personal Account</h4>
+										<a href="{{url_for('admin.account_settings')}}">Account Settings</a><br>
+										<a href="{{url_for('admin.account_payments')}}">Payment Options</a><br>
+										<h4>Account Notifications</h4>
+										<a href="{{url_for('admin.account_email')}}">Email Notifications</a><br>
+										<a href="{{url_for('admin.account_text')}}">Text Notifications</a><br>
+								</div>
+								<div class="account-content">
+										<h2>Payment Options</h2>
+                    <span>Add a new credit card or edit/remove an existing one</span><br>
+										<div class="row" style="margin: 2rem 0 0 0;">
+												<div class="col-lg-6 col-md-6">
+														{% if current.card %}
+																<h5>Card Type: {{current.card}}</h5>
+														{% else %}
+																<h5> Card Type: None </h5>
+														{% endif %}
+														{% if current.cardName %}
+																<h5>Card Name: {{current.cardName}}</h5>
+														{% else %}
+																<h5>Card Name: None </h5>
+														{% endif %}
+														{% if current.cardHide %}
+																<h5>Card Number: xxxx-xxxx-xxxx-{{current.cardHide}}</h5>
+														{% else %}
+																<h5>Card Number: None </h5>
+														{% endif %}
+														{% if current.cardMonth %}
+																<h5>Card Month: {{current.cardMonth}}</h5>
+														{% else %}
+																<h5>Card Month: None </h5>
+														{% endif %}
+														{% if current.cardYear %}
+																<h5>Card Year: {{current.cardYear}}</h5>
+														{% else %}
+																<h5>Card Year: None </h5>
+														{% endif %}
+												</div>
+												<div class="col-lg-6 col-md-6">
+														<h5>Billing Address: {{current.address}}</h5>
+														<h5>Address 2: {{current.address2}}</h5>
+														<h5>City: {{current.city}}</h5>
+														<h5>State: {{current.state}}</h5>
+														<h5>Zip: {{current.zip}}</h5>
+														<h5>Phone: {{current.phone}}</h5>
+												</div>
+										</div>
+										<div class="row" style="margin: 2rem 0 0 0;">
+												<h4>Payment Information</h4>
+										</div>
+										<form action="" method='post'>
+												{{ form.hidden_tag() }}
+												<div class="col-lg-6 col-md-6">
+														<div class="row" style="padding: 5px">
+																{{form.card.label}}
+																{{form.card(class="form-control")}}
+																{% for error in form.card.errors %}
+																		<span style="color: red;">[{{ error }}]</span>
+																{% endfor %}
+														</div>
+														<div class="row" style="padding: 5px">
+																{{form.cardName.label}}
+																<input type="boolean" class="form-control" name="cardName" id="cardName" placeholder="{{current.cardName}}"></input>
+																{% for error in form.cardName.errors %}
+																		<span style="color: red;">[{{ error }}]</span>
+																{% endfor %}
+														</div>
+														<div class="row" style="padding: 5px">
+																{{form.cardNumber.label}}
+																<input type="text" class="form-control" name="cardNumber" id="cardNumber" placeholder="xxxx-xxxx-xxxx-xxxx"></input>
+																{% for error in form.cardNumber.errors %}
+																		<span style="color: red;">[{{ error }}]</span>
+																{% endfor %}
+														</div>
+														<div class="row" style="padding: 5px">
+																<div style="display:inline-block;">
+																		{{form.cardMonth.label}}
+																		{{form.cardMonth(class="form-control", value="{{current.cardMonth}}")}}
+																		{% for error in form.cardMonth.errors %}
+																				<span style="color: red;">[{{ error }}]</span>
+																		{% endfor %}
+																</div>
+																<div style="display:inline-block;">
+																		{{form.cardYear.label}}
+																		{{form.cardYear(class="form-control", value="{{current.cardYear}}")}}
+																		{% for error in form.cardYear.errors %}
+																				<span style="color: red;">[{{ error }}]</span>
+																		{% endfor %}
+																</div>
+														</div>
+												</div>
+												<div class="col-lg-6 col-md-6">
+														<div class="row" style="padding: 5px">
+																{{form.address.label}}
+																<input type="text" class="form-control" name="address" id="address" placeholder="{{current.address}}"></input>
+																{% for error in form.address.errors %}
+																		<span style="color: red;">[{{ error }}]</span>
+																{% endfor %}
+														</div>
+														<div class="row" style="padding: 5px">
+																{{form.address2.label}}
+																<input type="text" class="form-control" name="address2" id="address2" placeholder="{{current.address2}}"></input>
+																{% for error in form.address2.errors %}
+																		<span style="color: red;">[{{ error }}]</span>
+																{% endfor %}
+														</div>
+														<div class="row" style="padding: 5px">
+																{{form.city.label}}
+																<input type="text" class="form-control" name="city" id="city" placeholder="{{current.city}}"></input>
+																{% for error in form.city.errors %}
+																		<span style="color: red;">[{{ error }}]</span>
+																{% endfor %}
+														</div>
+														<div class="row" style="padding: 5px">
+																{{form.state.label}}
+																{{form.state(class="form-control")}}
+																{% for error in form.state.errors %}
+																		<span style="color: red;">[{{ error }}]</span>
+																{% endfor %}
+														</div>
+														<div class="row" style="padding: 5px">
+																{{form.zip.label}}
+																<input type="text" class="form-control" name="zip" id="zip" placeholder="{{current.zip}}"></input>
+																{% for error in form.zip.errors %}
+																		<span style="color: red;">[{{ error }}]</span>
+																{% endfor %}
+														</div>
+														<div class="row" style="padding: 5px">
+																{{form.phone.label}}
+																<input type="text" class="form-control" name="phone" id="phone" placeholder="{{current.phone}}"></input>
+																{% for error in form.phone.errors %}
+																		<span style="color: red;">[{{ error }}]</span>
+																{% endfor %}
+														</div>
+												</div>
+												<hr />
+												<div class="row" style="padding: 5px">
+														<div class="col-lg-9 col-md-9"></div>
+														<div class="col-lg-2 col-md-2">
+																{{form.submit(class="form-control", placeholder="Silver")}}
+																{% for error in form.submit.errors %}
+																		<span style="color: red;">[{{ error }}]</span>
+																{% endfor %}
+														</div>
+														<div class="col-lg-1 col-md-1"></div>
+												</div>
+												<hr />
+										</form>
+
+										<div class="row">
+												<div class="container">
+														<p class="pad-1">Save Eloraus is the sole owner of the information collected on this site.
+															We will not sell, share, or rent this information to any outside parties,
+															except as outlined in the privacy policy.</p>
+												</div>
+										</div>
+								</div>
+						<div class="row" style="height: 25px"></div>
+				</div>
+		</div>
+</div>
+{% endblock %}

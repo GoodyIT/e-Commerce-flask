@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
 
     var hulla = new hullabaloo();
@@ -9,7 +8,7 @@ $(document).ready(function() {
 
     var groupName = $('#groupName').html();
     $('#groupName').hide();
-    
+
     // preloader
     $(function() {
         $(".preloader").fadeOut();
@@ -27,7 +26,7 @@ $(document).ready(function() {
             $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
         }
     );
-    
+
     // Tables
     $('#orderTable').DataTable();
     $('#productTable').DataTable();
@@ -37,8 +36,8 @@ $(document).ready(function() {
     // DATEPICKER on Tables
     $( "#datepick" ).datepicker();
     $( "#deliverypick" ).datepicker();
-    
-    
+
+
     // Table buttons
     // $("#tbl-btn").on("click", function() {
     //     console.log(123);
@@ -130,7 +129,7 @@ $(document).ready(function() {
             $("#tbFinal").html(finalresult.toFixed(2));
         }
 
-        
+
     });
 
     // Find and remove selected table rows
@@ -437,24 +436,6 @@ $(document).ready(function() {
         });
     });
 
-    $(document).ready(function(){
-	    var url = 'http://' + document.domain + ':' + location.port + '/test'
-		console.log(url)
-	    //connect to the socket server.
-	    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
-
-	    //receive details from server
-	    socket.on('my event', function(msg) {
-	        console.log("Received message: " + msg.message);
-
-	        var pathname = window.location.pathname;
-	        if (pathname === "/shipping") {
-	        	console.log('In /shipping');
-	        	location.reload();
-	        };
-	    });
-	});
-
     $("#analytics_by_date_type").on('change', function () {
         $("#analytics_by_date").remove();
         $("#analytics_by_date_container").append('<canvas id="analytics_by_date"></canvas>');
@@ -639,9 +620,9 @@ $(document).ready(function() {
                 .done(function(res) {
                     var labelArray = [];
                     var dataArray  = [];
-                    labelArray = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", 
-                    "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", 
-                    "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", 
+                    labelArray = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL",
+                    "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH",
+                    "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT",
                     "VA", "WA", "WV", "WI", "WY"];
                     var dataJson = {};
                     res.analyticsByState.forEach(value => {
@@ -652,7 +633,7 @@ $(document).ready(function() {
                             return dataJson[state];
                         return 0;
                     });
-                    
+
                     var ctxAnalyticsByLocation = document.getElementById("analytics_by_location").getContext('2d');
                     new Chart(ctxAnalyticsByLocation, {
                         type: 'bar',
@@ -693,7 +674,7 @@ $(document).ready(function() {
                         labelArray.push(value['_id']);
                         dataArray.push(value['quantity']);
                     });
-                    
+
                     var ctxAnalyticsByLocation = document.getElementById("analytics_by_location").getContext('2d');
                     new Chart(ctxAnalyticsByLocation, {
                         type: 'bar',
@@ -789,7 +770,7 @@ $(document).ready(function() {
             }
         }
     });
-    
+
 })
 
 function getProduct(pid) {
@@ -800,7 +781,7 @@ function getProduct(pid) {
         contentType: "application/json",
         data: JSON.stringify({'pid':pid}),
     })
-    .done(function(result) {        
+    .done(function(result) {
         //location.reload();
         if (result) {
             gl_uid = result['id'];
@@ -809,7 +790,7 @@ function getProduct(pid) {
             gl_cate = result['category'];
             gl_price = result['price'];
             gl_curr = result['currency'];
-            
+
             gl_attr0 = "";
             gl_attr1 = -1;
             gl_attr2 = -1;
@@ -819,7 +800,7 @@ function getProduct(pid) {
 
             gl_vendor = result['vendor'];
             gl_url = result['url'];
-                   
+
             $("#pid").val(result['id']);
             $("#pname").val(result['product']);
             $("#ptitle").text(result['product']);
@@ -828,7 +809,7 @@ function getProduct(pid) {
 
             $("#price").val(result['price']);
             $("#curr").val(result['currency']);
-            
+
             var attrs = result['attributes'];
             //console.log("------> attrs: ", attrs);
             var cntAttrs = 0;
@@ -842,42 +823,42 @@ function getProduct(pid) {
                 }
                 htmlAddAttr += '</div>';
                 $("div#dvAttr").append(htmlAddAttr);
-                
+
                 $("#attr"+cntAttrs).val(key);
                 $("#options"+cntAttrs).val(value);
                 $("#options"+cntAttrs).tagsinput();
-            
+
                 //update global variable
                 window["gl_attr"+cntAttrs] = key;
                 window["gl_options"+cntAttrs] = value;
-                
+
                 cntAttrs++;
             });
 
-            $("#btnAddAttr").on("click", function(){        
+            $("#btnAddAttr").on("click", function(){
                 for(var i=1; i<6; i++) {
                     cntAttrs++;
                     if (!$("#attr"+cntAttrs).length) break;
                     if (cntAttrs == 5) return;
-                }        
-        
+                }
+
                 var htmlAddAttr = '<div class="row" style="margin-top:10px;">'+
                                 '<div class="col-lg-3"><label for="attr'+cntAttrs+'">Attribute</label><input type="text" class="form-control" id="attr'+cntAttrs+'" name="attr'+cntAttrs+'" placeholder="eg:color"></div>'+
                                 '<div class="col-lg-5"><label for="options'+cntAttrs+'">Options</label><input type="text" class="form-control" id="options'+cntAttrs+'" name="options'+cntAttrs+'" data-role="tagsinput" placeholder=""></div>'+
                                 '</div>';
-                $("div#dvAttr").append(htmlAddAttr);        
-        
+                $("div#dvAttr").append(htmlAddAttr);
+
                 // Erase Values on Table
                 $("#attr"+cntAttrs).val("");
                 $("#options"+cntAttrs).tagsinput();
-        
+
             });
 
             $("#vendor").val(result['vendor']);
             $("#url").val(result['url']);
 
             getOrders(pid);
-            
+
         } else {
             console.log("Failed to get Product Info from server!!!");
         }
@@ -893,7 +874,7 @@ function getOrders(pid) {
         contentType: "application/json",
         data: JSON.stringify({'pid':pid}),
     })
-    .done(function(result) {        
+    .done(function(result) {
         //console.log("------ result: ",result);
         if (result) {
             var htmlTxt = "";
@@ -909,7 +890,7 @@ function getOrders(pid) {
                 htmlTxt += '</tr>';
             }
             $("#gl_orderTable tbody").html(htmlTxt);
-            
+
             getHistory(pid);
 
         } else {
@@ -926,7 +907,7 @@ function getHistory(pid) {
         contentType: "application/json",
         data: JSON.stringify({'pid':pid}),
     })
-    .done(function(result) {        
+    .done(function(result) {
         //console.log("------ result: ",result);
         if (result) {
             var htmlTxt = "";
@@ -940,7 +921,7 @@ function getHistory(pid) {
                 htmlTxt += '</tr>';
             }
             $("#gl_historyTable tbody").html(htmlTxt);
-            
+
         } else {
             console.log("Failed to get Product Info from server!!!");
         }
@@ -949,6 +930,7 @@ function getHistory(pid) {
 }
 
 updateSubgroupSelect();
+
 function updateSubgroupSelect() {
     $.ajax({
         url: "/getSubgroups",
@@ -972,7 +954,7 @@ $('#category').on('change', function() {
     updateSubgroupSelect();
 })
 
-$("#gl_btnUpdate").on("click", function(){        
+$("#gl_btnUpdate").on("click", function(){
     ///// Validation for all form element
     var pname = $("#pname").val();
     var sku = $("#sku").val();
@@ -997,7 +979,7 @@ $("#gl_btnUpdate").on("click", function(){
         attr2 = $("#attr2").val();
         options2 = $("#options2").val();
     }
-    
+
     var vendor = $("#vendor").val();
     var url = $("#url").val();
 
@@ -1034,12 +1016,12 @@ $("#gl_btnUpdate").on("click", function(){
 
     /////Check the modifications
     var dicChgs = {}; var dicAttr = {};
-    var arrChgs = []; 
+    var arrChgs = [];
 
     var d = new Date();
     var month = d.getMonth()+1;
-    var day = d.getDate();    
-    var todayDate = d.getFullYear() + '/' + (month<10 ? '0' : '') + month + '/' + (day<10 ? '0' : '') + day;    
+    var day = d.getDate();
+    var todayDate = d.getFullYear() + '/' + (month<10 ? '0' : '') + month + '/' + (day<10 ? '0' : '') + day;
 
     if (pname != gl_pname) {
         arrChgs.push("Product Name,"+todayDate+","+gl_uid);
@@ -1095,7 +1077,7 @@ $("#gl_btnUpdate").on("click", function(){
     }
     if (!jQuery.isEmptyObject(dicAttr)){
         dicChgs['attributes'] = {}; //dicChgs['attributes'] = dicAttr;
-        if (attr0 != "") 
+        if (attr0 != "")
             dicChgs['attributes'][attr0] = options0;
         if (attr1 != -1) {
             if (attr1 != "") dicChgs['attributes'][attr1] = options1;
@@ -1121,7 +1103,7 @@ $("#gl_btnUpdate").on("click", function(){
             contentType: "application/json",
             data: JSON.stringify({'chgs':arrChgs}),
         })
-        .done(function(result) {        
+        .done(function(result) {
             //console.log("------ result: ",result);
             console.log("**************updated");
             document.location.reload();
@@ -1147,9 +1129,9 @@ $("#gl_btnUpdate").on("click", function(){
                     htmlTxt += '<td>'+item['description']+'</td>';
                     htmlTxt += '</tr>';
                 }
-                
+
                 $("#gl_historyTable tbody").append(htmlTxt);
-                
+
             } else {
                 console.log("Failed to get History Info from server!!!");
             }
@@ -1159,8 +1141,8 @@ $("#gl_btnUpdate").on("click", function(){
 
     ///// form submission
     if (!jQuery.isEmptyObject(dicChgs)) {
-        //$("#frmAdjust").submit(); 
-        
+        //$("#frmAdjust").submit();
+
         $.ajax({
             url: "/updateProduct",
             type: "post",
@@ -1168,7 +1150,7 @@ $("#gl_btnUpdate").on("click", function(){
             contentType: "application/json",
             data: JSON.stringify({'pid':gl_uid,'item':dicChgs}),
         })
-        .done(function(result) {        
+        .done(function(result) {
             //console.log("------ result: ",result);
             if (result) {
                 alert("Success to update product information!");
@@ -1182,17 +1164,17 @@ $("#gl_btnUpdate").on("click", function(){
                 //Activate the History tab
                 $('.nav-tabs a[href="#History"]').tab('show');
                 //$('.nav-tabs a:last').tab('show');
-                
+
             } else {
                 console.log("Failed to get Product Info from server!!!");
             }
-    
+
         });
     }
 
 });
 
-/// Upload file 
+/// Upload file
 uploadFileImport = function(id) {
     //alert("uploadFileImport - id: "+id);
     $.ajaxFileUpload({
@@ -1202,7 +1184,7 @@ uploadFileImport = function(id) {
         data: {
             'param1': id,
         },
-        url: "/importFile", 
+        url: "/importFile",
         success: function (data, status)
         {
             //console.log("data: ",data);
@@ -1214,12 +1196,11 @@ uploadFileImport = function(id) {
             }
         },
         error: function (xhr, status, error) {
-            //console.log("xhr: ",xhr);                
+            //console.log("xhr: ",xhr);
 
         }
     });
 }
-
 
 function initDashboard() {
     $.ajax({
@@ -1240,9 +1221,9 @@ function initDashboard() {
         // Analytics by location
         var labelArray = [];
         var dataArray  = [];
-        labelArray = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", 
-          "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", 
-          "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", 
+        labelArray = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL",
+          "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH",
+          "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT",
           "VA", "WA", "WV", "WI", "WY"];
         var dataJson = {};
         res.analyticsByState.forEach(value => {
@@ -1253,7 +1234,7 @@ function initDashboard() {
                 return dataJson[state];
             return 0;
         });
-        
+
         var ctxAnalyticsByLocation = document.getElementById("analytics_by_location").getContext('2d');
         new Chart(ctxAnalyticsByLocation, {
             type: 'bar',
@@ -1285,7 +1266,7 @@ function initDashboard() {
             labelArray.push(value['group']);
             dataArray.push(value['quantity']);
         });
-        
+
         var ctxAnalyticsByGroup = document.getElementById("analytics_by_group").getContext('2d');
         new Chart(ctxAnalyticsByGroup, {
             type: 'bar',

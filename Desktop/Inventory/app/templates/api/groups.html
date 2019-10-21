@@ -1,0 +1,59 @@
+{% extends 'api/base.html' %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-xl-12">
+
+            <!-- Traffic sources -->
+            <div class="card border-dark">
+                <div class="card-header bg-dark text-white header-elements-inline">
+                    <h6 class="card-title">Groups</h6>
+                    <div class="header-elements">
+                        <div class="form-check form-check-right form-check-switchery form-check-switchery-sm">
+                            <a href="{{url_for('api.groups_add')}}" class="btn bg-teal-400 btn-labeled btn-labeled-left rounded-round" style="float: right;"><b><i class="icon-plus-circle2"></i></b>Add Group</a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="card-body py-0">
+
+                    <table class="table text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>ITEM NAME</th>
+                                <th>CATEGORY TYPE</th>
+                                <th>TOTAL ITEMS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in groups %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge badge-mark border-success mr-1"></span>
+                                        <a href="#" class="text-default font-weight-semibold">{{item.id}}</a>
+                                    </div>
+                                </td>
+                                <td><a href="{{url_for('api.groups_list', name=item.name)}}"><span class="text-success-600">{{item.name}}</span></a></td>
+                                <td><span class="badge bg-danger">{{item.type}}</span></td>
+                                <td><h6 class="font-weight-semibold mb-0">{{item.total|round|int}}</h6></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+            <!-- /traffic sources -->
+
+        </div>
+
+    </div>
+
+
+
+{% endblock %}

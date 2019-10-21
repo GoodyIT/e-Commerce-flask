@@ -1,0 +1,73 @@
+{% extends 'api/store-base.html' %}
+
+{% block body %}
+		<div class="breadcrumbs">
+				<div class="container">
+						<a href="#">Accounts</a>
+						<span class="separator"><i class="iconfont pe-7s-angle-right"></i></span>
+						<a href="#"> <span>Dashboard</span></a>
+				</div>
+		</div>
+		<div class="container" style="height: 1000px">
+				<div class="account-card">
+						<div class="row" style="height: 25px"></div>
+						<div class="row">
+								<div class="account-nav">
+										<h4>My Account</h4>
+										<a href="{{url_for('api.accounts')}}">Dashboard</a><br>
+										<h4>Orders</h4>
+										<a href="{{url_for('api.account_orders')}}">Order History</a><br>
+										<a href="{{url_for('api.account_returns')}}">Return Status/History</a><br>
+										<h4>Personal Account</h4>
+										<a href="{{url_for('api.account_settings')}}">Account Settings</a><br>
+										<a href="{{url_for('api.account_payments')}}">Payment Options</a><br>
+										<h4>Account Notifications</h4>
+										<a href="{{url_for('api.account_email')}}">Email Notifications</a><br>
+										<a href="{{url_for('api.account_text')}}">Text Notifications</a><br>
+								</div>
+								<div class="account-content container">
+										<div class="row">
+												<h2>Welcome {{current.first}}</h2>
+												<br>
+										</div>
+										<div class="row">
+												<div class="col-lg-8 col-md-8">
+														<h5>Eloraus ID: {{current.id}}</h5>
+														<h5>Account #: {{current.uid}}</h5>
+														{% if current.address %}
+																<h5>Address: {{current.address}}, {{current.city}}, {{current.state}}, {{current.zip}}</h5>
+														{% else %}
+																<h5>Address: None</h5>
+														{% endif %}
+														<h5>Join Date: {{current.joined}}</h5>
+												</div>
+												<div class="col-lg-4 col-md-4">
+														<h5>Current Balance: {{current.balance}}</h5>
+														<form action="" method='post'>
+															{{ form.hidden_tag() }}
+															<input class="form-control" name="coupon" id="coupon" type="text" placeholder="coupon code"></input>
+															<input class="form-control" name="submit" id="submit" type="submit"></input>
+														</form>
+												</div>
+										</div>
+
+										<br>
+										<div class="container" style="background-color:#eaeaea;">
+												<div class="row">
+														<h3 class="account_orders">Recent Order Status</h3><a href="{{url_for('api.account_orders')}}"><u>(View All)</u></a>
+												</div>
+										</div>
+										<p>No Available Orders</p>
+										<br>
+										<div class="container" style="background-color:#eaeaea;">
+												<div class="row ">
+														<h3 class="account_orders">Recent Return Status</h3><a href="{{url_for('api.account_returns')}}"><u>(View All)</u></a>
+												</div>
+										</div>
+										<p>There are no RMA associated with this account.</p>
+								</div>
+						</div>
+						<div class="row" style="height: 25px"></div>
+				</div>
+		</div>
+{% endblock %}

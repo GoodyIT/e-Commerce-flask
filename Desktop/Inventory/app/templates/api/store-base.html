@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <!-- Mobile Specific -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Site Description Here">
+
+    {% if title %}
+        <title>{{title}}</title>
+    {% else %}
+        <title>Web Page</title>
+    {% endif %}
+	  <link rel="icon" type="image/x-icon" href="images/favicon.png" />
+
+    <!-- google fonts -->
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:200,300,400,400i,500,600,700%7CMerriweather:300,300i">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='storecss/socicon.css') }}" media="all"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='storecss/iconsmind.css') }}" media="all"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='storecss/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='storecss/animate.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='storecss/font-awesome.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='storecss/ionicons.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='storecss/pe-icon-7-stroke.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='storecss/simple-line-icons.min.css') }}" media="all">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='storecss/owl.carousel.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='storecss/revslider.css') }}" >
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='storecss/jquery.bxslider.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='storecss/owl.carousel.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='storecss/owl.theme.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='storecss/jquery.mobile-menu.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='storecss/theme.css') }}" media="all"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='storecss/custom.css') }}" media="all"/>
+    <!-- <link href="../static/storecss/alert.css" rel="stylesheet" type="text/css" media="all"/> -->
+    <!-- <link href="../static/storecss/hullabaloo.css" rel="stylesheet" type="text/css" media="all"/> -->
+    <style type="text/css">
+        .category .filter-box {
+            text-transform: uppercase;
+        }
+
+        .pixxett-header1 #nav .level0-wrapper {
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body class="home-index-2">
+<div id="page">
+    <!-- Header -->
+    <header class="pixxett-header1">
+        <div class="header-container">
+            <div class="header-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-4 col-xs-12">
+                            <div class="language-currency-wrapper">
+                                <div class="inner-cl">
+                                    <div class="block block-language form-language">
+                                        <div class="lg-cur"><span> <img src="../static/images/flag-usa.png" alt="English"> <span
+                                                class="lg-fr">English</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="block block-currency">
+                                        <div class="item-cur"><span>Currency</span>&nbsp;$ <i
+                                                class="fa fa-angle-down"></i>
+                                        </div>
+                                        <ul>
+                                            <li><a href="javascript:setCurrency(1);" rel="nofollow" title="Dollar"> $
+                                                Dollar </a></li>
+                                            <li><a href="javascript:setCurrency(2);" rel="nofollow" title="Euros"> €
+                                                Euros </a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- End Default Welcome Message -->
+                            </div>
+                        </div>
+
+                        <!-- top links -->
+                        <div class="toplinks col-lg-7 col-md-7 col-sm-8 col-xs-12 hidden-xs">
+                            <div class="links">
+                                <div class="login top-links-wrapper ">
+                                    {% if current_user.is_authenticated %}
+                                        <a class="top-link" title="Account" href="{{url_for('api.accounts')}}"><span class="hidden-xs">{{current_user.get_id()}}</span></a>
+                                        <a class="top-link" title="Logout" href="{{url_for('api.logout')}}"><span class="hidden-xs">Logout</span></a>
+                                    {% else %}
+                                        <a class="top-link" title="Login" href="{{url_for('api.store_login')}}"><span class="hidden-xs">Login</span></a>
+                                    {% endif %}
+                                </div>
+
+                                <!-- top cart -->
+                                <div class="top-cart top-links-wrapper ">
+                                    <div class="top-cart-contain">
+                                        <div class="mini-cart">
+                                            <div data-toggle="dropdown" data-hover="dropdown" class="basket dropdown-toggle"><a class="top-link" href="#">
+                                                <div class="shoppingcart-inner"><span class="cart-title"></span> <span class="cart_count">0</span></div>
+                                            </a></div>
+                                            <div>
+                                                <div class="top-cart-content">
+                                                    <form action="{{url_for('api.checkout')}}" method="POST">
+                                                        <input type="hidden" name="cart-data" id="cart-data" />
+                                                        <div class="block-subtitle hidden-xs">Recently added item(s)</div>
+                                                        <ul id="cart-sidebar" class="mini-products-list">
+                                                        </ul>
+                                                        <div class="top-subtotal">Subtotal: <span
+                                                                class="price" id="cart-total-price">$0.00</span>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <button class="btn-checkout store-checkout" type="submit" style="text-align: center;">
+                                                                <i class="fa fa-check"></i><span>Checkout</span></button>
+                                                                <br><br>
+                                                            <button class="btn-checkout cart-clear" type="button" style="text-align: center;">
+                                                                <i class="fa fa-remove"></i><span> Clear Cart</span></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pixxett-search-block">
+                                <form method="get" action="#" id="searchbox">
+                                    <input autocomplete="off" class="search_query form-control ac_input" id="search_query_top" name="search_query" value="Search..." type="text">
+                                    <button type="submit" name="submit_search" class="btn button-search"><span class="fa fa-search"></span></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12 logo-block">
+                            <div class="logo" style="margin-top:20px;">
+                                <a title="e-commerce" href="{{url_for('api.store')}}">
+                                    <img alt="e-commerce" src="../static/images/logo.png">
+                                </a>
+                            </div>
+                            <!-- Navbar -->
+
+                            <div class="mm-toggle-wrap hidden-lg hidden-md">
+                                <div class="mm-toggle"><i class="fa fa-bars"></i><span
+                                        class="mm-label">Menu</span>
+                                </div>
+                            </div>
+                            <div class="nav-inner">
+                                <ul id="nav" class="hidden-xs">
+                                    <li class="level0 parent drop-menu"><a href="{{url_for('api.store')}}" class="active"><span>Home</span> </a> </li>
+                                    <li class="level0 parent drop-menu">
+                                        <a href="{{url_for('api.games', page = 1)}}"><span>Games</span><b class="caret"></b> </a>
+                                        <ul class="level1">
+                                            {% for group in groups['GAMES'] %}
+                                            <li class="level1 first">
+                                                <a href="{{url_for('api.games', page = 1, gid = group.id)}}"><span>{{group.name}}</span></a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                    <li class="level0 parent drop-menu">
+                                        <a href="{{url_for('api.games', page = 1)}}"><span>Office</span><b class="caret"></b> </a>
+                                        <ul class="level1">
+                                            {% for group in groups['GAMES'] %}
+                                            <li class="level1 first">
+                                                <a href="{{url_for('api.games', page = 1, gid = group.id)}}"><span>{{group.name}}</span></a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                    <li class="level0 parent drop-menu">
+                                        <a href="{{url_for('api.games', page = 1)}}"><span>Electronics</span><b class="caret"></b> </a>
+                                        <ul class="level1">
+                                            {% for group in groups['GAMES'] %}
+                                            <li class="level1 first">
+                                                <a href="{{url_for('api.games', page = 1, gid = group.id)}}"><span>{{group.name}}</span></a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                    <li class="level0 parent drop-menu">
+                                        <a href="{{url_for('api.games', page = 1)}}"><span>Gear</span><b class="caret"></b> </a>
+                                        <ul class="level1">
+                                            {% for group in groups['GAMES'] %}
+                                            <li class="level1 first">
+                                                <a href="{{url_for('api.games', page = 1, gid = group.id)}}"><span>{{group.name}}</span></a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                    <li class="level0 parent drop-menu">
+                                        <a href="{{url_for('api.games', page = 1)}}"><span>Computer</span><b class="caret"></b> </a>
+                                        <ul class="level1">
+                                            {% for group in groups['GAMES'] %}
+                                            <li class="level1 first">
+                                                <a href="{{url_for('api.games', page = 1, gid = group.id)}}"><span>{{group.name}}</span></a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                    <li class="level0 parent drop-menu">
+                                        <a href="{{url_for('api.games', page = 1)}}"><span>Toys</span><b class="caret"></b> </a>
+                                        <ul class="level1">
+                                            {% for group in groups['GAMES'] %}
+                                            <li class="level1 first">
+                                                <a href="{{url_for('api.games', page = 1, gid = group.id)}}"><span>{{group.name}}</span></a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                    <li class="level0 parent drop-menu">
+                                        <a href="{{url_for('api.games', page = 1)}}"><span>Acessories</span><b class="caret"></b> </a>
+                                        <ul class="level1">
+                                            {% for group in groups['GAMES'] %}
+                                            <li class="level1 first">
+                                                <a href="{{url_for('api.games', page = 1, gid = group.id)}}"><span>{{group.name}}</span></a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                </ul>
+
+                            </div>
+                            <!-- end nav -->
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <!-- end header -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <b>{{message}}</b>
+            {% endfor %}
+        {% endif %}
+    {%  endwith %}
+
+    {% block body %}{% endblock %}
+
+<!-- mobile menu -->
+<div id="mobile-menu" class="pixxett-header1">
+    <ul>
+        <li>
+            <div class="mm-search">
+                <form id="search1" name="search">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                        </div>
+                        <input type="text" class="form-control simple" placeholder="Search ..." name="srch-term"
+                               id="srch-term">
+                    </div>
+                </form>
+            </div>
+        </li>
+        <li><a href="#">Pages</a>
+            <ul>
+                <li><a href="index.html">Home</a>
+                    <ul>
+                        <li><a href="index.html">Home Full Width</a> </li>
+                        <li><a href="index-boxed.html">Home Boxed</a> </li>
+                    </ul>
+                </li>
+                <li><a href="grid.html">Grid</a>
+                    <ul>
+                        <li><a href="grid.html">Grid Without Sidebar</a> </li>
+                        <li><a href="grid1.html">Grid left Sidebar</a> </li>
+                        <li><a href="grid2.html">Grid Right Sidebar</a> </li>
+                    </ul>
+                </li>
+                <li><a href="list.html">List</a></li>
+                <li><a href="product_detail.html">Product Detail</a></li>
+                <li><a href="aboutus.html">About Us</a>
+                    <ul>
+                        <li><a href="aboutus.html"><span>About Us</span></a> </li>
+                        <li><a href="aboutus-left-sidebar.html"><span>About Us left Sidebar</span></a> </li>
+                        <li><a href="aboutus-right-sidebar.html"><span>About Us Right Sidebar</span></a> </li>
+                    </ul>
+                </li>
+                <li><a href="blog-articles-cards.html">Blog</a>
+                    <ul>
+                        <li><a href="blog-articles-cards.html"><span>Blog Grid View</span></a> </li>
+                        <li><a href="blog-articles-cards-sidebar.html"><span>Blog Grid With Sidebar</span></a> </li>
+                        <li><a href="blog-articles-list.html"><span>Blog List View</span></a> </li>
+                        <li><a href="blog-articles-magazine.html"><span>Blog Articles Magazine</span></a> </li>
+                        <li><a href="blog-post-single.html"><span>Single Blog Post</span></a> </li>
+                        <li><a href="blog-post-image-single.html"><span>Single Blog With Image </span></a> </li>
+                        <li><a href="blog-post-audio-single.html"><span>Single Blog With Audio </span></a> </li>
+                        <li><a href="blog-post-video-single.html"><span>Single Blog With Video </span></a> </li>
+                    </ul>
+                </li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </li>
+
+        <li><a href="grid1.html">Mobiles</a></li>
+        <li><a href="grid.html">Appliances</a></li>
+        <li><a href="grid.html">Computers</a>
+            <ul>
+                <li><a href="grid.html"><span>Category</span></a>
+                    <ul>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                    </ul>
+                </li>
+                <li><a href="grid.html"><span>Category</span></a>
+                    <ul>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                    </ul>
+                </li>
+                <li><a href="grid.html"><span>Category</span></a>
+                    <ul>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li><a href="grid.html">Kitchen</a>
+            <ul>
+                <li><a href="grid.html"><span>Category</span></a>
+                    <ul>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                    </ul>
+                </li>
+                <li><a href="grid.html"><span>Category</span></a>
+                    <ul>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                    </ul>
+                </li>
+                <li><a href="grid.html"><span>Category</span></a>
+                    <ul>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                    </ul>
+                </li>
+                <li><a href="grid.html"><span>Category</span></a>
+                    <ul>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li><a href="grid.html">Accessories</a>
+            <ul>
+                <li><a href="grid.html"><span>Category</span></a>
+                    <ul>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                    </ul>
+                </li>
+                <li><a href="grid.html"><span>Category</span></a>
+                    <ul>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                    </ul>
+                </li>
+                <li><a href="grid.html"><span>Category</span></a>
+                    <ul>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                    </ul>
+                </li>
+                <li><a href="grid.html"><span>Category</span></a>
+                    <ul>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                        <li><a href="grid.html"><span>Sub Category</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li><a href="grid.html">Custom</a></li>
+    </ul>
+    <div class="top-links">
+        <ul class="links">\
+            <li class="last"><a title="Login" href="login.html"><span>Login</span></a></li>
+        </ul>
+    </div>
+</div>
+
+<footer>
+    <div class="row" style="height:250px; background-color: black;">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-2 footer-contact">
+            <div class="row mt">
+                <h4>Contact Us</h4>
+            </div>
+            <div class="row mt">
+                <h5 class="rv">Phone</h5>
+                <span>Toll Free (1800)800-8080</span>
+            </div>
+            <div class="row mt">
+                <h5 class="rv">Email</h5>
+                <span>general@eterant.com</span>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="row mt">
+                <div class="col-lg-4">
+                    <h4>Help</h4>
+                </div>
+                <div class="col-lg-4">
+                    <h4>Partner</h4>
+                </div>
+                <div class="col-lg-4">
+                    <h4>Legal</h4>
+                </div>
+            </div>
+            <div class="row mt">
+                <div class="col-lg-4 footer-help">
+                    <ul>
+                        <li><a href="{{url_for('api.returns')}}">Shipping & Returns</a></li>
+                        <li><a href="{{url_for('api.payments')}}">Payment Methods</a></li>
+                        <li><a href="{{url_for('api.faq')}}">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 footer-partner">
+                    <ul>
+                        <li><a href="{{url_for('api.about')}}">About Us</a></li>
+                        <li><a href="{{url_for('api.affiliate')}}">Affiliate</a></li>
+                        <li><a href="{{url_for('api.contact')}}">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 footer-legal">
+                    <ul>
+                        <li><a href="{{url_for('api.privacy')}}">Privacy & Cookie Policy</a></li>
+                        <li><a href="{{url_for('api.terms')}}">Terms & Conditions</a></li>
+                        <li><a href="{{url_for('api.copyright')}}">Copyright</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt">
+                <div class="col-lg-4 footer-rights">
+                      <span>2018. Eloraus All Rights Reserved.</span>
+                </div>
+                <div class="col-lg-4 footer-hours">
+                    <h5>Working Days/Hours:</h5>
+                    <span>24/7 Support</span>
+                </div>
+                <div class="col-lg-4 footer-payments">
+                    <img src="../static/images/payments.png" alt="payments"></img>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1"></div>
+    </div>
+</footer>
+
+<!--<div class="loader"></div>-->
+<a class="back-to-top inner-link" id="toTop" href="javascript:void(0);" data-scroll-class="100vh:active"><i class="icon-Up-4"></i></a>
+
+<!-- Scripts -->
+<script defer src="{{ url_for('static', filename='storejs/jquery-3.1.1.min.js') }}"></script>
+<script defer src="{{ url_for('static', filename='storejs/parallax.js') }}"></script>
+<script defer src="{{ url_for('static', filename='storejs/typed.min.js') }}"></script>
+<script defer src="{{ url_for('static', filename='storejs/datepicker.js') }}"></script>
+<script defer src="{{ url_for('static', filename='storejs/isotope.min.js') }}"></script>
+<script defer src="{{ url_for('static', filename='storejs/ytplayer.min.js') }}"></script>
+<script defer src="{{ url_for('static', filename='storejs/granim.min.js') }}"></script>
+<script defer src="{{ url_for('static', filename='storejs/countdown.min.js') }}"></script>
+<script defer src="{{ url_for('static', filename='storejs/smooth-scroll.min.js') }}"></script>
+<script defer src="{{ url_for('static', filename='storejs/scripts.js') }}"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script defer src="{{ url_for('static', filename='storejs/bootstrap.min.js') }}"></script>
+
+<!-- main js -->
+<script defer type="text/javascript" src="{{ url_for('static', filename='storejs/common.js') }}"></script>
+<script defer type="text/javascript" src="{{ url_for('static', filename='storejs/jquery.mobile-menu.min.js') }}"></script>
+<script defer type="text/javascript" src="{{ url_for('static', filename='storejs/owl.carousel.min.js') }}"></script>
+<script defer type="text/javascript" src="{{ url_for('static', filename='storejs/app.js') }}"></script>
+<script defer type="text/javascript" src="{{ url_for('static', filename='storejs/revslider.js') }}"></script>
+<script defer type="text/javascript" src="{{ url_for('static', filename='storejs/countdown.js') }}"></script>
+<script defer type="text/javascript" src="{{ url_for('static', filename='storejs/jquery.bxslider.min.js') }}"></script>
+<script defer type="text/javascript" src="{{ url_for('static', filename='storejs/cloud-zoom.js') }}"></script>
+<script defer type="text/javascript" src="{{ url_for('static', filename='storejs/hullabaloo.js') }}"></script>
+<script defer type="text/javascript">
+    var dthen1 = new Date("12/25/17 11:59:00 PM");
+    start = "08/04/15 03:02:11 AM";
+    start_date = Date.parse(start);
+    var dnow1 = new Date(start_date);
+    if (CountStepper > 0)
+        ddiff = new Date((dnow1) - (dthen1));
+    else
+        ddiff = new Date((dthen1) - (dnow1));
+    gsecs1 = Math.floor(ddiff.valueOf() / 1000);
+
+    var iid1 = "countbox_1";
+    CountBack_slider(gsecs1, "countbox_1", 1);
+
+    var dthen1 = new Date("05/25/17 11:59:00 PM");
+    start = "08/04/15 03:02:11 AM";
+    start_date = Date.parse(start);
+    var dnow1 = new Date(start_date);
+    if (CountStepper > 0)
+        ddiff = new Date((dnow1) - (dthen1));
+    else
+        ddiff = new Date((dthen1) - (dnow1));
+    gsecs1 = Math.floor(ddiff.valueOf() / 1000);
+
+    var iid1 = "countbox_2";
+    CountBack_slider(gsecs1, "countbox_2", 1);
+</script>
+<script defer type='text/javascript'>
+    jQuery(document).ready(function () {
+        jQuery('#rev_slider_4').show().revolution({
+            dottedOverlay: 'none',
+            delay: 5000,
+            startwidth: 1140,
+            startheight: 600,
+
+            hideThumbs: 200,
+            thumbWidth: 200,
+            thumbHeight: 50,
+            thumbAmount: 2,
+
+            navigationType: 'thumb',
+            navigationArrows: 'solo',
+            navigationStyle: 'round',
+
+            touchenabled: 'on',
+            onHoverStop: 'on',
+
+            swipe_velocity: 0.7,
+            swipe_min_touches: 1,
+            swipe_max_touches: 1,
+            drag_block_vertical: false,
+
+            spinner: 'spinner0',
+            keyboardNavigation: 'off',
+
+            navigationHAlign: 'center',
+            navigationVAlign: 'bottom',
+            navigationHOffset: 0,
+            navigationVOffset: 20,
+
+            soloArrowLeftHalign: 'left',
+            soloArrowLeftValign: 'center',
+            soloArrowLeftHOffset: 20,
+            soloArrowLeftVOffset: 0,
+
+            soloArrowRightHalign: 'right',
+            soloArrowRightValign: 'center',
+            soloArrowRightHOffset: 20,
+            soloArrowRightVOffset: 0,
+
+            shadow: 0,
+            fullWidth: 'on',
+            fullScreen: 'off',
+
+            stopLoop: 'off',
+            stopAfterLoops: -1,
+            stopAtSlide: -1,
+
+            shuffle: 'off',
+
+            autoHeight: 'off',
+            forceFullWidth: 'on',
+            fullScreenAlignForce: 'off',
+            minFullScreenHeight: 0,
+            hideNavDelayOnMobile: 1500,
+
+            hideThumbsOnMobile: 'off',
+            hideBulletsOnMobile: 'off',
+            hideArrowsOnMobile: 'off',
+            hideThumbsUnderResolution: 0,
+
+            hideSliderAtLimit: 0,
+            hideCaptionAtLimit: 0,
+            hideAllCaptionAtLilmit: 0,
+            startWithSlide: 0,
+            fullScreenOffsetContainer: ''
+        });
+    });
+</script>
+</body>
+</html>

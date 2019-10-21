@@ -1,0 +1,99 @@
+{% extends 'api/base.html' %}
+
+{% block body %}
+<style>
+ .image-container {
+  display: flex;
+  justify-content: center;
+}
+
+.dropzone {
+    text-align: center;
+}
+.dropzone .dz-preview, .dropzone-previews .dz-preview {
+    margin: .3rem;
+    min-width: 2rem;
+}
+.dropzone .dz-preview .dz-image {
+    display:block;
+    margin: auto;
+    width: 100px;
+    height: 100px;
+}
+.dropzone .dz-preview .dz-details {
+    opacity: 1;
+    padding: 0em;
+    max-width: 100px;
+}
+.dropzone .dz-preview .dz-details .dz-filename {
+    white-space: normal;
+}
+</style>
+
+
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+
+        <div class="col-md-6">
+
+            <!-- Horizontal form -->
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title">My Profile</h5>
+                    <div class="header-elements">
+                        <div class="list-icons">
+                            <a class="list-icons-item" data-action="collapse"></a>
+                            <a class="list-icons-item" data-action="reload"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="avatar-upload">
+                        <div class="avatar-edit">
+                            <form action="{{ url_for('api.addItem') }}" method="post" class="dropzone" id="frm-drop-zone" enctype="multipart/form-data">
+                           </form>
+                        </div>
+                    </div>
+                    <form action="" method="post">
+                        <input type="hidden" id="hdfiles" name="hdfiles"></input>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" name="username" value="{{data.id}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" name="name" value="{{data.name}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" name="email" value="{{data.email}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" name="password">
+                        </div>
+                        <button type="submit" class="btn btn-submit">Update profile</button>
+                        <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#demo">View logs</button>
+                    </form>
+                    <br/>
+                    <div id="demo" class="collapse">
+                    {% for history in historys %}
+
+                        <p>{{history.date}} : {{history.reason}}</p>
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <!-- /horizotal form -->
+
+        </div>
+
+        <div class="col-md-6">
+        </div>
+    </div>
+
+
+
+{% endblock %}
