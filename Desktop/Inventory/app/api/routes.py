@@ -117,22 +117,6 @@ def not_found_error(error):
 def internal_error(error):
     return render_template('api/500.html'), 500
 
-# home page
-@api.route('/admin')
-@login_required
-def home():
-    user_id = current_user.get_id()
-    current = db.Users.find_one({"id": user_id})
-    products = db.Products.find()
-    return render_template(
-        'api/index.html',
-        breadCrumb=BREAD_CRUMB['Dashboard'][0],
-        uname=current_user.get_id(),
-        avatar=current.get('avatar'),
-        title='Home Page',
-        total=products
-        )
-
 # Get analytics
 @api.route('/analytics', methods=['POST'])
 @login_required
@@ -234,8 +218,8 @@ def get_analytics():
             "analyticsByYearly"   : list(analyticsByYearly),
             "analyticsByState"    : list(analyticsByState),
             "analyticsByGroup"    : analyticsByGroupArray,
-            "totalCost"           : totalQuantityAndCostArray[0]['price'],
-            "totalQuantity"       : totalQuantityAndCostArray[0]['quantity'],
+            "totalCost"           : totalQuantityAndCostArray[0]['price'] if totalQuantityAndCostArray else '',
+            "totalQuantity"       : totalQuantityAndCostArray[0]['quantity'] if totalQuantityAndCostArray else '',
             "packedOrderCount"    : packedOrderCount,
             "shippedOrderCount"   : shippedOrderCount,
             "deliveredOrderCount" : deliveredOrderCount,
@@ -1947,19 +1931,6 @@ def signup():
         flash('Congratulations {}, you are now a registered user!'.format(form.name.data))
         return redirect(url_for('api.home'))
     return render_template('api/signup.html', breadCrumb=BREAD_CRUMB['Signup'][0], title='Register', form=form)
-
-@api.route('/8f9wehf38jd', methods=['GET'])
-def createsuperuser():
-    new_user = {
-        'id': "admin",
-        'name': "admin",
-        'uid': "admin",
-        'email': "admin@admin.com",
-        'pw': User.setHash("admin"),
-        "role": "admin"
-    }
-    db.Users.insert_one(new_user)
-    return redirect(url_for('api.login'))
 
 # login page
 @api.route('/login', methods=['GET', 'POST'])

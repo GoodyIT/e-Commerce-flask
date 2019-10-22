@@ -14,7 +14,6 @@ from . import *
 
 import json, os, math, random, pandas, csv, pdb
 
-
 def _removeNewLine(input):
     ''' Removes \n from string elements '''
     if input.endswith('\n'):
@@ -118,7 +117,7 @@ def internal_error(error):
     return render_template('admin/500.html'), 500
 
 # home page
-@admin_bp.route('/admin', methods=['GET', 'POST'])
+@admin_bp.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
     user_id = current_user.get_id()
@@ -230,12 +229,13 @@ def get_analytics():
         shippedOrderCount   = db.Orders.count_documents({"ship_id": None})
         deliveredOrderCount = db.Orders.count_documents({"$and": [{"ship_id": {"$ne": None}}, {"invoice_id": None}]})
         invoicedOrderCount  = db.Orders.count_documents({"$and": [{"ship_id": {"$ne": None}}, {"invoice_id": {"$ne": None}}]})
+        import pdb; pdb.set_trace()
         return jsonify({
             "analyticsByYearly"   : list(analyticsByYearly),
             "analyticsByState"    : list(analyticsByState),
             "analyticsByGroup"    : analyticsByGroupArray,
-            "totalCost"           : totalQuantityAndCostArray[0]['price'],
-            "totalQuantity"       : totalQuantityAndCostArray[0]['quantity'],
+            "totalCost"           : totalQuantityAndCostArray[0]['price'] if totalQuantityAndCostArray else '',
+            "totalQuantity"       : totalQuantityAndCostArray[0]['quantity'] if totalQuantityAndCostArray else '',
             "packedOrderCount"    : packedOrderCount,
             "shippedOrderCount"   : shippedOrderCount,
             "deliveredOrderCount" : deliveredOrderCount,
@@ -1932,7 +1932,6 @@ def myprofile():
 def signup():
     if current_user.is_authenticated:
         user_id = current_user.get_id()
-        current = db.Users.find_one({"id": user_id})
         return redirect(url_for('admin.home'))
     form = RegisterForm()
     if form.validate_on_submit():
@@ -1942,6 +1941,7 @@ def signup():
             'uid': User.setUID(),
             'email':form.email.data,
             'pw': User.setHash(form.pw.data),
+            'admin': True
         }
         db.Users.insert_one(new_user)
         flash('Congratulations {}, you are now a registered user!'.format(form.name.data))
@@ -1966,8 +1966,6 @@ def createsuperuser():
 def login():
     print("++++++++++      login     +++++++++++")
     if current_user.is_authenticated:
-        user_id = current_user.get_id()
-        current = db.Users.find_one({"id": user_id})
         return redirect(url_for('admin.home'))
     form = LoginForm()
     if form.validate_on_submit():
@@ -2099,94 +2097,94 @@ def copyright():
     return render_template('admin/copyright.html', groups=groupsList, title='Copyright')
 
 # home page
-@admin_bp.route('/store_login', methods=['GET', 'POST'])
-def store_login():
-    if current_user.is_authenticated:
-        user_id = current_user.get_id()
-        current = db.Users.find_one({"id": user_id})
-        return redirect(url_for('admin.accounts'))
+# @admin_bp.route('/store_login', methods=['GET', 'POST'])
+# def store_login():
+#     if current_user.is_authenticated:
+#         user_id = current_user.get_id()
+#         current = db.Users.find_one({"id": user_id})
+#         return redirect(url_for('admin.accounts'))
 
-    groupsList = {}
-    groups = db.Groups.aggregate(
-        [{ "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }]
-    )
-    for x in groups:
-        groupsList[x['_id']] = x['store']
+#     groupsList = {}
+#     groups = db.Groups.aggregate(
+#         [{ "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }]
+#     )
+#     for x in groups:
+#         groupsList[x['_id']] = x['store']
 
-    form = StoreLoginForm()
-    if form.validate_on_submit():
-        user = db.Users.find_one({'id':form.email.data})
-        if user != None and User.checkPassword(user['pw'], form.pw.data):
-            verify = User(user['id'])
-            login_user(verify)
-            return redirect(url_for('admin.accounts'))
-        flash('Invalid Username or Password. Please try again.')
-        return redirect(url_for('admin.store_login'))
-    return render_template(
-        'admin/store-login.html',
-        title='Store Login',
-        groups=groupsList,
-        form=form
-        )
+#     form = StoreLoginForm()
+#     if form.validate_on_submit():
+#         user = db.Users.find_one({'id':form.email.data})
+#         if user != None and User.checkPassword(user['pw'], form.pw.data):
+#             verify = User(user['id'])
+#             login_user(verify)
+#             return redirect(url_for('admin.accounts'))
+#         flash('Invalid Username or Password. Please try again.')
+#         return redirect(url_for('admin.store_login'))
+#     return render_template(
+#         'admin/store-login.html',
+#         title='Store Login',
+#         groups=groupsList,
+#         form=form
+#         )
 
-# home page
-@admin_bp.route('/store_signup', methods=['GET', 'POST'])
-def store_signup():
-    if current_user.is_authenticated:
-        user_id = current_user.get_id()
-        current = db.Users.find_one({"id": user_id})
-        return redirect(url_for('admin.accounts'))
+# # home page
+# @admin_bp.route('/store_signup', methods=['GET', 'POST'])
+# def store_signup():
+#     if current_user.is_authenticated:
+#         user_id = current_user.get_id()
+#         current = db.Users.find_one({"id": user_id})
+#         return redirect(url_for('admin.accounts'))
 
-    groupsList = {}
-    groups = db.Groups.aggregate(
-        [{ "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }]
-    )
-    for x in groups:
-        groupsList[x['_id']] = x['store']
+#     groupsList = {}
+#     groups = db.Groups.aggregate(
+#         [{ "$group" : { "_id" : "$type", "store": { "$push": "$$ROOT" } } }]
+#     )
+#     for x in groups:
+#         groupsList[x['_id']] = x['store']
 
-    form = StoreSignupForm()
-    if form.validate_on_submit() and User.validate_email(form.email.data):
-        new_user = {
-            'id': form.email.data,
-            'first':form.first.data,
-            'uid': User.setUID(),
-            'last':form.last.data,
-            'pw': User.setHash(form.pw.data),
-            'orders': [],
-            'returns': [],
-            'balance': 0,
-            'admin': False,
-            'address': None,
-            'address2': None,
-            'cardType': None,
-            'cardHide': None,
-            'cardName': None,
-            'cardNumber': None,
-            'cardDate': None,
-            'city': None,
-            'state': None,
-            'zip': None,
-            'phone': None,
-            'emailNotification':False,
-            'emailFlash':False,
-            'emailProducts':False,
-            'emailSeller':False,
-            'emailProduct':False,
-            'emailSpecial':False,
-            'phoneNotification':False,
-            'phoneAlerts':False,
-            'phoneShipment':False,
-            'joined': date.today()
-        }
-        db.Users.insert_one(new_user)
-        flash('Congratulations {}, you are now a registered user!'.format(form.first.data))
-        return redirect(url_for('admin.store_login'))
-    return render_template(
-        'admin/store-signup.html',
-        title='Store Signup',
-        groups=groupsList,
-        form=form,
-        )
+#     form = StoreSignupForm()
+#     if form.validate_on_submit() and User.validate_email(form.email.data):
+#         new_user = {
+#             'id': form.email.data,
+#             'first':form.first.data,
+#             'uid': User.setUID(),
+#             'last':form.last.data,
+#             'pw': User.setHash(form.pw.data),
+#             'orders': [],
+#             'returns': [],
+#             'balance': 0,
+#             'admin': False,
+#             'address': None,
+#             'address2': None,
+#             'cardType': None,
+#             'cardHide': None,
+#             'cardName': None,
+#             'cardNumber': None,
+#             'cardDate': None,
+#             'city': None,
+#             'state': None,
+#             'zip': None,
+#             'phone': None,
+#             'emailNotification':False,
+#             'emailFlash':False,
+#             'emailProducts':False,
+#             'emailSeller':False,
+#             'emailProduct':False,
+#             'emailSpecial':False,
+#             'phoneNotification':False,
+#             'phoneAlerts':False,
+#             'phoneShipment':False,
+#             'joined': date.today()
+#         }
+#         db.Users.insert_one(new_user)
+#         flash('Congratulations {}, you are now a registered user!'.format(form.first.data))
+#         return redirect(url_for('admin.store_login'))
+#     return render_template(
+#         'admin/store-signup.html',
+#         title='Store Signup',
+#         groups=groupsList,
+#         form=form,
+#         )
 
 # home page
 @admin_bp.route('/accounts', methods=['GET', 'POST'])
