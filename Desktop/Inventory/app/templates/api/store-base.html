@@ -483,14 +483,14 @@
 <a class="back-to-top inner-link" id="toTop" href="javascript:void(0);" data-scroll-class="100vh:active"><i class="icon-Up-4"></i></a>
 
 <!-- Scripts -->
-<script defer src="{{ url_for('static', filename='storejs/jquery-3.1.1.min.js') }}"></script>
+<script src="{{ url_for('static', filename='storejs/jquery-3.1.1.min.js') }}"></script>
 <script defer src="{{ url_for('static', filename='storejs/parallax.js') }}"></script>
 <script defer src="{{ url_for('static', filename='storejs/typed.min.js') }}"></script>
 <script defer src="{{ url_for('static', filename='storejs/datepicker.js') }}"></script>
 <script defer src="{{ url_for('static', filename='storejs/isotope.min.js') }}"></script>
 <script defer src="{{ url_for('static', filename='storejs/ytplayer.min.js') }}"></script>
 <script defer src="{{ url_for('static', filename='storejs/granim.min.js') }}"></script>
-<script defer src="{{ url_for('static', filename='storejs/countdown.min.js') }}"></script>
+<script src="{{ url_for('static', filename='storejs/countdown.min.js') }}"></script>
 <script defer src="{{ url_for('static', filename='storejs/smooth-scroll.min.js') }}"></script>
 <script defer src="{{ url_for('static', filename='storejs/scripts.js') }}"></script>
 
@@ -503,11 +503,11 @@
 <script defer type="text/javascript" src="{{ url_for('static', filename='storejs/owl.carousel.min.js') }}"></script>
 <script defer type="text/javascript" src="{{ url_for('static', filename='storejs/app.js') }}"></script>
 <script defer type="text/javascript" src="{{ url_for('static', filename='storejs/revslider.js') }}"></script>
-<script defer type="text/javascript" src="{{ url_for('static', filename='storejs/countdown.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='storejs/countdown.js') }}"></script>
 <script defer type="text/javascript" src="{{ url_for('static', filename='storejs/jquery.bxslider.min.js') }}"></script>
 <script defer type="text/javascript" src="{{ url_for('static', filename='storejs/cloud-zoom.js') }}"></script>
 <script defer type="text/javascript" src="{{ url_for('static', filename='storejs/hullabaloo.js') }}"></script>
-<script defer type="text/javascript">
+<script type="text/javascript">
     var dthen1 = new Date("12/25/17 11:59:00 PM");
     start = "08/04/15 03:02:11 AM";
     start_date = Date.parse(start);
@@ -534,7 +534,7 @@
     var iid1 = "countbox_2";
     CountBack_slider(gsecs1, "countbox_2", 1);
 </script>
-<script defer type='text/javascript'>
+<script type='text/javascript'>
     jQuery(document).ready(function () {
         jQuery('#rev_slider_4').show().revolution({
             dottedOverlay: 'none',
