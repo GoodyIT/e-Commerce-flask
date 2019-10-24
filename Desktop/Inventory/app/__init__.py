@@ -30,7 +30,7 @@ def create_app(debug=False):
         print('======8888====== ', request.blueprint, username)
         if request.blueprint == 'admin':
             admin = db.Users.find_one({'id':username})
-            if admin['admin'] == True:
+            if admin and admin['admin'] == True:
                 current_user = User(admin['id'])
         elif request.blueprint == 'api':
             user = db.Users.find_one({'id':username})
