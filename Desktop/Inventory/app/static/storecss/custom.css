@@ -23,8 +23,17 @@
     display: none;
 }
 
-/* background cards */
+.section-title {
+    font-weight: 800 !important;
+}
 
+/* owl-carousel items */
+.item a img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+/* background cards */
 .bg-card {
     height: 100%;
     background-color: white;
@@ -34,8 +43,27 @@
     color: black;
 }
 
-/* Breadcrumbs */
+/* nav ad */
+.top-carousel {
+    height: 40px;
+    background-color: #ffa33a;
+    text-align: center;
+}
 
+.top-carousel-info {
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+    height: 100%;
+    width: 100%;
+}
+
+/* nav links */
+.drop-menu a span {
+    font-weight: 800;
+}
+
+/* Breadcrumbs */
 .breadcrumb-area {
     background-color: rgb(243, 243, 243);
     padding: 30px 0px;
@@ -465,20 +493,41 @@ footer h1, footer h2, footer h3,  footer h4, footer h5, footer h6 {
     margin-bottom: 1rem;
 }
 
-/* product-details.html */
-.product-pic {
-    z-index: 999;
-    overflow: hidden; 
-    margin-left: 1px;
-    margin-top: 1px;
-    background-position: -112.793px -415.703px;
-    width: 357.656px;
-    height: 434.297px;
-    float: left;
-    cursor: crosshair;
-    background-repeat: no-repeat;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    display: none;
+/* store.html */
+.trending-products {
+    margin-bottom: 100px;
+}
+
+.top-ban a img {
+    margin: 5px;
+    box-shadow: -2px 2px 12px -6px rgba(0,0,0,0.35)
+}
+
+.pixxett-tabs li a::before {
+    font-weight: 700;
+}
+
+.section-services {
+    padding: 0 0 7.42857143em 0 !important;
+}
+
+.infor {
+    font-weight: 700;
+}
+
+.home-special-products {
+    margin-bottom: 100px;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: .5s ease;
+  background-color: #ff6709;
 }
