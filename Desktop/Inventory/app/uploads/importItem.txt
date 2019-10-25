@@ -1,0 +1,3 @@
+Product Name,SKU,Category,Price,Currency,Attributes,Vendor,URL
+ProductTest,skuskuskusku,e6e7b047-cabf-4885-9cdd-7e0a972f8ddc,180,EURO,{"color":"red/yello"},none,www.test.com
+ProductTest1,skuskuskusku1,e6e7b047-cabf-4885-9cdd-7e0a972f8ddc,190,USD,{"size":"medium/big"},none,www.test1.com

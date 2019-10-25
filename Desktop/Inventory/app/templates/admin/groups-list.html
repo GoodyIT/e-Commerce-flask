@@ -1,0 +1,439 @@
+{% extends 'admin/base.html' %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal form -->
+            <div class="card border-dark">
+                <div class="card-header bg-dark text-white header-elements-inline">
+                    <h5 class="card-title">Group list</h5>
+                    <div class="header-elements">
+                        <div class="list-icons">
+                            <a class="list-icons-item" data-action="collapse"></a>
+                            <a class="list-icons-item" data-action="reload"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-12">
+
+                            <!-- Product List -->
+                            <div class="card" style="height:100%;">
+                                <div class="card-header bg-transparent header-elements-inline">
+                                    <span class="text-uppercase font-size-sm font-weight-semibold">Products</span>
+                                    <div class="header-elements">
+                                        <div class="list-icons">
+                                            <a class="list-icons-item" data-action="collapse"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="list-group list-group-flush">
+                                    {% set item = items[0] %}
+                                    {% for x in items %}
+                                        <a href="javascript:getProduct('{{x.id}}')" class="list-group-item list-group-item-action">
+                                            <div>
+                                                <img src="{{x.images}}" width="36" height="36" class="rounded-circle mr-3" alt="">
+                                                {{x.product}}
+                                            </div>
+                                        </a>
+                                    {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Product List -->
+                        </div>
+
+                        <!-- Right content -->
+                        <div class="col-lg-9 col-md-12">
+
+                            <div class="card" style="height:100%;">
+                                <div class="card-header bg-transparent header-elements-inline">
+                                    <img src="{{item.images}}" width="36" height="36" class="rounded-circle" alt="">
+                                    <span class="text-uppercase font-size-sm font-weight-semibold" id="ptitle">{{item.product}}</span>
+                                    <div class="header-elements">
+                                    </div>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div>
+                                        <div class="nav-tabs-responsive">
+                                            <ul class="nav nav-tabs nav-tabs-highlight flex-nowrap mb-0">
+                                                <li class="nav-item">
+                                                    <a href="#Overview" class="nav-link active" data-toggle="tab">
+                                                        <i class="icon-info22 mr-2"></i>Overview
+                                                        <span class="badge badge-mark ml-2 border-danger"></span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="#Transactions" class="nav-link" data-toggle="tab">
+                                                        <i class="icon-cart-add2 mr-2"></i>Transactions
+                                                        <span class="badge badge-mark ml-2 border-success"></span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="#Adjustments" class="nav-link" data-toggle="tab">
+                                                        <i class="icon-pencil7 mr-2"></i>Adjustments
+                                                        <span class="badge badge-mark ml-2 border-warning"></span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="#History" class="nav-link" data-toggle="tab">
+                                                        <i class="icon-history mr-2"></i>History
+                                                        <span class="badge badge-mark ml-2 border-grey-300"></span>
+                                                    </a>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+
+                                        <div class="tab-content card card-body border-top-0 rounded-0 rounded-bottom mb-0">
+                                            <div class="tab-pane fade show active" id="Overview">
+                                                <div class="row" style="margin-left:20px;">
+                                                    <div class="col-lg-6">
+                                                        <div class="mb-4">
+                                                            <table class="table">
+                                                                <tr class="table-active">
+                                                                    <td colspan="2"><span class="font-weight-semibold">Primary Details</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">Item Group Name</td>
+                                                                    <td><span id="lbgroupname">{{item.category_type}}</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">Item Type</td>
+                                                                    <td><span id="lbitemtype">Inventory Items</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">Black</td>
+                                                                    <td><span id="lbblack">Add</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">SKU</td>
+                                                                    <td><span id="lbsku">{{item.sku}}</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">Price</td>
+                                                                    <td><span id="lbunit">{{item.price}}</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">Created Source</td>
+                                                                    <td><span id="lbsource">User</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">Inventory Account</td>
+                                                                    <td><span id="lbinven">Inventory Asset</span></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="mb-4">
+                                                            <table class="table">
+                                                                <tr class="table-active">
+                                                                    <td colspan="2"><span class="font-weight-semibold">Purchase Information</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">Purchase Cost</td>
+                                                                    <td><span id="lbpurcost">AFN3300</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">Purchase Account</td>
+                                                                    <td><span id="lbpuraccount">Cost of Goods Sold</span></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="mb-4">
+                                                            <table class="table">
+                                                                <tr class="table-active">
+                                                                    <td colspan="2"><span class="font-weight-semibold">Sales Information</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">Selling Price</td>
+                                                                    <td><span id="lbselprice">AFN3300</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">Sales Account</td>
+                                                                    <td><span id="lbsalesaccount">Sales</span></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-lg-1"></div>
+                                                    <div class="col-lg-5">
+                                                        <div class="mb-4">
+                                                            <table class="table">
+                                                                <tr class="table-active">
+                                                                    <td colspan="2"><span id="lbopenstock" class="font-weight-semibold">Opening Stock: 0.00</span></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="mb-4">
+                                                            <table class="table">
+                                                                <tr class="table-active">
+                                                                    <td colspan="2"><span class="font-weight-semibold">Accounting Stock &#9432;</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">Stock on Hand</td>
+                                                                    <td><span id="lbaccstockonhand">:0.00</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">Committed Stock</td>
+                                                                    <td><span id="lbacccommitstock">:0.00</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">Available for Sale</td>
+                                                                    <td><span id="lbaccavailforsale">:0.00</span></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="mb-4">
+                                                            <table class="table">
+                                                                <tr class="table-active">
+                                                                    <td colspan="2"><span class="font-weight-semibold">Physical Stock &#9432;</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">>Stock on Hand</td>
+                                                                    <td><span id="lbphystockonhand">:0.00</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">Committed Stock</td>
+                                                                    <td><span id="lbphycommitstock">:0.00</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-semibold">Available for Sale</td>
+                                                                    <td><span id="lbphyavailforsale">:0.00</span></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="tab-pane fade" id="Transactions">
+                                                <table id="gl_orderTable" class="table table-striped table-bordered product-table table-hover dataTable no-footer" style="width:100%;">
+                                                    <thead>
+                                                        <tr role="row" style="background-color: #777; color:white; text-align: center">
+                                                            <td class="sorting_asc" tabindex="0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="ID: activate to sort column descending" style="width: 25%;">Order</td>
+                                                            <td class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Product: activate to sort column ascending" style="width: 19%;">Player</td>
+                                                            <td class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" style="width: 10%;">Item</td>
+                                                            <td class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" style="width: 10%;;">Quantity</td>
+                                                            <td class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending" style="width: 10%;">Type</td>
+                                                            <td class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 10%;">Price</td>
+                                                            <td data-orderable="false" tabindex="0" aria-controls="myTable" rowspan="1" colspan="1" aria-label="" style="width: 10%;">ACTION</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody style="text-align: center;">
+                                                    {% for item in orders %}
+                                                        <tr role="row">
+                                                            <td class="sorting_1">{{item.order_id}}</td>
+                                                            <td>{{item.player_id}}</td>
+                                                            <td>{{item.item_id}}</td>
+                                                            <td>{{item.quantity}}</td>
+                                                            <td>{{item.type}}</td>
+                                                            <td>{{item.price}}</td>
+                                                            <td class="text-center"><button type="button" class="btn" id='tbl-btn' style="background-color: transparent;"><i class="icon-trash"></i></button></td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+
+                                            <div class="tab-pane fade" id="Adjustments">
+                                                <div class="col-lg-11" style="margin-left: 20px;">
+                                                    <form id="frmAdjust" action="{{ url_for('admin.groups_list',name=cates[item.category]) }}" method="post">
+                                                        <input type="hidden" id="pid" name="pid" value="{{item.id}}">
+                                                        <div class="row" style="margin-top:20px;">
+                                                            <div class="col-lg-12">
+                                                                <label for="pname">Product Name</label>
+                                                                <input type="text" class="form-control" id="pname" name="pname" placeholder="" value="{{item.product}}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style='margin-top:30px;'>
+                                                            <div class="col-lg-8"><!-- style="padding:0;"-->
+                                                                <label for="sku">SKU</label>
+                                                                <input type="text" class="form-control" id="sku" name="sku" placeholder="" value="{{item.sku}}">
+                                                            </div>
+                                                            <div class="col-lg-4">
+                                                                <label for="cate">Category</label>
+                                                                <select class="form-control form-control-lg" id="cate" name="cate">
+                                                                    {% for key, val in cates.items() %}
+                                                                        {% if key == item.category %}
+                                                                        <option value="{{key}}" selected>{{val}}</option>
+                                                                        {% else %}
+                                                                        <option value="{{key}}">{{val}}</option>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div> <!-- END ROW -->
+                                                        <div class="row" style="margin-top:30px;">
+                                                            <div class="col-lg-4">
+                                                                <label for="price">Price</label>
+                                                                <input type="number" class="form-control" id="price" name="price" placeholder="" value="{{item.price}}">
+                                                            </div>
+                                                            <div class="col-lg-4">
+                                                                <label for="curr">Currency</label>
+                                                                <select class="form-control form-control-lg" id="curr" name="curr">
+                                                                    {% for curr in currs %}
+                                                                        {% if curr[0] == item.currency %}
+                                                                        <option value="{{curr[0]}}" selected>{{curr[1]}}</option>
+                                                                        {% else %}
+                                                                        <option value="{{curr[0]}}">{{curr[1]}}</option>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div> <!-- END ROW -->
+
+                                                        <div class="row" style="margin-top:20px;">
+                                                            <div class="col-lg-12">
+                                                                <div id="dvAttr">
+                                                                    {% if 'attributes' in item %}
+                                                                        {% set cnt=0 %}
+                                                                        {% for key, value in item.attributes.items() %}
+                                                                        <div class="row">
+                                                                            <div class="col-lg-3">
+                                                                                <label for="attr{{loop.index-1}}">Attribute</label>
+                                                                                <input type="text" class="form-control" id="attr{{loop.index-1}}" name="attr{{loop.index-1}}" placeholder="eg:color" value="{{key}}">
+                                                                            </div>
+                                                                            <div class="col-lg-5">
+                                                                                <label for="options{{loop.index-1}}">Options</label>
+                                                                                <input type="text" class="form-control" id="options{{loop.index-1}}" name="options{{loop.index-1}}" data-role="tagsinput" placeholder="" value="{{value}}">
+                                                                            </div>
+                                                                            {% if loop.first %}
+                                                                            <div class="col-lg-3" style="margin-top: 25px;">
+                                                                                <button type="button" id="btnAddAttr" class="btn btn-link">+Add more attribute</button>
+                                                                            </div>
+                                                                            {% endif %}
+                                                                        </div>
+                                                                        {% endfor %}
+                                                                    {% else %}
+                                                                        <div class="row">
+                                                                            <div class="col-lg-3">
+                                                                                <label for="attr0">Attribute</label>
+                                                                                <input type="text" class="form-control" id="attr0" name="attr0" placeholder="eg:color">
+                                                                            </div>
+                                                                            <div class="col-lg-5">
+                                                                                <label for="options0">Options</label>
+                                                                                <input type="text" class="form-control" id="options0" name="options0" data-role="tagsinput" placeholder="">
+                                                                            </div>
+                                                                            <div class="col-lg-3" style="margin-top: 25px;">
+                                                                                <button type="button" id="btnAddAttr" class="btn bg-teal-400">+Add more attribute</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div> <!-- END ROW -->
+                                                        <div class="row" style="margin-top: 30px; padding:0;">
+                                                            <div class="col-lg-4">
+                                                                <label for="vendor">Vendor</label>
+                                                                <select class="form-control form-control-lg" id="vendor" name="vendor">
+                                                                    {% for key, val in vendors.items() %}
+                                                                        {% if key == item.vendor %}
+                                                                        <option value="{{key}}" selected>{{val}}</option>
+                                                                        {% else %}
+                                                                        <option value="{{key}}">{{val}}</option>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-lg-8" style="padding-right:0">
+                                                                <label for="url">URL</label>
+                                                                <input type="text" class="form-control" id="url" name="url" placeholder="www.amazon.com" value="{{item.url}}">
+                                                            </div>
+                                                        </div> <!-- END ROW -->
+                                                        <div class="row" style="margin-top: 30px; margin-bottom: 30px;">
+                                                            <div class="col-lg-10"></div>
+                                                            <div class="col-lg-2">
+                                                                <button type="button" class="btn bg-teal-400 btn-labeled btn-labeled-left rounded-round" id="gl_btnUpdate"><b><i class="icon-cloud-check2"></i></b>Update</button>
+                                                            </div>
+                                                        </div> <!-- END ROW -->
+                                                    </form>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="tab-pane fade" id="History">
+                                                <table id="gl_historyTable" class="table color-table product-table table-hover dataTable no-footer" style="width:100%;">
+                                                    <thead>
+                                                        <tr role="row" style="background-color: grey;">
+                                                            <td class="sorting_asc" tabindex="0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="ID: activate to sort column descending" style="width: 100px;">TYPE</td>
+                                                            <td class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Product: activate to sort column ascending" style="width: 100px;">DATE</td>
+                                                            <td class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" style="width: 200px;">REASON</td>
+                                                            <td class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" style="width: 220px;">ADJUSTMENTS REFERENCE#</td>
+                                                            <td class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending" style="width: 180px;">DESCRIPTION</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for hist in history %}
+                                                            <tr role="row">
+                                                                <td class="sorting_1">{{hist.type}}</td>
+                                                                <td>{{hist.date}}</td>
+                                                                <td>{{hist.reason}}</td>
+                                                                <td>{{hist.adjustments}}</td>
+                                                                <td>{{hist.description}}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- /right content -->
+
+                    </div>
+                    <!-- /inner container -->
+
+
+
+
+
+
+                </div>
+            </div>
+            <!-- /horizotal form -->
+
+        </div>
+
+    </div>
+
+<script>
+// Variables for Group List
+var gl_uid = "{{item.id}}";
+var gl_pname = "{{item.product}}";
+var gl_sku = "{{item.sku}}";
+var gl_cate = "{{item.category}}";
+var gl_price = "{{item.price}}";
+var gl_curr = "{{item.currency}}";
+
+var gl_attr0 = "";
+var gl_attr1 = -1;
+var gl_attr2 = -1;
+var gl_options0 = "";
+var gl_options1 = -1;
+var gl_options2 = -1;
+{% for key, value in item.attributes.items() %}
+    gl_attr{{loop.index-1}} = "{{key}}";
+    gl_options{{loop.index-1}} = "{{value}}";
+{% endfor %}
+
+var gl_vendor = "{{item.vendor}}";
+var gl_url = "{{item.url}}";
+
+</script>
+
+{% endblock %}

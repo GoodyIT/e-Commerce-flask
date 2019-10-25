@@ -1,0 +1,176 @@
+﻿{% extends 'admin/store-base.html' %}
+
+{% block body %}
+
+    <!-- end header -->
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs">
+    <div class="container"> <a href="{{url_for('admin.store')}}">Home</a> <span class="separator"><i class="iconfont pe-7s-angle-right"></i></span> <a href="{{url_for('admin.electronics', page=1)}}"><span>Electronics</span></a> </div>
+  </div>
+  <!-- Breadcrumbs End -->
+
+  <div class="category">
+    <div class="container filter-box">
+      <div class="filter-list-wrap" id="1">
+        <dl class="filter-list clearfix J_filterList filter-list-row">
+          <dt>Category :</dt>
+          <a href="electronics?page=1"><dd class="category-all {{'active' if activeGroupId == 'ALL'}}">All </dd></a>
+          {% for group in groups['ELECTRONICS'] %}
+            <a href="electronics?gid={{group.id}}&page=1"><dd class="item {{'active' if activeGroupId == group.id}}"> {{group.name}}</dd></a>
+          {% endfor %}
+          <dd class=""> <a data-id="1" class="more J_filterToggle" href="#"><i class="iconfont pe-7s-angle-down"></i></a></dd>
+        </dl>
+      </div>
+      <div class="filter-list-wrap" id="2">
+        <dl class="filter-list clearfix J_filterList filter-list-row">
+          <dt>Sub :</dt>
+          <a href="electronics?gid={{activeGroupId}}&page=1"><dd class="category-all {{'active' if activeSubGroup == 'ALL'}}">All </dd></a>
+
+          {% for group in groups['ELECTRONICS'] %}
+            {% if activeGroupId == 'ALL' %}
+              {% for subgroup in group.sub_group %}
+                <a href="electronics?gid={{group.id}}&subgroup={{subgroup}}&page=1"><dd class="item {{'active' if activeSubGroup == subgroup}}">{{group.name}}/{{subgroup}}</dd></a>
+              {% endfor %}
+            {% else %}
+              {% if activeGroupId == group.id %}
+                {% for subgroup in group.sub_group %}
+                    <a href="electronics?gid={{group.id}}&subgroup={{subgroup}}&page=1"><dd class="item {{'active' if activeSubGroup == subgroup}}">{{subgroup}}</dd></a>
+                {% endfor %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+          <dd><a data-id="2" class="more J_filterToggle" href="#"><i class="iconfont pe-7s-angle-down"></i></a></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <section class="main-container bar bar--xs">
+    <div class="container">
+      <div class="row">
+        <div class="order-list-box clearfix">
+          <ul class="order-list">
+            <li class="active first"> <a href="#">Relevance</a> </li>
+            <li class=""> <a href="#">New</a> </li>
+            <li class=""> <a href="#">Price <i class="iconfont fa fa-long-arrow-up"></i></a> </li>
+          </ul>
+          <div class="type-list">
+            <div class="type-list-inner"> <span class="tips">Only view products <i class="iconfont fa fa-long-arrow-up"></i></span> <span class="checkbox ">
+              <input name="checkbox" type="checkbox" value="in-stock">
+              </span>on sale </div>
+            <div class="type-list-inner"> <span class="checkbox ">
+              <input name="checkbox" type="checkbox" value="in-stock">
+              </span>In stock </div>
+          </div>
+        </div>
+        <div class="goods-list-box">
+          <ul class="products-grid">
+            {% for item in products %}
+              <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                <div class="item-inner">
+                  <div class="item-img">
+                    <div class="mgk-pro-hover"> <span class="sale-new-label top-right"><span class="labelsale">Sale</span></span>
+                        <a href="#" title="{{item.product}}" class="product-image">
+                          {% if item.images == '' %}
+                            <img class="img-responsive" src="../static/products-images/product-img1.jpg" alt="{{item.product}}">
+                          {% else %}
+                            <img class="img-responsive" src="{{item.images}}" style="width: 264px; height: 321px; object-fit: contain;" alt="{{item.product}}">
+                          {% endif %}
+                          <span class="product-img-back">
+                            <img class="img-responsive" src="../static/products-images/product-img1.jpg" alt="{{item.product}}">
+                          </span>
+                        </a>
+                      </div>
+                    <div class="item-title"> <a title="{{item.product}}" href="product_detail.html">{{item.product}}</a> </div>
+                    <div class="quick-view"> <a title="Quick View" href="#" class="link-quickview"><i class="icons pe-7s-search"></i> </a> </div>
+                  </div>
+                  <div class="item-info">
+                    <div class="info-inner">
+                      <div class="actions">
+                        <div class="item-price">
+                          <div class="price-box">
+                            <p class="old-price"> <span class="price-label">Regular Price:</span> <span class="price"> $167.00 </span> </p>
+                            <p class="special-price"> <span class="price-label">Special Price</span> <span class="price"> ${{item.price}} </span> </p>
+                          </div>
+                        </div>
+                        <div class="actions-cart">
+                          <a data-id="{{item.id}}" data-name="{{item.product}}" data-image="{{item.images}}" data-price="{{item.price}}" title="Add to Cart" class="button btn-cart"></a>
+                        </div>
+                        <ul class="add-to-links">
+                          <li class="pull-right-no pull-compare"><span class="separator">|</span> <a href="#" title="Compare" class="link-compare"><i class="fa fa-retweet"></i>Compare</a></li>
+                          <li class="pull-left-no pull-wishlist"><a href="#" title="Wishlist" class="link-wishlist"><i class="fa fa-heart-o"></i>Wishlist</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+          <div class="xm-pagenavi">
+            <a href="electronics?gid={{activeGroupId}}&subgroup={{activeSubGroup}}&page={{'1' if currentPage|int-1 == 0 else currentPage|int-1}}" class="numbers first iconfont pe-7s-angle-left"></a>
+            {% for _ in range(0, pageCount) %}
+              <a href="electronics?gid={{activeGroupId}}&subgroup={{activeSubGroup}}&page={{loop.index}}" class="numbers {{'current' if loop.index == currentPage|int}}">{{loop.index}}</a>
+            {% endfor %}
+            <a href="electronics?gid={{activeGroupId}}&subgroup={{activeSubGroup}}&page={{pageCount if currentPage|int +1 > pageCount|int else currentPage|int + 1}}" class="numbers last iconfont pe-7s-angle-right"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Main Container End -->
+
+  <section class="brand-logo wow bounceInUp animated">
+    <div class="container">
+      <div class="row">
+        <div class="section-heading">
+          <h2 class="section-title">TOP BRANDS</h2>
+        </div>
+        <div class="slider-items-products">
+          <div id="brand-logo-slider" class="product-flexslider hidden-buttons">
+            <div class="slider-items slider-width-col6">
+
+              <!-- Item -->
+              <div class="item"><a href="#"><img src="../static/images/b-logo3.png" alt="Image"></a> </div>
+              <!-- End Item -->
+
+              <!-- Item -->
+              <div class="item"><a href="#"><img src="../static/images/b-logo2.png" alt="Image"></a> </div>
+              <!-- End Item -->
+
+              <!-- Item -->
+              <div class="item"><a href="#"><img src="../static/images/b-logo1.png" alt="Image"></a> </div>
+              <!-- End Item -->
+
+              <!-- Item -->
+              <div class="item"><a href="#"><img src="../static/images/b-logo4.png" alt="Image"></a> </div>
+              <!-- End Item -->
+
+              <!-- Item -->
+              <div class="item"><a href="#"><img src="../static/images/b-logo5.png" alt="Image"></a> </div>
+              <!-- End Item -->
+
+              <!-- Item -->
+              <div class="item"><a href="#"><img src="../static/images/b-logo6.png" alt="Image"></a> </div>
+              <!-- End Item -->
+
+              <!-- Item -->
+              <div class="item"><a href="#"><img src="../static/images/b-logo1.png" alt="Image"></a> </div>
+              <!-- End Item -->
+
+              <!-- Item -->
+              <div class="item"><a href="#"><img src="../static/images/b-logo4.png" alt="Image"></a> </div>
+              <!-- End Item -->
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--end of row-->
+    </div>
+    <!--end of container-->
+  </section>
+
+{% endblock %}

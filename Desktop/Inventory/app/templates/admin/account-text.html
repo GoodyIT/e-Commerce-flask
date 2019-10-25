@@ -1,0 +1,115 @@
+{% extends 'admin/store-base.html' %}
+
+{% block body %}
+		<div class="breadcrumbs">
+				<div class="container">
+						<a href="#">Accounts</a>
+						<span class="separator"><i class="iconfont pe-7s-angle-right"></i></span>
+						<a href="#"> <span>Dashboard</span></a>
+				</div>
+		</div>
+		<div class="container" style="height: 1000px">
+				<div class="account-card">
+						<div class="row" style="height: 25px"></div>
+						<div class="row">
+								<div class="account-nav">
+										<h4>My Account</h4>
+										<a href="{{url_for('admin.accounts')}}">Dashboard</a><br>
+										<h4>Orders</h4>
+										<a href="{{url_for('admin.account_orders')}}">Order History</a><br>
+										<a href="{{url_for('admin.account_returns')}}">Return Status/History</a><br>
+										<h4>Personal Account</h4>
+										<a href="{{url_for('admin.account_settings')}}">Account Settings</a><br>
+										<a href="{{url_for('admin.account_payments')}}">Payment Options</a><br>
+										<h4>Account Notifications</h4>
+										<a href="{{url_for('admin.account_email')}}">Email Notifications</a><br>
+										<a href="{{url_for('admin.account_text')}}">Text Notifications</a><br>
+
+								</div>
+								<div class="account-content">
+										<h2>Text Notifications</h2>
+                    <span>Manage your preferences for recieving email notifications from Eloraus</span><br>
+										<form method="post" action="">
+												{{ form.hidden_tag() }}
+												<div class="col-lg-6 col-md-5">
+														<div class="container">
+																<div class="row">
+																		{{form.phone.label}}
+																		<input class="form-control" name="phone" id="phone" type="text" placeholder={{current.phone}}>
+																		{% for error in form.phone.errors %}
+																				<span style="color: red;">[{{ error }}]</span>
+																		{% endfor %}
+																</div>
+																<div class="row agree">
+																		{% if current.auto %}
+																				<input class="form-control" name="auto" id="auto" type="checkbox" checked>
+																		{% else %}
+																				<input class="form-control" name="auto" id="auto" type="checkbox">
+																		{% endif %}
+																		{{form.auto.label}}
+																		{% for error in form.auto.errors %}
+																				<span style="color: red;">[{{ error }}]</span>
+																		{% endfor %}
+																		<p>Account Notifications is a great feature to implement.</p>
+																</div>
+																<div class="row agree">
+																		{% if current.alert %}
+																				<input class="form-control" name="alert" id="alert" type="checkbox" checked>
+																		{% else %}
+																				<input class="form-control" name="alert" id="alert" type="checkbox">
+																		{% endif %}
+																		{{form.alert.label}}
+																		{% for error in form.alert.errors %}
+																				<span style="color: red;">[{{ error }}]</span>
+																		{% endfor %}
+																		<p>New feature for implementing product ratings reviews.</p>
+																</div>
+																<div class="row agree">
+																		{% if current.shipment %}
+																				<input class="form-control" name="shipment" id="shipment" type="checkbox" checked>
+																		{% else %}
+																				<input class="form-control" name="shipment" id="shipment" type="checkbox">
+																		{% endif %}
+																		{{form.shipment.label}}
+																		{% for error in form.shipment.errors %}
+																				<span style="color: red;">[{{ error }}]</span>
+																		{% endfor %}
+																		<p>Account Notifications is a great feature to implement.</p>
+																</div>
+																<div class="row agree">
+																		{{form.unsubscribe(class="form-control")}}
+																		{{form.unsubscribe.label}}
+																		{% for error in form.unsubscribe.errors %}
+																				<span style="color: red;">[{{ error }}]</span>
+																		{% endfor %}
+																</div>
+														</div>
+												</div>
+												<hr />
+												<div class="row">
+														<div class="col-lg-9 col-md-9">
+														</div>
+														<div class="col-lg-2 col-md-2">
+																{{form.submit(class="form-control")}}
+																{% for error in form.submit.errors %}
+																		<span style="color: red;">[{{ error }}]</span>
+																{% endfor %}
+														</div>
+														<div class="col-lg-1 col-md-1"></div>
+												</div>
+												<hr />
+										</form>
+										<div class="row">
+												<p class="pad-1">Eloraus will send a SMS message to verify your phone number.
+													Msg & Data Rates May Apply. Charges may occur for messages.
+													Message frequency varies by account. Check with your carrier for more info.
+													For additional information, text HELP or you may opt-out at any time by
+													sending SSSTOP or STOP to 639-344. For Privacy information, please visit
+													our Privacy Policy page and read more about Text Terms & Conditions here.</p>
+										</div>
+								</div>
+						<div class="row" style="height: 25px"></div>
+				</div>
+		</div>
+</div>
+{% endblock %}

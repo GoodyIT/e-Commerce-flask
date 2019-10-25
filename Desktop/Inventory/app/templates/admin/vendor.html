@@ -1,0 +1,94 @@
+{% extends 'admin/base.html' %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <!-- Horizontal form -->
+            <div class="card border-dark">
+                <div class="card-header bg-dark text-white header-elements-inline">
+                    <h5 class="card-title">Add Vendor</h5>
+                    <div class="header-elements">
+                        <div class="list-icons">
+                            <a class="list-icons-item" data-action="collapse"></a>
+                            <a class="list-icons-item" data-action="reload"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="col-lg-12">
+                        <form action="" method="post">
+                            {{ form.hidden_tag() }}
+                            <div class="row" style="margin-top: 30px">
+                                <div class="col-lg-4">
+                                    <label for="vendor">Vendor Name</label>
+                                    <input type="text" class="form-control" id="vendor" name="vendor" placeholder="Amazon">
+                                    {% for error in form.vendor.errors %}
+                                        <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-lg-8">
+                                    <label for="url">URL</label>
+                                    <input type="text" class="form-control" id="url" name="url" placeholder="www.amazon.com">
+                                    {% for error in form.url.errors %}
+                                        <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 30px; margin-bottom: 30px;">
+                                <div class="col-lg-10"></div>
+                                <div class="col-lg-2">
+                                    <button type="submit" class="btn bg-teal-400 btn-labeled btn-labeled-left rounded-round"><b><i class="icon-plus-circle2"></i></b>Add Vendor</button>
+                                    <!--{{form.submit()}}-->
+                                </div>
+                            </div> <!-- END ROW -->
+                        </form> <!-- END FORM -->
+                    </div>
+                    <div class="col-lg-12">
+                        <table class="table text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>VENDOR NAME</th>
+                                    <th>URL</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in vendors %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge badge-mark border-success mr-1"></span>
+                                            <a href="#" class="text-default font-weight-semibold">{{item.id}}</a>
+                                        </div>
+                                    </td>
+                                    <td><a href="{{url_for('admin.groups_list', name=item.name)}}"><span class="text-success-600">{{item.vendor}}</span></a></td>
+                                    <td><span class="badge bg-danger">{{item.url}}</span></td>
+                                    <td class="text-center"><a href="{{url_for('admin.delete_vendor', item = item.id)}}" class="btn" id='tbl-btn' style="background-color: transparent;"><i class="icon-trash"></i></a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- /horizotal form -->
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,153 @@
+ {% extends 'admin/store-base.html' %}
+
+{% block body %}
+		<div class="breadcrumbs">
+				<div class="container">
+						<a href="#">Accounts</a>
+						<span class="separator"><i class="iconfont pe-7s-angle-right"></i></span>
+						<a href="#"> <span>Dashboard</span></a>
+				</div>
+		</div>
+		<div class="container" style="height: 1250px">
+				<div class="account-card">
+						<div class="row" style="height: 25px"></div>
+						<div class="row">
+								<div class="account-nav">
+										<h4>My Account</h4>
+										<a href="{{url_for('admin.accounts')}}">Dashboard</a><br>
+										<h4>Orders</h4>
+										<a href="{{url_for('admin.account_orders')}}">Order History</a><br>
+										<a href="{{url_for('admin.account_returns')}}">Return Status/History</a><br>
+										<h4>Personal Account</h4>
+										<a href="{{url_for('admin.account_settings')}}">Account Settings</a><br>
+										<a href="{{url_for('admin.account_payments')}}">Payment Options</a><br>
+										<h4>Account Notifications</h4>
+										<a href="{{url_for('admin.account_email')}}">Email Notifications</a><br>
+										<a href="{{url_for('admin.account_text')}}">Text Notifications</a><br>
+								</div>
+								<div class="account-content">
+										<h2>Email Notifications</h2>
+                    <span>Manage your preferences for recieving email notifications from Eloraus</span><br>
+										<form method="post" action="" style="margin-top: 2rem">
+												{{ form.hidden_tag() }}
+												<div class="col-lg-6 col-md-5">
+														<div class="container">
+																<div class="row agree">
+																		{% if current.newsletter %}
+																				<input class="form-control" name="newsletter" id="newsletter" type="checkbox" checked>
+																		{% else %}
+																				<input class="form-control" name="newsletter" id="newsletter" type="checkbox">
+																		{% endif %}
+																		{{form.newsletter.label}}
+																		{% for error in form.newsletter.errors %}
+																				<span style="color: red;">[{{ error }}]</span>
+																		{% endfor %}
+																		<ul>
+																				<li>Weekly savings on Eloraus hottest products</li>
+																				<li>The latest updates on hot new product releases and 24-hour sales</li>
+																				<li>Sweepstakes and giveaways from top brands</li>
+																		</ul>
+																</div>
+																<div class="row agree">
+																				{% if current.deals %}
+																						<input class="form-control" name="deals" id="deals" type="checkbox" checked>
+																				{% else %}
+																						<input class="form-control" name="deals" id="deals" type="checkbox">
+																				{% endif %}
+																				{{form.deals.label}}
+																				{% for error in form.deals.errors %}
+																						<span style="color: red;">[{{ error }}]</span>
+																				{% endfor %}
+																		<ul>
+																				<li>Special preview of tomorrow's discounts for all Shell Shocker flash sale items</li>
+																				<li>Links to Newegg's New Top Deals page, a trending assortment of the day's best sale items</li>
+																		</ul>
+																</div>
+																<div class="row agree">
+																		{% if current.rating %}
+																				<input class="form-control" name="rating" id="rating" type="checkbox" checked>
+																		{% else %}
+																				<input class="form-control" name="rating" id="rating" type="checkbox">
+																		{% endif %}
+																		{{form.rating.label}}
+																		{% for error in form.rating.errors %}
+																				<span style="color: red;">[{{ error }}]</span>
+																		{% endfor %}
+																		<p>New feature for implementing product ratings reviews.</p>
+																</div>
+																<div class="row agree">
+																		{% if current.seller %}
+																				<input class="form-control" name="seller" id="seller" type="checkbox" checked>
+																		{% else %}
+																				<input class="form-control" name="seller" id="seller" type="checkbox">
+																		{% endif %}
+																		{{form.seller.label}}
+																		{% for error in form.seller.errors %}
+																				<span style="color: red;">[{{ error }}]</span>
+																		{% endfor %}
+																		<p>New feature for implementing individual seller reviews.</p>
+																</div>
+																<div class="row agree">
+																		{% if current.voting %}
+																				<input class="form-control" name="voting" id="voting" type="checkbox" checked>
+																		{% else %}
+																				<input class="form-control" name="voting" id="voting" type="checkbox">
+																		{% endif %}
+																		{{form.voting.label}}
+																		{% for error in form.voting.errors %}
+																				<span style="color: red;">[{{ error }}]</span>
+																		{% endfor %}
+																		<p>New feature for implementing product voting.</p>
+																</div>
+																<div class="row agree">
+																		{% if current.offers %}
+																				<input class="form-control" name="offers" id="offers" type="checkbox" checked>
+																		{% else %}
+																				<input class="form-control" name="offers" id="offers" type="checkbox">
+																		{% endif %}
+																		{{form.offers.label}}
+																		{% for error in form.offers.errors %}
+																				<span style="color: red;">[{{ error }}]</span>
+																		{% endfor %}
+																		<ul>
+																				<li>Be the first to see special offers only available in select areas</li>
+																				<li>Get exclusive point items based on current monthly point contents.</li>
+																		</ul>
+																</div>
+																<div class="row agree" style="margin-top:1rem;">
+																		{% if current.unsubscribe %}
+																				<input class="form-control" name="unsubscribe" id="unsubscribe" type="checkbox" checked>
+																		{% else %}
+																				<input class="form-control" name="unsubscribe" id="unsubscribe" type="checkbox">
+																		{% endif %}
+																		{{form.unsubscribe.label}}
+																		{% for error in form.unsubscribe.errors %}
+																				<span style="color: red;">[{{ error }}]</span>
+																		{% endfor %}
+																</div>
+														</div> <!-- end container -->
+												</div>
+												<hr />
+												<div class="row">
+																<div class="col-lg-9 col-md-9">
+																</div>
+																<div class="col-lg-2 col-md-2">
+																				{{form.submit(class="form-control", placeholder="Silver")}}
+																				{% for error in form.submit.errors %}
+																						<span style="color: red;">[{{ error }}]</span>
+																				{% endfor %}
+																</div>
+																<div class="col-lg-1 col-md-1"></div>
+												</div>
+												<hr />
+												<div class="row">
+																<p class="pad-1">Save Eloraus is the sole owner of the information collected on this site.
+																	We will not sell, share, or rent this information to any outside parties,
+																	except as outlined in the privacy policy.</p>
+												</div>
+										</form>
+								</div>
+								<div class="row" style="height: 25px"></div></div>
+				</div>
+		</div>
+{% endblock %}

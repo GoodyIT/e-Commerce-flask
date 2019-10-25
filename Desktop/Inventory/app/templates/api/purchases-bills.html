@@ -1,0 +1,49 @@
+{% extends 'api/base.html' %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-lg-5"></div>
+    <div class="col-lg-4">
+        <h4>Bills details</h4>
+    </div>
+    <div class="col-lg-3"></div>
+</div>
+<div class="row" style="display: flex; align-items: center; text-align: right; margin-bottom: 10px;">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-5" style="display: flex; align-items: center;">
+        From&nbsp;&nbsp;<input type="text" class="form-control" id="purchase_from_date" name="purchase_from_date" size="30">
+        &nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;&nbsp;<input type="text" class="form-control" id="purchase_to_date" name="purchase_to_date" size="30">
+        &nbsp;&nbsp;<button type="button" class="btn btn-primary add-row" id="report_order_history_apply">Apply</button>
+    </div>
+    <div class="col-lg-5">
+        <button type="button" class="btn btn-primary btn-sm" id="report_order_history_export_csv">CSV Exports</button>
+        <button type="button" class="btn btn-primary btn-sm" id="report_order_history_export_excel">EXCEL Exports</button>
+        <button type="button" class="btn btn-primary btn-sm" id="report_order_history_export_doc">DOC Exports</button>
+        <button type="button" class="btn btn-primary btn-sm" id="report_order_history_export_pdf">PDF Exports</button>
+    </div>
+    <div class="col-lg-1"></div>
+</div>
+
+<div class="row report-block" style="background-color:#eeeeee">
+    <div class="col-lg-3"><p>FIFO</p></div>
+    <div class="col-lg-1"><p>SKU</p></div>
+    <div class="col-lg-1"></div>
+    <div class="col-lg-1"><h8>MARGIN</h8></div>
+    <div class="col-lg-1"></div>
+    <div class="col-lg-1"><h8>QTY SOLD</h8></div>
+    <div class="col-lg-1"></div>
+    <div class="col-lg-1"><h8>TOTAL SALES</h8></div>
+    <div class="col-lg-1"></div>
+    <div class="col-lg-1"><h8>SALES PRICE</h8></div>
+</div>
+<div class="row" style="height:800px" id="report-order-content">
+    <div class="col-lg-5"></div>
+    <div class="col-lg-4">
+        <p>No Data To Display</p>
+    </div>
+    <div class="col-lg-3"></div>
+</div>
+
+<script src="../static/vendor/js/purchases-orders.js"></script>
+{% endblock %}

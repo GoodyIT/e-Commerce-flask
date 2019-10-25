@@ -1,0 +1,68 @@
+{% extends 'admin/store-base.html' %}
+
+{% block body %}
+
+<div class="container">
+    <div class="blank-card">
+        <div class="row">
+            <div class="col-lg-2 col-md-2"></div>
+            <div class="col-lg-8 col-md-8">
+                <div class="login-card">
+                    <div class="login-card-inner">
+                        <div class="container">
+                            <div class="row" style="text-align: center">
+                                <h3>Signup</h3>
+                            </div>
+                            <form action="" method="post" autocomplete>
+                                {{ form.hidden_tag() }}
+                                <div class="row">
+                                    <div style="margin: 0" class="col-lg-1 col-md-1"></div>
+                                    <div style="margin: 0" class="col-lg-5 col-md-5 col-xs-12" style="padding: 0">
+                                        <label for="first" style="margin: 1rem 0 0 0">First Name</label>
+                                        <br>
+                                        <input type="text" class="form-control" name="first" id="first" size="40" required />
+                                    </div>
+                                    <div style="margin: 0" class="col-lg-5 col-md-5 col-xs-12" style="padding: 0">
+                                        <label for="last" style="margin: 1rem 0 0 0">Last Name</label>
+                                        <br>
+                                        <input type="text" class="form-control" name="last" id="last" size="40" required />
+                                    </div>
+                                    <div style="margin: 0" class="col-lg-1 col-md-1"></div>
+                                </div>
+                                <div class="row">
+                                    <div style="margin: 0" class="col-lg-1 col-md-1"></div>
+                                    <div style="margin: 0" class="col-lg-10 col-md-10" style="padding:0">
+                                        <label for="email" style="margin: 1rem 0 0 0">Email</label>
+                                        <br>
+                                        <input type="text" class="form-control" name="email" id="email" size="86" required />
+                                    </div>
+                                    <div style="margin: 0" class="col-lg-1 col-md-1"></div>
+                                </div>
+                                <div class="row">
+                                    <div style="margin: 0" class="col-lg-1 col-md-1"></div>
+                                    <div style="margin: 0" class="col-lg-10 col-md-10" style="padding:0">
+                                        <label for="pw" style="margin: 1rem 0 0 0">Password</label>
+                                        <br>
+                                        <input type="password" class="form-control" name="pw" id="pw" size="86" required />
+                                    </div>
+                                    <div style="margin: 0" class="col-lg-1 col-md-1"></div>
+                                </div>
+                                <div class="row" style="text-align: center; margin-bottom: 2rem">
+                                    <div style="margin: 0" class="col-lg-3 col-md-3"></div>
+                                    <div style="margin: 0" class="col-lg-6 col-md-6">
+                                        <input type="submit" class="form-control" name="submit" id="submit" style="margin: 2rem 0 0 0"></input>
+                                    </div>
+                                    <div style="margin: 0" class="col-lg-3 col-md-3"></div>
+                                    <br>
+                                </div>
+                            </form>
+                        </div> <!-- end container -->
+                    </div> <!-- end login-card-inner -->
+                </div> <!-- end login-card -->
+            </div>
+            <div class="col-lg-2 col-md-2"></div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,8 @@
+flask
+flask_login
+jwt
+uuid
+flask_wtf
+flask_PyMongo
+pandas
+zinc

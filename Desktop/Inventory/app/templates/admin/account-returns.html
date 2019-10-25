@@ -1,0 +1,47 @@
+{% extends 'admin/store-base.html' %}
+
+{% block body %}
+		<div class="breadcrumbs">
+				<div class="container">
+						<a href="#">Accounts</a>
+						<span class="separator"><i class="iconfont pe-7s-angle-right"></i></span>
+						<a href="#"> <span>Dashboard</span></a>
+				</div>
+		</div>
+		<div class="container" style="height: 1000px">
+				<div class="account-card">
+						<div class="row" style="height: 25px"></div>
+						<div class="row">
+								<div class="account-nav">
+										<h4>My Account</h4>
+										<a href="{{url_for('admin.accounts')}}">Dashboard</a><br>
+										<h4>Orders</h4>
+										<a href="{{url_for('admin.account_orders')}}">Order History</a><br>
+										<a href="{{url_for('admin.account_returns')}}">Return Status/History</a><br>
+										<h4>Personal Account</h4>
+										<a href="{{url_for('admin.account_settings')}}">Account Settings</a><br>
+										<a href="{{url_for('admin.account_payments')}}">Payment Options</a><br>
+										<h4>Account Notifications</h4>
+										<a href="{{url_for('admin.account_email')}}">Email Notifications</a><br>
+										<a href="{{url_for('admin.account_text')}}">Text Notifications</a><br>
+								</div>
+								<div class="account-content">
+										<h2>Return Orders</h2>
+										<span>Manage your preferences for recieving email notifications from Eloraus</span><br>
+										<div class="row">
+												<div class="container" style="padding:3rem">
+														<form class="form-inline md-form form-sm active-pink active-pink-2 mt-2">
+																<label for="search"><b>Search All Orders:</b></label>
+																<input class="form-control form-control-sm ml-3 w-75" name="search" type="text" placeholder="Search"
+																aria-label="Search" style="width:75%">
+																<button type="button" class="btn btn-alt btn-mini order-search-right">GO</button>
+														</form>
+														<div class="search-result">
+																<h5 style="color:red; margin-top: 2rem">No results were found.</h5>
+														</div>
+												</div>
+										</div>
+								</div>
+				</div>
+		</div>
+{% endblock %}
