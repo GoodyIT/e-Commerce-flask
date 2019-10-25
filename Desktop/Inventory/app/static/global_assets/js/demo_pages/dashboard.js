@@ -215,7 +215,7 @@ var Dashboard = function () {
             // Load data
             // ------------------------------
 
-            d3.csv('static/global_assets/demo_data/dashboard/traffic_sources.csv', function (data) {
+            d3.csv('/static/global_assets/demo_data/dashboard/traffic_sources.csv', function (data) {
                 // Pull out values
                 data.forEach(function (d) {
                     d.date = format.parse(d.date);
@@ -608,7 +608,7 @@ var Dashboard = function () {
             // Load data
             // ------------------------------
 
-            d3.csv('static/global_assets/demo_data/dashboard/app_sales.csv', function(error, data) {
+            d3.csv('/static/global_assets/demo_data/dashboard/app_sales.csv', function(error, data) {
                 formatted = data;
                 redraw();
             });
