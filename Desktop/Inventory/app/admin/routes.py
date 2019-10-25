@@ -1126,7 +1126,6 @@ def addItem():
         print("------strjson: "+strjson)
         return jsonify(target_file=strjson)
 
-    pdb.set_trace()
     if form.validate_on_submit():
         # add new vendor
         vendor = ""
