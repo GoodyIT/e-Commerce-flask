@@ -55,19 +55,20 @@
                                    </form>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="col-md-9">
-                            <div class="row" style="margin-top:20px;">
+                            <form action="" method="post" enctype="multipart/form-data">
+                            <!-- <div class="row" style="margin-top:20px;">
                                 <div class="col-lg-9"></div>
                                 <div class="col-lg-3">
                                     <label for="fileImport" class="btn btn-primary btn-block"><i class="icon-file-upload2 mr-2"></i>Choose file to import</label>
                                     <input type="file" name="fileImport" id="fileImport" onchange="uploadFileImport('fileImport')" accept=".csv,.xls,.txt"  style="visibility:hidden;">
                                 </div>
-                            </div>
-                    <div class="col-lg-12">
-                        <form action="" method="post" enctype="multipart/form-data">
+                            </div> -->
+                            <!-- <input type="hidden" id="hdfiles" /> -->
+                            <div class="col-lg-12">
+                        
                             {{form.hidden_tag()}}
                             <div class="row">
                                 <div class="col-md-9">
@@ -113,7 +114,7 @@
                                                     <span style="color: red;">[{{ error }}]</span>
                                                 {% endfor %}
                                             </div>
-                                            <div class="col-lg-4" style="">
+                                            <div class="col-lg-4">
                                                 <label for="currency">Currency</label>
                                                 {{form.currency(class="form-control form-control-lg")}}
                                             </div>

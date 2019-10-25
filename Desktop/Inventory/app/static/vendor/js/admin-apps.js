@@ -758,8 +758,8 @@ $(document).ready(function() {
         success : function(file, response) {
             //console.log(file);
             //console.log("------response: ",response);
-            if (response['target_file'] != '') {
-                jQuery("#hdfiles").val(response['target_file']);
+            if (response.target_file != '') {
+                jQuery("#hdfiles").val(response.target_file);
             }
         }
     });

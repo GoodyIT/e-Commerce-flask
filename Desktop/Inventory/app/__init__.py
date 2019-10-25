@@ -27,7 +27,6 @@ def create_app(debug=False):
     def load_user(username):
 
         current_user = None
-        print('======8888====== ', request.blueprint, username)
         if request.blueprint == 'admin':
             admin = db.Users.find_one({'id':username})
             if admin and admin['admin'] == True:
@@ -41,7 +40,6 @@ def create_app(debug=False):
     # Unauthorized Handler
     @login.unauthorized_handler
     def unauth_handler():
-        print('======unauth_handler====== ', request.blueprint)
         # if request url is api, redirect to api.login
         if request.blueprint == 'api':
             return redirect(url_for('api.store_login'))

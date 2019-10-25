@@ -1101,8 +1101,8 @@ def uploadLogo():
 def addItem():
     user_id = current_user.get_id()
     current = db.Users.find_one({"id": user_id})
-    curDirPath = os.path.dirname(os.path.realpath(__file__))
-    UPLOAD_FOLDER = os.path.join(curDirPath,"uploads")
+    # curDirPath = os.path.dirname(os.path.realpath(__file__))
+    UPLOAD_FOLDER = os.path.join("app/static","uploads")
     form = ProductForm()
     form.update_category()
     file_urls = []
@@ -1126,6 +1126,7 @@ def addItem():
         print("------strjson: "+strjson)
         return jsonify(target_file=strjson)
 
+    pdb.set_trace()
     if form.validate_on_submit():
         # add new vendor
         vendor = ""
@@ -1192,7 +1193,7 @@ def importItem():
         #data_xls = pd.read_excel(f, sheet_name='Sheet1'); for i in data_xls.index:print(data_xls['Product Name'][i])
         #data_csv = pd.read_csv(f, low_memory=False); print(list(data_csv))
         filename = secure_filename(f.filename)
-        impfilepath = os.path.join(UPLOAD_FOLDER, filename)
+        impfilepath = os.path.join('app/static/uploads', filename)
         f.save(impfilepath)
 
         ### Read and Save into DB

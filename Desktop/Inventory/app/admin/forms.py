@@ -13,13 +13,13 @@ import os
 def getGroups():
     groups = db.Groups.find()
     size = groups.count() - 1
-    choices = [('None','None')]
+    choices = [('','None')]
     while size >= 0:
         choices.append((groups[size]['id'], groups[size]['name']))
         size -= 1
 
     if len(choices) == 0:
-        return [('none', 'None')]
+        return [('', 'None')]
     return choices
 
 def getSubgroups():
@@ -148,13 +148,13 @@ class LoginForm(FlaskForm):
 class ProductForm(FlaskForm):
     ''' Product Items '''
     product = StringField('Product Name', validators=[DataRequired()])
-    category = SelectField('Category', choices=getGroups())
+    category = SelectField('Category', choices=getGroups(), validators=[DataRequired()])
     subgroup = SelectField('SubGroup', choices=getSubgroups())
     summary = TextAreaField('Summary', validators=[DataRequired()])
     sku = StringField('SKU', validators=[DataRequired()])
     price = IntegerField('Price', validators=[DataRequired()])
-    imgImport = FileField('Image File', validators=[DataRequired()])
-    addImport = MultipleFileField('Additional Images', validators=[DataRequired()])
+    imgImport = FileField('Image File', validators=[])
+    addImport = MultipleFileField('Additional Images', validators=[])
     currency = SelectField('Currency', choices=[('USD', '$'),('EURO','€'),('POUND', '£')])
     attr0 = StringField('Attribute')
     options0 = StringField('Options')
