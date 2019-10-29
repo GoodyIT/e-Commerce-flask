@@ -20,7 +20,7 @@
                                                 {% if product.images == '' %}
                                                   <img class="img-responsive product-zoom" src="../static/products-images/product-img1.jpg" data-zoom-image="products-images/product-img1.jpg" style="width: 100%;" alt="{{product.product}}">
                                                 {% else %}
-                                                  <img class="img-responsive product-zoom" style="width: 100%; height: 400px; object-fit: contain;" src="{{product.images}}" data-zoom-image="products-images/product-img1.jpg" alt="{{product.product}}">
+                                                  <img class="img-responsive product-zoom" style="width: 100%; height: 400px; object-fit: contain;" src="../static/{{product.images}}" data-zoom-image="products-images/product-img1.jpg" alt="{{product.product}}">
                                                 {% endif %}
                                             </div>
                                             <div class="more-views">

@@ -1121,7 +1121,7 @@ def addItem():
                 imgfilepath = os.path.join(UPLOAD_FOLDER, filename)
                 file.save(imgfilepath)
                 # append image urls
-                file_urls.append('../uploads/' + filename)
+                file_urls.append('/uploads/' + filename)
         strjson = file_urls[0]
         print("------strjson: "+strjson)
         return jsonify(target_file=strjson)
