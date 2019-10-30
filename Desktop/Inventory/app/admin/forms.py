@@ -151,6 +151,7 @@ class ProductForm(FlaskForm):
     category = SelectField('Category', choices=getGroups(), validators=[DataRequired()])
     subgroup = SelectField('SubGroup', choices=getSubgroups())
     summary = TextAreaField('Summary', validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired()])
     sku = StringField('SKU', validators=[DataRequired()])
     price = IntegerField('Price', validators=[DataRequired()])
     imgImport = FileField('Image File', validators=[])

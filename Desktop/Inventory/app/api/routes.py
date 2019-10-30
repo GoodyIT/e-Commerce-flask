@@ -1123,7 +1123,7 @@ def addItem():
         if form.attr2.data != "":
             attrs[form.attr2.data] = form.options2.data
         images = form.hdfiles.data
-        #images = images.split(",")
+        images = images.split(",")
         print("\n routes | addItem: ----------------------------")
 
         category_type = db.Groups.find_one({"id": form.category.data})["type"]

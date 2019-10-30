@@ -759,7 +759,7 @@ $(document).ready(function() {
             //console.log(file);
             //console.log("------response: ",response);
             if (response.target_file != '') {
-                jQuery("#hdfiles").val(response.target_file);
+                jQuery("#hdfiles").val(jQuery("#hdfiles").val() + ',' + response.target_file);
             }
         }
     });

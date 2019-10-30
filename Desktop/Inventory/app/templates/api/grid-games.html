@@ -103,7 +103,7 @@
                           {% if item.images == '' %}
                             <img class="img-responsive" src="../static/products-images/product-img1.jpg" alt="{{item.product}}">
                           {% else %}
-                            <img class="img-responsive" style="width: 264px; height: 321px; object-fit: contain;" src="../static/{{item.images}}" alt="{{item.product}}">
+                            <img class="img-responsive" style="width: 264px; height: 321px; object-fit: contain;" src="/static{{item.images[0]}}" alt="{{item.product}}">
                           {% endif %}
                         </a>
                       </div>

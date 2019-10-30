@@ -20,7 +20,7 @@
                                                 {% if product.images == '' %}
                                                   <img class="img-responsive product-zoom" src="../static/products-images/product-img1.jpg" data-zoom-image="products-images/product-img1.jpg" style="width: 100%;" alt="{{product.product}}">
                                                 {% else %}
-                                                  <img class="img-responsive product-zoom" style="width: 100%; height: 400px; object-fit: contain;" src="../static/{{product.images}}" data-zoom-image="products-images/product-img1.jpg" alt="{{product.product}}">
+                                                  <img class="img-responsive product-zoom" style="width: 100%; height: 400px; object-fit: contain;" src="/static{{product.images[0]}}" data-zoom-image="products-images/product-img1.jpg" alt="{{product.product}}">
                                                 {% endif %}
                                             </div>
                                             <div class="more-views">
@@ -28,36 +28,15 @@
                                                     <div id="gallery_01"
                                                          class="product-flexslider hidden-buttons product-img-thumb">
                                                         <div class="slider-items slider-width-col4 block-content">
+                                                            {% for image in product.images%}
                                                             <div class="more-views-items"><a href="#"
-                                                                                             data-image="products-images/product-img.jpg"
-                                                                                             data-zoom-image="products-images/product-img1.jpg">
+                                                                                             data-image="/static{{image}}"
+                                                                                             data-zoom-image="/static{{image}}">
                                                                 <img class="product-zoom"
-                                                                     src="../static/products-images/product-img1.jpg"
-                                                                     alt="product-image"/> </a></div>
-                                                            <div class="more-views-items"><a href="#"
-                                                                                             data-image="products-images/product-img.jpg"
-                                                                                             data-zoom-image="products-images/product-img1.jpg">
-                                                                <img class="product-zoom"
-                                                                     src="../static/products-images/product-img1.jpg"
-                                                                     alt="product-image"/> </a></div>
-                                                            <div class="more-views-items"><a href="#"
-                                                                                             data-image="products-images/product-img.jpg"
-                                                                                             data-zoom-image="products-images/product-img1.jpg">
-                                                                <img class="product-zoom"
-                                                                     src="../static/products-images/product-img1.jpg"
-                                                                     alt="product-image"/> </a></div>
-                                                            <div class="more-views-items"><a href="#"
-                                                                                             data-image="products-images/product-img.jpg"
-                                                                                             data-zoom-image="products-images/product-img1.jpg">
-                                                                <img class="product-zoom"
-                                                                     src="../static/products-images/product-img1.jpg"
-                                                                     alt="product-image"/> </a></div>
-                                                            <div class="more-views-items"><a href="#"
-                                                                                             data-image="products-images/product-img.jpg"
-                                                                                             data-zoom-image="products-images/product-img1.jpg">
-                                                                <img class="product-zoom"
-                                                                     src="../static/products-images/product-img1.jpg"
-                                                                     alt="product-image"/> </a></div>
+                                                                     src="/static{{image}}"
+                                                                     alt="product-image"/> </a>
+                                                            </div>
+                                                            {% endfor %}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -90,12 +69,7 @@
                                         </div>
                                         <div class="short-description">
                                             <h2>Quick Overview</h2>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla
-                                                augue nec est tristique auctor. Donec non est at libero vulputate
-                                                rutrum. Morbi ornare lectus quis justo gravida semper. Nulla tellus mi,
-                                                vulputate adipiscing cursus eu, suscipit id nulla. Donec a neque libero.
-                                                Pellentesque aliquet, sem eget laoreet ultrices, ipsum metus feugiat
-                                                sem, quis fermentum turpis eros eget velit. Donec ac tempus ante. </p>
+                                            <p>{{product.summary}}</p>
                                         </div>
                                         <div class="add-to-box">
                                             <div class="add-to-cart">
@@ -155,30 +129,7 @@
                             <div id="productTabContent" class="tab-content">
                                 <div class="tab-pane fade in active" id="product_tabs_description">
                                     <div class="std">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla augue
-                                            nec est tristique auctor. Donec non est at libero vulputate rutrum. Morbi
-                                            ornare lectus quis justo gravida semper. Nulla tellus mi, vulputate
-                                            adipiscing cursus eu, suscipit id nulla. Donec a neque libero. Pellentesque
-                                            aliquet, sem eget laoreet ultrices, ipsum metus feugiat sem, quis fermentum
-                                            turpis eros eget velit. Donec ac tempus ante. Fusce ultricies massa massa.
-                                            Fusce aliquam, purus eget sagittis vulputate, sapien libero hendrerit est,
-                                            sed commodo augue nisi non neque. Lorem ipsum dolor sit amet, consectetur
-                                            adipiscing elit. Sed tempor, lorem et placerat vestibulum, metus nisi
-                                            posuere nisl, in accumsan elit odio quis mi. Cras neque metus, consequat et
-                                            blandit et, luctus a nunc. Etiam gravida vehicula tellus, in imperdiet
-                                            ligula euismod eget. Pellentesque habitant morbi tristique senectus et netus
-                                            et malesuada fames ac turpis egestas. Nam erat mi, rutrum at sollicitudin
-                                            rhoncus, ultricies posuere erat. Duis convallis, arcu nec aliquam consequat,
-                                            purus felis vehicula felis, a dapibus enim lorem nec augue.</p>
-                                        <p> Nunc facilisis sagittis ullamcorper. Proin lectus ipsum, gravida et mattis
-                                            vulputate, tristique ut lectus. Sed et lorem nunc. Vestibulum ante ipsum
-                                            primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aenean
-                                            eleifend laoreet congue. Vivamus adipiscing nisl ut dolor dignissim semper.
-                                            Nulla luctus malesuada tincidunt. Class aptent taciti sociosqu ad litora
-                                            torquent per conubia nostra, per inceptos himenaeos. Integer enim purus,
-                                            posuere at ultricies eu, placerat a felis. Suspendisse aliquet urna pretium
-                                            eros convallis interdum. Quisque in arcu id dui vulputate mollis eget non
-                                            arcu. Aenean et nulla purus. Mauris vel tellus non nunc mattis lobortis.</p>
+                                        <P>{{product.description}}</P>
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="product_tabs_tags">

@@ -84,8 +84,17 @@
                                     <div class="row" style="margin-top:20px;">
                                         <div class="col-lg-12">
                                                 {{form.summary.label}}
-                                                {{form.summary(class="form-control",placeholder="Enter in a description..")}}
+                                                {{form.summary(class="form-control",placeholder="Enter in short description.")}}
                                                 {% for error in form.summary.errors %}
+                                                    <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:20px;">
+                                        <div class="col-lg-12">
+                                                {{form.description.label}}
+                                                {{form.description(class="form-control",placeholder="Enter in a full description.")}}
+                                                {% for error in form.description.errors %}
                                                     <span style="color: red;">[{{ error }}]</span>
                                                 {% endfor %}
                                         </div>

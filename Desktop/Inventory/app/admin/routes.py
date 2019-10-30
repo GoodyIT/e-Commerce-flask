@@ -1123,7 +1123,6 @@ def addItem():
                 # append image urls
                 file_urls.append('/uploads/' + filename)
         strjson = file_urls[0]
-        print("------strjson: "+strjson)
         return jsonify(target_file=strjson)
 
     if form.validate_on_submit():
@@ -1139,8 +1138,8 @@ def addItem():
         if form.attr2.data != "":
             attrs[form.attr2.data] = form.options2.data
         images = form.hdfiles.data
-        #images = images.split(",")
-        print("\n routes | addItem: ----------------------------")
+        images = images.split(",")[1:]
+        pdb.set_trace()
 
         category_type = db.Groups.find_one({"id": form.category.data})["type"]
         new_item = {
@@ -1151,6 +1150,8 @@ def addItem():
             'category_type': category_type,
             'category' : form.category.data,
             'subgroup' : form.subgroup.data,
+            'summary': form.summary.data,
+            'description': form.description.data,
             'price' : form.price.data,
             'currency' : form.currency.data,
             'attributes' : attrs,
